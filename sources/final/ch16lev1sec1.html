@@ -1,0 +1,898 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch16lev1sec1.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch16lev1sec1.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch16lev1sec1.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch16lev1sec1.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href="ch16.html"><img src=
+"images/prev.gif" width="20" height="20" border="0" align=
+"absmiddle" alt="Previous Page"></a> <a href=
+"ch16lev1sec2.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch16"></a>
+<h2 id="title-ID0EBWOM" class="docChapterTitle">16. XML</h2>
+
+<p class="docText"><img border="0" id="" width="150" height="152"
+src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzcmduZV9laXBjX2hwaDE2L2FjcnNvdGouZXBw.jpg"
+alt="">
+</p>
+
+<ul>
+<li>
+<p class="docList"><a name="iddle2196"></a><a name=
+"iddle2722"></a><a name="iddle3769"></a><a name=
+"iddle6145"></a><a name="iddle6165"></a><a name=
+"iddle6172"></a><a name="iddle6178"></a><a name=
+"iddle6179"></a><a name="iddle6708"></a><a name=
+"iddle7021"></a><a name="iddle7032"></a><a name=
+"iddle7893"></a><a name="iddle8707"></a><a name=
+"iddle8726"></a><a name="iddle8730"></a><span class=
+"docEmphasis"><a class="docLink" href=
+"ch16lev1sec1.html#ch16lev1sec1">Reading XML with
+QXmlStreamReader</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch16lev1sec2.html#ch16lev1sec2">Reading XML with
+DOM</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch16lev1sec3.html#ch16lev1sec3">Reading XML with
+SAX</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch16lev1sec4.html#ch16lev1sec4">Writing XML</a></span>
+</p>
+</li>
+</ul>
+
+<p class="docText"><a name="XML"></a>XML (eXtensible Markup
+Language) is a general-purpose text file format that is popular for
+data interchange and data storage. It was developed by the World
+Wide Web Consortium (W3C) as a lightweight alternative to SGML
+(Standard Generalized Markup Language). The syntax is similar to
+HTML, but XML is a metalanguage and as such does not mandate
+specific tags, attributes, or entities. The XML-compliant version
+of HTML is called XHTML.</p>
+
+<p class="docText"><a name="popular SVG"></a>For the popular SVG
+(Scalable Vector Graphics) XML format, the <span class=
+"docEmphasis">QtSvg</span><a name="provides classes"></a> module
+provides classes that can load and render SVG images. For rendering
+documents that use the MathML (Mathematical Markup Language) XML
+format, the <tt>QtMmlWidget</tt> from Qt Solutions can be used.</p>
+
+<p class="docText">For general XML processing, Qt provides the
+<span class="docEmphasis">QtXml</span> module, which is the subject
+of this chapter.<sup class="docFootnote"><a class="docLink" href=
+"#ch16fn01">[*]</a></sup> The <span class=
+"docEmphasis">QtXml</span> module offers three distinct APIs for
+reading XML documents:</p>
+
+<blockquote>
+<p class="docFootnote"><sup><a name=
+"ch16fn01">[*]</a></sup><a name="providing support"></a> Qt 4.4 is
+expected to include additional high-level classes for handling XML,
+providing support for XQuery and XPath, in a separate module called
+<span class="docEmphasis">QtXmlPatterns</span>.</p>
+</blockquote>
+
+<ul>
+<li>
+<p class="docList"><tt>QXmlStreamReader</tt><a name=
+"reading well"></a> is a fast parser for reading well-formed
+XML.</p>
+</li>
+
+<li>
+<p class="docList"><a name="which the"></a>DOM (Document Object
+Model) converts an XML document into a tree structure, which the
+application can then navigate.</p>
+</li>
+
+<li>
+<p class="docList"><a name="application through"></a>SAX (Simple
+API for XML) reports "parsing events" directly to the application
+through virtual functions.</p>
+</li>
+</ul>
+
+<p class="docText">The <tt>QXmlStreamReader</tt><a name=
+"use and"></a> class is the fastest and easiest to use and offers
+an API that is consistent with the rest of Qt. It is ideal for
+writing one-pass parsers. DOM's main benefit is that it lets us
+navigate a tree representation of the XML document in any order,
+allowing us to implement multi-pass parsing algorithms. Some
+applications even use the DOM tree as their primary data structure.
+SAX is provided mainly for historical reasons; using
+<tt>QXmlStreamReader</tt><a name="to simpler"></a> usually leads to
+simpler and faster code.</p>
+
+<p class="docText">For writing XML files, Qt also offers three
+options:</p>
+
+<ul>
+<li>
+<p class="docList"><a name="iddle1539"></a><a name=
+"iddle1707"></a><a name="iddle2197"></a><a name=
+"iddle2310"></a><a name="iddle2395"></a><a name=
+"iddle2397"></a><a name="iddle2418"></a><a name=
+"iddle3283"></a><a name="iddle4510"></a><a name=
+"iddle6709"></a><a name="iddle6710"></a><a name=
+"iddle6711"></a><a name="iddle6712"></a><a name=
+"iddle6713"></a><a name="iddle6714"></a><a name=
+"iddle6715"></a><a name="iddle6716"></a><a name=
+"iddle6717"></a><a name="iddle6718"></a><a name=
+"iddle6719"></a><a name="iddle6725"></a><a name=
+"iddle6729"></a><a name="iddle6773"></a><a name=
+"iddle7713"></a><a name="iddle7716"></a>We can use a
+<tt>QXmlStreamWriter</tt>.</p>
+</li>
+
+<li>
+<p class="docList"><a name="in memory"></a>We can represent the
+data as a DOM tree in memory and ask the tree to write itself to a
+file.</p>
+</li>
+
+<li>
+<p class="docList"><a name="We can"></a>We can generate the XML by
+hand.</p>
+</li>
+</ul>
+
+<p class="docText">Using <tt>QXmlStreamWriter</tt><a name=
+"far the"></a> is by far the easiest approach, and is more reliable
+than hand-generating XML. Using DOM to produce XML really makes
+sense only if a DOM tree is already used as the application's
+primary data structure. All three approaches to reading and writing
+XML are shown in this chapter.</p>
+<a name="ch16lev1sec1"></a>
+<h3 class="docSection1Title" id="-100000">Reading XML with
+QXmlStreamReader</h3>
+
+<p class="docText">Using <tt>QXmlStreamReader</tt><a name=
+"the fastest"></a> is the fastest and easiest way to read XML in
+Qt. Because the parser works incrementally, it is particularly
+useful for finding all occurrences of a given tag in an XML
+document, for reading very large files that may not fit in memory,
+and for populating custom data structures to reflect an XML
+document's contents.</p>
+
+<p class="docText">The <tt>QXmlStreamReader</tt> parser works in
+terms of the tokens listed in <a class="docLink" href=
+"#ch16fig01">Figure 16.1</a>. Each time the
+<tt>readNext()</tt><a name="the current"></a> function is called,
+the next token is read and becomes the current token. The current
+token's properties depend on the token's type and are accessible
+using the getter functions listed in the table.</p>
+<a name="ch16fig01"></a>
+<h5 class="docTableTitle">Figure 16.1. The
+<tt>QXmlStreamReader</tt>'s tokens</h5>
+
+<table cellspacing="0" class="allBorders" border="1">
+<colgroup align="left" span="3">
+<col width="125">
+<col width="150">
+<col width="275">
+</colgroup>
+
+<thead>
+<tr>
+<th scope="col" class="docTableCell thead" align="center" valign=
+"top" style="background-color:#E6E6E6">Token Type</th>
+<th scope="col" class="docTableCell thead" align="center" valign=
+"top" style="background-color:#E6E6E6">Example</th>
+<th scope="col" class="docTableCell thead" align="center" valign=
+"top" style="background-color:#E6E6E6">Getter Functions</th>
+</tr>
+</thead>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>StartDocument</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">N/A</span>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<tt>isStandaloneDocument()</tt>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>EndDocument</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">N/A</span>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<tt>isStandaloneDocument()</tt>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>StartElement</tt>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;item&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<tt>namespaceUri()</tt><span class="docEmphRomanAlt">,</span>
+<tt>name()</tt><span class="docEmphRomanAlt">,</span>
+<tt>attributes()</tt><span class="docEmphRomanAlt">,</span>
+<tt>namespaceDeclarations()</tt></td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>EndElement</tt>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;/item&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<tt>namespaceUri()</tt>, <tt>name()</tt></td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>Characters</tt>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<tt>AT&amp;amp;T</tt>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<tt>text()</tt><span class="docEmphRomanAlt">,</span>
+<tt>isWhitespace()</tt><span class="docEmphRomanAlt">,</span>
+<tt>isCDATA()</tt></td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>Comment</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><tt>&lt;!-- fix
+--&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><tt>text()</tt>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>DTD</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><tt>&lt;!DOCTYPE
+...&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<tt>text()</tt><span class="docEmphRomanAlt">,</span>
+<tt>notationDeclarations()</tt><span class=
+"docEmphRomanAlt">,</span> <tt>entityDeclarations()</tt></td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>EntityReference</tt>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<tt>&amp;trade;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<tt>name()</tt><span class="docEmphRomanAlt">,</span>
+<tt>text()</tt></td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>ProcessingInstruction</tt>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;?alert?&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<tt>processingInstructionTarget()</tt><span class=
+"docEmphRomanAlt">,</span>
+<tt>processingInstructionData()</tt></td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>Invalid</tt>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<tt>&gt;&amp;&lt;!</tt>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<tt>error()</tt><span class="docEmphRomanAlt">,</span>
+<tt>errorString()</tt></td>
+</tr>
+</table>
+<br>
+
+<p class="docText">Consider the following XML document:</p>
+
+<div class="docText">
+<pre>
+&lt;doc&gt;
+    &lt;quote&gt;Einmal ist keinmal&lt;/quote&gt;
+&lt;/doc&gt;
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle2642"></a><a name=
+"iddle3318"></a><a name="iddle3338"></a><a name=
+"iddle6403"></a><a name="iddle6721"></a><a name=
+"iddle6722"></a><a name="iddle6728"></a><a name=
+"iddle7722"></a><a name="iddle8221"></a><a name=
+"iddle8713"></a><a name="page_389"></a>If we parse this document,
+each <tt>readNext()</tt><a name="with extra"></a> call will produce
+a new token, with extra information available using getter
+functions:</p>
+
+<div class="docText">
+<pre>
+StartDocument
+StartElement (name() == "doc")
+StartElement (name() == "quote")
+Characters (text() == "Einmal ist keinmal")
+EndElement (name() == "quote")
+EndElement (name() == "doc")
+EndDocument
+</pre>
+</div>
+<br>
+
+<p class="docText">After each <tt>readNext()</tt> call, we can test
+for the current token's type using <tt>isStartElement()</tt>,
+<tt>isCharacters()</tt>, and similar functions, or simply using
+<tt>state()</tt>.</p>
+
+<p class="docText"><a name="use"></a>We will review an example that
+shows how to use <tt>QXmlStreamReader</tt><a name="format and"></a>
+to parse an ad hoc XML file format and render its contents in a
+<tt>QTreeWidget</tt><a name="of a"></a>. The format we will parse
+is that of a book index, with index entries and sub-entries. Here's
+the book index file that is displayed in the <tt>QTreeWidget</tt>
+in <a class="docLink" href="#ch16fig02">Figure 16.2</a>:</p>
+
+<div class="docText">
+<pre>
+&lt;?xml version="1.0"?&gt;
+&lt;bookindex&gt;
+    &lt;entry term="sidebearings"&gt;
+        &lt;page&gt;10&lt;/page&gt;
+        &lt;page&gt;34-35&lt;/page&gt;
+        &lt;page&gt;307-308&lt;/page&gt;
+    &lt;/entry&gt;
+    &lt;entry term="subtraction"&gt;
+        &lt;entry term="of pictures"&gt;
+            &lt;page&gt;115&lt;/page&gt;
+            &lt;page&gt;244&lt;/page&gt;
+        &lt;/entry&gt;
+        &lt;entry term="of vectors"&gt;
+            &lt;page&gt;9&lt;/page&gt;
+        &lt;/entry&gt;
+    &lt;/entry&gt;
+&lt;/bookindex&gt;
+</pre>
+</div>
+<br>
+<a name="ch16fig02"></a>
+<center>
+<h5 class="docFigureTitle"><a name="XML Stream"></a>Figure 16.2.
+The XML Stream Reader application</h5>
+
+<p class="docText"><img border="0" id="" width="302" height="258"
+src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzcmdkYWxhaXBjLWhyc3htL3RfbXNyZWouZXBl.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="the application"></a>We will begin by
+looking at an extract from the application's
+<tt>main()</tt><a name="to see"></a> function, to see how the XML
+reader is used in context, and then we will look at the reader's
+implementation.</p>
+
+<div class="docText">
+<pre>
+int main(int argc, char *argv[])
+{
+    QApplication app(argc, argv);
+    QStringList args = QApplication::arguments();
+    ...
+    QTreeWidget treeWidget;
+    ...
+    XmlStreamReader reader(&amp;treeWidget);
+    for (int i = 1; i &lt; args.count(); ++i)
+        reader.readFile(args[i]);
+    return app.exec();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle6809"></a><a name=
+"iddle8714"></a><a name="shown in"></a>The application shown in
+<a class="docLink" href="#ch16fig02">Figure 16.2</a><a name=
+"by creating"></a> begins by creating a <tt>QTreeWidget</tt>. It
+then creates an <tt>XmlStreamReader</tt><a name="parse each"></a>,
+passing it the tree widget and asking it to parse each file
+specified on the command line.</p>
+
+<div class="docText">
+<pre>
+class XmlStreamReader
+{
+public:
+    XmlStreamReader(QTreeWidget *tree);
+
+    bool readFile(const QString &amp;fileName);
+
+private:
+    void readBookindexElement();
+    void readEntryElement(QTreeWidgetItem *parent);
+    void readPageElement(QTreeWidgetItem *parent);
+    void skipUnknownElement();
+
+    QTreeWidget *treeWidget;
+    QXmlStreamReader reader;
+};
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>XmlStreamReader</tt><a name=
+"constructor and"></a> class provides two public functions: the
+constructor and <tt>parseFile()</tt>. The class uses a
+<tt>QXmlStreamReader</tt> instance to parse the XML file, and
+populates the <tt>QTreeWidget</tt><a name="is done"></a> to reflect
+the XML data that is read. The parsing is done using recursive
+descent:</p>
+
+<ul>
+<li>
+<p class="docList"><tt>readBookindexElement()</tt> parses a
+<tt>&lt;bookindex&gt;...&lt;/bookindex&gt;</tt> element that
+contains zero or more <tt>&lt;entry&gt;</tt> elements.</p>
+</li>
+
+<li>
+<p class="docList"><a name="iddle6726"></a><a name=
+"iddle6727"></a><a name="iddle6768"></a><a name=
+"iddle6774"></a><a name="iddle7195"></a><a name=
+"iddle8715"></a><a name="iddle8718"></a><tt>readEntryElement()</tt>
+parses an <tt>&lt;entry&gt;...&lt;/entry&gt;</tt> element that
+contains zero or more <tt>&lt;page&gt;</tt> elements and zero or
+more <tt>&lt;entry&gt;</tt> elements nested to any depth.</p>
+</li>
+
+<li>
+<p class="docList"><tt>readPageElement()</tt> parses a
+<tt>&lt;page&gt;...&lt;/page&gt;</tt> element.</p>
+</li>
+
+<li>
+<p class="docList"><tt>skipUnknownElement()</tt> skips an
+unrecognized element.</p>
+</li>
+</ul>
+
+<p class="docText">We will now look at the <tt>XmlStreamReader</tt>
+class's implementation, beginning with the constructor.</p>
+
+<div class="docText">
+<pre>
+XmlStreamReader::XmlStreamReader(QTreeWidget *tree)
+{
+    treeWidget = tree;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="which"></a>The constructor is used only
+to establish which <tt>QTreeWidget</tt><a name="place in"></a> the
+reader should use. All the action takes place in the
+<tt>readFile()</tt> function (called from <tt>main()</tt><a name=
+"will look"></a>), which we will look at in three parts.</p>
+
+<div class="docText">
+<pre>
+bool XmlStreamReader::readFile(const QString &amp;fileName)
+{
+    QFile file(fileName);
+    if (!file.open(QFile::ReadOnly | QFile::Text)) {
+        std::cerr &lt;&lt; "Error: Cannot read file " &lt;&lt; qPrintable(fileName)
+                  &lt;&lt; ": " &lt;&lt; qPrintable(file.errorString())
+                  &lt;&lt; std::endl;
+        return false;
+    }
+    reader.setDevice(&amp;file);
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>readFile()</tt><a name="it outputs"></a>
+function begins by trying to open the file. If it fails, it outputs
+an error message and returns <tt>false</tt><a name="If the"></a>.
+If the file is opened successfully, it is set as the
+<tt>QXmlStreamReader</tt>'s input device.</p>
+
+<div class="docText">
+<pre>
+    reader.readNext();
+    while (!reader.atEnd()) {
+        if (reader.isStartElement()) {
+            if (reader.name() == "bookindex") {
+                readBookindexElement();
+            } else {
+                reader.raiseError(QObject::tr("Not a bookindex file"));
+            }
+        } else {
+            reader.readNext();
+        }
+    }
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>QXmlStreamReader</tt>'s
+<tt>readNext()</tt><a name="the next"></a> function reads the next
+token from the input stream. If a token is successfully read and
+the end of the XML file has not been reached, the function enters
+the <tt>while</tt><a name="of the"></a> loop. Because of the
+structure of the index files, we know that inside this loop there
+are just three possibilities: A <tt>&lt;bookindex&gt;</tt><a name=
+"been read"></a> start tag has just been read, another start tag
+has been read (in which case the file is not a book index), or some
+other token has been read.</p>
+
+<p class="docText"><a name="iddle1246"></a><a name=
+"iddle2454"></a><a name="iddle2461"></a><a name=
+"iddle5230"></a><a name="iddle5233"></a><a name=
+"iddle6720"></a><a name="iddle6723"></a><a name=
+"iddle6741"></a><a name="iddle6760"></a><a name=
+"iddle8716"></a><a name="start tag"></a>If we have the correct
+start tag, we call <tt>readBookindexElement()</tt> to continue
+processing. Otherwise, we call
+<tt>QXmlStreamReader::raiseError()</tt> with an error message. The
+next time <tt>atEnd()</tt> is called (in the <tt>while</tt> loop
+condition), it will return <tt>true</tt><a name="after an"></a>.
+This ensures that parsing stops as soon as possible after an error
+has been encountered. The error can be queried later by calling
+<tt>error()</tt> and <tt>errorString()</tt> on the
+<tt>QFile</tt><a name="right away"></a>. An alternative would have
+been to return right away when we detect an error in the book index
+file. Using <tt>raiseError()</tt><a name="use the"></a> is usually
+more convenient, because it lets us use the same error-reporting
+mechanism for low-level XML parsing errors, which are raised
+automatically when <tt>QXmlStreamReader</tt><a name=
+"invalid XML"></a> runs into invalid XML, and for
+application-specific errors.</p>
+
+<div class="docText">
+<pre>
+    file.close();
+    if (reader.hasError()) {
+        std::cerr &lt;&lt; "Error: Failed to parse file "
+                  &lt;&lt; qPrintable(fileName) &lt;&lt; ": "
+                  &lt;&lt; qPrintable(reader.errorString()) &lt;&lt; std::endl;
+        return false;
+    } else if (file.error() != QFile::NoError) {
+        std::cerr &lt;&lt; "Error: Cannot read file " &lt;&lt; qPrintable(fileName)
+                  &lt;&lt; ": " &lt;&lt; qPrintable(file.errorString())
+                  &lt;&lt; std::endl;
+        return false;
+    }
+    return true;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="was a"></a>Once the processing has
+finished, the file is closed. If there was a parser error or a file
+error, the function outputs an error message and returns
+<tt>false</tt><a name="it returns"></a>; otherwise, it returns
+<tt>true</tt><a name="a successful"></a> to report a successful
+parse.</p>
+
+<div class="docText">
+<pre>
+void XmlStreamReader::readBookindexElement()
+{
+    reader.readNext();
+    while (!reader.atEnd()) {
+        if (reader.isEndElement()) {
+            reader.readNext();
+            break;
+        }
+
+        if (reader.isStartElement()) {
+            if (reader.name() == "entry") {
+                readEntryElement(treeWidget-&gt;invisibleRootItem());
+            } else {
+                skipUnknownElement();
+            }
+        } else {
+            reader.readNext();
+        }
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1251"></a><a name=
+"iddle3289"></a><a name="iddle6764"></a><a name="iddle8717"></a>The
+<tt>readBookindexElement()</tt><a name="responsible for"></a> is
+responsible for reading the main part of the file. It starts by
+skipping the current token (which at this point can be only a
+<tt>&lt;bookindex&gt;</tt> start tag) and then loops over the
+input.</p>
+
+<p class="docText"><a name="the"></a>If an end tag is read, it can
+be only the <tt>&lt;/bookindex&gt;</tt> tag, since otherwise,
+<tt>QXmlStreamReader</tt> would have reported an error
+(<tt>UnexpectedElementError</tt><a name="tag and"></a>). In that
+case, we skip the tag and break out of the loop. Otherwise, we
+should have a top-level index <tt>&lt;entry&gt;</tt> start tag. If
+this is the case, we call <tt>readEntryElement()</tt> to process
+the entry's data; if not, we call <tt>skipUnknownElement()</tt>.
+Using <tt>skipUnknownElement()</tt> rather than calling
+<tt>raiseError()</tt><a name="in the"></a> means that if we extend
+the book index format in the future to include new tags, this
+reader will continue to work, since it will simply ignore the tags
+it does not recognize.</p>
+
+<p class="docText">The <tt>readEntryElement()</tt> takes a
+<tt>QTreeWidgetItem *</tt> argument that identifies a parent item.
+We pass <tt>QTreeWidget::invisibleRootItem()</tt><a name=
+"items root"></a> as the parent to make the new items root items.
+In <tt>readEntryElement()</tt>, we will call
+<tt>readEntryElement()</tt> recursively, with a different
+parent.</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+void XmlStreamReader::readEntryElement(QTreeWidgetItem *parent)
+{
+    QTreeWidgetItem *item = new QTreeWidgetItem(parent);
+    item-&gt;setText(0, reader.attributes().value("term").toString());
+
+    reader.readNext();
+    while (!reader.atEnd()) {
+        if (reader.isEndElement()) {
+            reader.readNext();
+            break;
+        }
+
+        if (reader.isStartElement()) {
+            if (reader.name() == "entry") {
+                readEntryElement(item);
+            } else if (reader.name() == "page") {
+                readPageElement(item);
+            } else {
+                skipUnknownElement();
+            }
+        } else {
+            reader.readNext();
+        }
+    }
+}
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>readEntryElement()</tt> function is
+called whenever an <tt>&lt;entry&gt;</tt><a name="widget item"></a>
+start tag is encountered. We want a tree widget item to be created
+for every index entry, so we create a new
+<tt>QTreeWidgetItem</tt><a name="its first"></a>, and set its first
+column's text to be the entry's term attribute's text.</p>
+
+<p class="docText"><a name="next token"></a>Once the entry has been
+added to the tree, the next token is read. If it is an end tag, we
+skip the tag and break out of the loop. If a start tag is
+encountered, it will be an <tt>&lt;entry&gt;</tt><a name="tag"></a>
+tag (signifying a sub-entry), a <tt>&lt;page&gt;</tt><a name=
+"number for"></a> tag (a page number for <a name=
+"iddle1231"></a><a name="iddle6724"></a><a name=
+"iddle6763"></a><a name="iddle6779"></a><a name=
+"iddle7516"></a><a name="iddle8719"></a><a name=
+"iddle8720"></a><a name="or an"></a>this entry), or an unknown tag.
+If the start tag is a sub-entry, we call
+<tt>readEntryElement()</tt> recursively. If the tag is a
+<tt>&lt;page&gt;</tt> tag, we call <tt>readPageElement()</tt>.</p>
+
+<div class="docText">
+<pre>
+void XmlStreamReader::readPageElement(QTreeWidgetItem *parent)
+{
+    QString page = reader.readElementText();
+    if (reader.isEndElement())
+        reader.readNext();
+
+    QString allPages = parent-&gt;text(1);
+    if (!allPages.isEmpty())
+        allPages += ", ";
+    allPages += page;
+    parent-&gt;setText(1, allPages);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>readPageElement()</tt> function is
+called whenever we get a <tt>&lt;page&gt;</tt><a name=
+"the entry"></a> tag. It is passed the tree item that corresponds
+to the entry to which the page text belongs. We begin by reading
+the text between the <tt>&lt;page&gt;</tt> and
+<tt>&lt;/page&gt;</tt> tags. On success, the
+<tt>readElementText()</tt><a name="on the"></a> function will leave
+the parser on the <tt>&lt;/page&gt;</tt> tag, which we must
+skip.</p>
+
+<p class="docText"><a name="We begin"></a>The pages are stored in
+the tree widget item's second column. We begin by extracting the
+text that is already there. If the text is not empty, we append a
+comma to it, ready for the new page text. We then append the new
+text and update the column's text accordingly.</p>
+
+<div class="docText">
+<pre>
+void XmlStreamReader::skipUnknownElement()
+{
+    reader.readNext();
+    while (!reader.atEnd()) {
+        if (reader.isEndElement()) {
+            reader.readNext();
+            break;
+        }
+
+        if (reader.isStartElement()) {
+            skipUnknownElement();
+        } else {
+            reader.readNext();
+        }
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="until we"></a>Finally, when unknown
+tags are encountered, we keep reading until we get the unknown
+element's end tag, which we also skip. This means that we will skip
+over well-formed but unrecognized elements, and read as much of the
+recognizable data as possible from the XML file.</p>
+
+<p class="docText"><a name="as the"></a>The example presented here
+could be used as the basis for similar XML recursive descent
+parsers. Nonetheless, sometimes implementing a parser like this can
+be tricky, if a <tt>readNext()</tt><a name="missing or"></a> call
+is missing or out of place. Some programmers address the problem by
+using assertions in their code. For example, at the beginning of
+<tt>readBookindexElement()</tt>, we could add the line</p>
+
+<div class="docText">
+<pre>
+Q_ASSERT(reader.isStartElement() &amp;&amp; reader.name() == "bookindex");
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle2198"></a><a name=
+"iddle3204"></a><a name="iddle4059"></a><a name=
+"iddle4490"></a><a name="iddle4580"></a><a name=
+"iddle6015"></a><a name="iddle8380"></a><a name=
+"iddle8496"></a><a name="iddle8659"></a><a name="iddle8710"></a>A
+similar assertion could be made in the <tt>readEntryElement()</tt>
+and <tt>readPageElement()</tt> functions. For
+<tt>skipUnknownElement()</tt>, we would simply assert that we have
+a start element.</p>
+
+<p class="docText">A <tt>QXmlStreamReader</tt> can take input from
+any <tt>QIODevice</tt>, including <tt>QFile</tt>, <tt>QBuffer</tt>,
+<tt>QProcess</tt>, and <tt>QTcpSocket</tt><a name="the data"></a>.
+Some input sources may not be able to provide the data that the
+parser needs when it needs it—for example, due to network latency.
+It is still possible to use <tt>QXmlStreamReader</tt><a name=
+"under such"></a> under such circumstances; more information on
+this is provided in the reference documentation for
+<tt>QXmlStreamReader</tt><a name="heading"></a> under the heading
+"Incremental Parsing".</p>
+
+<p class="docText">The <tt>QXmlStreamReader</tt><a name=
+"used in"></a> class used in this application is part of the
+<span class="docEmphasis">QtXml</span><a name="to the"></a>
+library. To link against this library, we must add this line to the
+<tt>.pro</tt> file:</p>
+
+<div class="docText">
+<pre>
+QT += xml
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="will see"></a>In the next two sections,
+we will see how to write the same application with DOM and SAX.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href="ch16.html"><img src=
+"images/prev.gif" width="20" height="20" border="0" align=
+"absmiddle" alt="Previous Page"></a> <a href=
+"ch16lev1sec2.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

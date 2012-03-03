@@ -1,0 +1,637 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch14lev1sec2.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch14lev1sec2.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch14lev1sec2.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch14lev1sec2.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch14lev1sec1.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch14lev1sec3.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch14lev1sec2"></a>
+<h3 class="docSection1Title" id="-100000">Synchronizing
+Threads</h3>
+
+<p class="docText"><a name="A common"></a>A common requirement for
+multithreaded applications is that of synchronizing several
+threads. Qt provides the following synchronization classes:
+<tt>QMutex</tt>, <tt>QReadWriteLock</tt>, <tt>QSemaphore</tt>, and
+<tt>QWaitCondition</tt>.</p>
+
+<p class="docText">The <tt>QMutex</tt><a name="a means"></a> class
+provides a means of protecting a variable or a piece of code so
+that only one thread can access it at a time. The class provides a
+<tt>lock()</tt><a name="that locks"></a> function that locks the
+mutex. If the mutex is unlocked, the current thread seizes it
+immediately and locks it; otherwise, the current thread is blocked
+until the thread that holds the mutex unlocks it. Either way, when
+the call to <tt>lock()</tt> returns, the current thread holds the
+mutex until it calls <tt>unlock()</tt>. The <tt>QMutex</tt> class
+also provides a <tt>tryLock()</tt> function that returns
+immediately if the mutex is already locked.</p>
+
+<p class="docText">For example, let's suppose that we wanted to
+protect the <tt>stopped</tt> variable of the <tt>Thread</tt> class
+from the preceding section with a <tt>QMutex</tt>. We would then
+add the following member variable to <tt>Thread</tt>:</p>
+
+<div class="docText">
+<pre>
+private:
+    ...
+    QMutex mutex;
+};
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>run()</tt> function would change to
+this:</p>
+
+<div class="docText">
+<pre>
+void Thread::run()
+{
+    forever {
+        mutex.lock();
+        if (stopped) {
+            stopped = false;
+            mutex.unlock();
+            break;
+        }
+        mutex.unlock();
+
+        std::cerr &lt;&lt; qPrintable(messageStr);
+    }
+    std::cerr &lt;&lt; std::endl;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>stop()</tt> function would become
+this:</p>
+
+<div class="docText">
+<pre>
+void Thread::stop()
+{
+    mutex.lock();
+    stopped = true;
+    mutex.unlock();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle3620"></a><a name=
+"iddle5430"></a><a name="iddle5664"></a><a name=
+"iddle6789"></a><a name="iddle7772"></a><a name=
+"iddle8041"></a><a name="functions that"></a>Locking and unlocking
+a mutex in complex functions, or in functions that throw C++
+exceptions, can be error-prone. Qt offers the <tt>QMutexLocker</tt>
+convenience class to simplify mutex handling.
+<tt>QMutexLocker</tt>'s constructor accepts a <tt>QMutex</tt> as
+argument and locks it. <tt>QMutexLocker</tt><a name=
+"could rewrite"></a>'s destructor unlocks the mutex. For example,
+we could rewrite the earlier <tt>run()</tt> and <tt>stop()</tt>
+functions as follows:</p>
+
+<div class="docText">
+<pre>
+void Thread::run()
+{
+    forever {
+        {
+            QMutexLocker locker(&amp;mutex);
+            if (stopped) {
+                stopped = false;
+                break;
+            }
+        }
+
+        std::cerr &lt;&lt; qPrintable(messageStr);
+    }
+    std::cerr &lt;&lt; std::endl;
+}
+
+void Thread::stop()
+{
+    QMutexLocker locker(&amp;mutex);
+    stopped = true;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="thread can"></a>One issue with using
+mutexes is that only one thread can access the same variable at a
+time. In programs with lots of threads trying to read the same
+variable simultaneously (without modifying it), the mutex can be a
+serious performance bottleneck. In these cases, we can use
+<tt>QReadWriteLock</tt><a name="without compromising"></a>, a
+synchronization class that allows simultaneous read-only access
+without compromising performance.</p>
+
+<p class="docText">In the <tt>Thread</tt> class, it would make no
+sense to replace <tt>QMutex</tt> with <tt>QReadWriteLock</tt> to
+protect the <tt>stopped</tt><a name="to read"></a> variable,
+because at most one thread might try to read the variable at any
+given time. A more appropriate example would involve one or many
+reader threads accessing some shared data and one or many writer
+threads modifying the data. For example:</p>
+
+<div class="docText">
+<pre>
+MyData data;
+QReadWriteLock lock;
+
+void ReaderThread::run()
+{
+    ...
+    lock.lockForRead();
+    access_data_without_modifying_it(&amp;data);
+    lock.unlock();
+    ...
+}
+
+void WriterThread::run()
+{
+    ...
+    lock.lockForWrite();
+    modify_data(&amp;data);
+    lock.unlock();
+    ...
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1066"></a><a name=
+"iddle1367"></a><a name="iddle1569"></a><a name=
+"iddle1794"></a><a name="iddle2615"></a><a name=
+"iddle3619"></a><a name="iddle3621"></a><a name=
+"iddle3962"></a><a name="iddle4511"></a><a name=
+"iddle5426"></a><a name="iddle5429"></a><a name=
+"iddle5663"></a><a name="iddle5730"></a><a name=
+"iddle5731"></a><a name="iddle5733"></a><a name=
+"iddle6666"></a><a name="iddle6846"></a><a name=
+"iddle7086"></a><a name="iddle7087"></a><a name=
+"iddle8310"></a><a name="iddle8311"></a><a name="can use"></a>For
+convenience, we can use the <tt>QReadLocker</tt> and
+<tt>QWriteLocker</tt> classes to lock and unlock a
+<tt>QReadWriteLock</tt>.</p>
+
+<p class="docText"><tt>QSemaphore</tt><a name="used to"></a> is
+another generalization of mutexes, but unlike read-write locks,
+semaphores can be used to guard a certain number of identical
+resources. The following two code snippets show the correspondence
+between <tt>QSemaphore</tt><a name="and"></a> and
+<tt>QMutex</tt>:</p>
+
+<table cellspacing="0" frame="void" rules="none" cellpadding="5">
+<colgroup align="left" span="4">
+<col width="150">
+<col width="50">
+<col width="50">
+<col width="150">
+</colgroup>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<div class="docText">
+<pre>
+QSemaphore semaphore(1);
+semaphore.acquire();
+semaphore.release();
+</pre>
+</div>
+<br>
+</td>
+<td class="docTableCell rightBorder" align="left" valign="top">
+&nbsp;</td>
+<td class="docTableCell" align="left" valign="top">&nbsp;</td>
+<td class="docTableCell" align="left" valign="top">
+<div class="docText">
+<pre>
+QMutex mutex;
+mutex.lock();
+mutex.unlock();
+</pre>
+</div>
+<br>
+</td>
+</tr>
+</table>
+<br>
+
+<p class="docText"><a name="to the"></a>By passing 1 to the
+constructor, we tell the semaphore that it controls a single
+resource. The advantage of using a semaphore is that we can pass
+numbers other than 1 to the constructor and then call
+<tt>acquire()</tt><a name="times to"></a> multiple times to acquire
+many resources.</p>
+
+<p class="docText"><a name="certain amount"></a>A typical
+application of semaphores is when transferring a certain amount of
+data (<tt>DataSize</tt><a name="shared circular"></a>) between two
+threads using a shared circular buffer of a certain size
+(<tt>BufferSize</tt>):</p>
+
+<div class="docText">
+<pre>
+const int DataSize = 100000;
+const int BufferSize = 4096;
+char buffer[BufferSize];
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="it reaches"></a>The producer thread
+writes data to the buffer until it reaches the end and then
+restarts from the beginning, overwriting existing data. The
+consumer thread reads the data as it is generated. <a class=
+"docLink" href="#ch14fig02">Figure 14.2</a> illustrates this,
+assuming a tiny 16-byte buffer.</p>
+<a name="ch14fig02"></a>
+<center>
+<h5 class="docFigureTitle">Figure 14.2. The producer–consumer
+model</h5>
+
+<p class="docText"><img border="0" id="" width="340" height="99"
+src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZmlncGNmaDJnMTQvaTBpcy4-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="iddle1067"></a><a name=
+"iddle5732"></a><a name="iddle5734"></a><a name=
+"iddle6339"></a><a name="iddle6847"></a><a name=
+"iddle6986"></a><a name="is twofold"></a>The need for
+synchronization in the producer–consumer example is twofold: If the
+producer generates the data too fast, it will overwrite data that
+the consumer hasn't yet read; if the consumer reads the data too
+fast, it will pass the producer and read garbage.</p>
+
+<p class="docText"><a name="is to"></a>A crude way to solve this
+problem is to have the producer fill the buffer, then wait until
+the consumer has read the entire buffer, and so on. However, on
+multiprocessor machines, this isn't as fast as letting the producer
+and consumer threads operate on different parts of the buffer at
+the same time.</p>
+
+<p class="docText"><a name="to efficiently"></a>One way to
+efficiently solve the problem involves two semaphores:</p>
+
+<div class="docText">
+<pre>
+QSemaphore freeSpace(BufferSize);
+QSemaphore usedSpace(0);
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>freeSpace</tt><a name=
+"producer can"></a> semaphore governs the part of the buffer that
+the producer can fill with data. The <tt>usedSpace</tt><a name=
+"semaphore governs"></a> semaphore governs the area that the
+consumer can read. These two areas are complementary. The
+<tt>freeSpace</tt><a name="initialized with"></a> semaphore is
+initialized with <tt>BufferSize</tt><a name="that it"></a> (4096),
+meaning that it has that many resources that can be acquired. When
+the application starts, the reader thread will start acquiring
+"free" bytes and convert them into "used" bytes. The
+<tt>usedSpace</tt><a name="read garbage"></a> semaphore is
+initialized with 0 to ensure that the consumer won't read garbage
+at startup.</p>
+
+<p class="docText"><a name="as one"></a>For this example, each byte
+counts as one resource. In a real-world application, we would
+probably operate on larger units (e.g., 64 or 256 bytes at a time)
+to reduce the overhead associated with using semaphores.</p>
+
+<div class="docText">
+<pre>
+void Producer::run()
+{
+    for (int i = 0; i &lt; DataSize; ++i) {
+        freeSpace.acquire();
+        buffer[i % BufferSize] = "ACGT"[uint(std::rand()) % 4];
+        usedSpace.release();
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="the buffer"></a>In the producer, every
+iteration starts by acquiring one "free" byte. If the buffer is
+full of data that the consumer hasn't read yet, the call to
+<tt>acquire()</tt><a name="to consume"></a> will block until the
+consumer has started to consume the data. Once we have acquired the
+byte, we fill it with some random data ('A', 'C', 'G', or 'T') and
+release the byte as "used", so that the consumer thread can read
+it.</p>
+
+<div class="docText">
+<pre>
+void Consumer::run()
+{
+    for (int i = 0; i &lt; DataSize; ++i) {
+        usedSpace.acquire();
+        std::cerr &lt;&lt; buffer[i % BufferSize];
+        freeSpace.release();
+    }
+    std::cerr &lt;&lt; std::endl;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle2638"></a><a name=
+"iddle5424"></a><a name="iddle6478"></a><a name=
+"iddle8509"></a><a name="iddle8510"></a><a name="If the"></a>In the
+consumer, we start by acquiring one "used" byte. If the buffer
+contains no data to read, the call to <tt>acquire()</tt><a name=
+"until the"></a> will block until the producer has produced some.
+Once we have acquired the byte, we print it and release the byte as
+"free", making it possible for the producer to fill it with data
+again.</p>
+
+<div class="docText">
+<pre>
+int main()
+{
+    Producer producer;
+    Consumer consumer;
+    producer.start();
+    consumer.start();
+    producer.wait();
+    consumer.wait();
+    return 0;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">Finally, in <tt>main()</tt><a name=
+"converts some"></a>, we start the producer and consumer threads.
+Then the producer converts some "free" space into "used" space, and
+the consumer can convert it back to "free" space.</p>
+
+<p class="docText"><a name="When we"></a>When we run the program,
+it writes a random sequence of 100000 'A's, 'C's, 'G's, and 'T's to
+the console and terminates. To really understand what is going on,
+we can disable writing the output and instead write 'P' each time
+the producer generates a byte and 'c' each time the consumer reads
+a byte. And to make things as simple to follow as possible, we can
+use smaller values for <tt>DataSize</tt> and
+<tt>BufferSize</tt>.</p>
+
+<p class="docText"><a name="possible run"></a>For example, here's a
+possible run with a <tt>DataSize</tt><a name="and a"></a> of 10 and
+a <tt>BufferSize</tt><a name="as the"></a> of 4:
+"PcPcPcPcPcPcPcPcPcPc".In this case, the consumer reads the bytes
+as soon as the producer generates them; the two threads are
+executing at the same speed. Another possibility is that the
+producer fills the whole buffer before the consumer even starts
+reading it: "PPPPccccPPPPccccPPcc". There are many other
+possibilities. Semaphores give a lot of latitude to the
+system-specific thread scheduler, which can study the threads'
+behavior and choose an appropriate scheduling policy.</p>
+
+<p class="docText"><a name="problem of"></a>A different approach to
+the problem of synchronizing a producer and a consumer is to use
+<tt>QWaitCondition</tt> and <tt>QMutex</tt>. A
+<tt>QWaitCondition</tt><a name="some condition"></a> allows a
+thread to wake up other threads when some condition has been met.
+This allows for more precise control than is possible with mutexes
+alone. To show how it works, we will redo the producer–consumer
+example using wait conditions.</p>
+
+<div class="docText">
+<pre>
+const int DataSize = 100000;
+const int BufferSize = 4096;
+char buffer[BufferSize];
+
+QWaitCondition bufferIsNotFull;
+QWaitCondition bufferIsNotEmpty;
+QMutex mutex;
+int usedSpace = 0;
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle3963"></a><a name=
+"iddle6340"></a><a name="iddle6479"></a><a name=
+"iddle6480"></a><a name="iddle6987"></a><a name=
+"iddle8508"></a><a name="iddle8516"></a>In addition to the buffer,
+we declare two <tt>QWaitCondition</tt>s, one
+<tt>QMutex</tt><a name="bytes in"></a>, and one variable that
+stores how many bytes in the buffer are "used" bytes.</p>
+
+<div class="docText">
+<pre>
+void Producer::run()
+{
+    for (int i = 0; i &lt; DataSize; ++i) {
+        mutex.lock();
+        while (usedSpace == BufferSize)
+            bufferIsNotFull.wait(&amp;mutex);
+        buffer[i % BufferSize] = "ACGT"[uint(std::rand()) % 4];
+        ++usedSpace;
+        bufferIsNotEmpty.wakeAll();
+        mutex.unlock();
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="the buffer"></a>In the producer, we
+start by checking whether the buffer is full. If it is, we wait on
+the "buffer is not full" condition. When that condition is met, we
+write one byte to the buffer, increment <tt>usedSpace</tt><a name=
+"any thread"></a>, and wake any thread waiting for the "buffer is
+not empty" condition to turn true.</p>
+
+<p class="docText"><a name="the"></a>We use a mutex to protect all
+accesses to the <tt>usedSpace</tt><a name="The"></a> variable. The
+<tt>QWaitCondition::wait()</tt><a name="take a"></a> function can
+take a locked mutex as its first argument, which it unlocks before
+blocking the current thread and then locks before returning.</p>
+
+<p class="docText"><a name="this example"></a>For this example, we
+could have replaced the <tt>while</tt> loop</p>
+
+<div class="docText">
+<pre>
+while (usedSpace == BufferSize)
+    bufferIsNotFull.wait(&amp;mutex);
+</pre>
+</div>
+<br>
+
+<p class="docText">with this <tt>if</tt> statement:</p>
+
+<div class="docText">
+<pre>
+if (usedSpace == BufferSize) {
+    mutex.unlock();
+    bufferIsNotFull.wait();
+    mutex.lock();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="than one"></a>However, this would break
+as soon as we allow more than one producer thread, since another
+producer could seize the mutex immediately after the
+<tt>wait()</tt><a name="not full"></a> call and make the "buffer is
+not full" condition false again.</p>
+
+<div class="docText">
+<pre>
+void Consumer::run()
+{
+    for (int i = 0; i &lt; DataSize; ++i) {
+        mutex.lock();
+        while (usedSpace == 0)
+            bufferIsNotEmpty.wait(&amp;mutex);
+        std::cerr &lt;&lt; buffer[i % BufferSize];
+        --usedSpace;
+        bufferIsNotFull.wakeAll();
+        mutex.unlock();
+    }
+    std::cerr &lt;&lt; std::endl;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1463"></a><a name=
+"iddle1954"></a><a name="iddle2653"></a><a name=
+"iddle2965"></a><a name="iddle2984"></a><a name=
+"iddle3215"></a><a name="iddle3607"></a><a name=
+"iddle3681"></a><a name="iddle4861"></a><a name=
+"iddle6335"></a><a name="iddle6347"></a><a name=
+"iddle7259"></a><a name="iddle8048"></a><a name=
+"iddle8098"></a><a name="iddle8247"></a><a name="waits for"></a>The
+consumer does the exact opposite of the producer: It waits for the
+"buffer is not empty" condition and wakes up any thread waiting for
+the "buffer is not full" condition.</p>
+
+<p class="docText"><a name="have accessed"></a>In all the examples
+so far, our threads have accessed the same global variables. But
+some multithreaded applications need to have a global variable hold
+different values in different threads. This is often called
+thread-local storage or thread-specific data. We can fake it using
+a map keyed on thread IDs (returned by
+<tt>QThread::currentThread()</tt><a name="the"></a>), but a nicer
+approach is to use the <tt>QThreadStorage&lt;T&gt;</tt> class.</p>
+
+<p class="docText"><a name="use of"></a>A common use of
+<tt>QThreadStorage&lt;T&gt;</tt><a name="we avoid"></a> is for
+caches. By having a separate cache in different threads, we avoid
+the overhead of locking, unlocking, and possibly waiting for a
+mutex. For example:</p>
+
+<div class="docText">
+<pre>
+QThreadStorage&lt;QHash&lt;int, double&gt; *&gt; cache;
+
+void insertIntoCache(int id, double value)
+{
+    if (!cache.hasLocalData())
+        cache.setLocalData(new QHash&lt;int, double&gt;);
+    cache.localData()-&gt;insert(id, value);
+}
+
+void removeFromCache(int id)
+{
+    if (cache.hasLocalData())
+        cache.localData()-&gt;remove(id);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="The"></a>The <tt>cache</tt><a name=
+"one pointer"></a> variable holds one pointer to a
+<tt>QHash&lt;int, double&gt;</tt><a name="of problems"></a> per
+thread. (Because of problems with some compilers, the template type
+in <tt>QThreadStorage&lt;T&gt;</tt><a name="the cache"></a> must be
+a pointer type.) The first time we use the cache in a particular
+thread, <tt>hasLocalData()</tt> returns <tt>false</tt> and we
+create the <tt>QHash&lt;int, double&gt;</tt> object.</p>
+
+<p class="docText">In addition to caching,
+<tt>QThreadStorage&lt;T&gt;</tt><a name="variables"></a> can be
+used for global error-state variables (similar to <tt>errno</tt>)
+to ensure that modifications in one thread don't affect other
+threads.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch14lev1sec1.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch14lev1sec3.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

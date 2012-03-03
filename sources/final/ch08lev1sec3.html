@@ -1,0 +1,259 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch08lev1sec3.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch08lev1sec3.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch08lev1sec3.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch08lev1sec3.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch08lev1sec2.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch08lev1sec4.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch08lev1sec3"></a>
+<h3 class="docSection1Title" id="-100000">High-Quality Rendering
+with QImage</h3>
+
+<p class="docText"><a name="When drawing"></a>When drawing, we may
+be faced with a trade-off between speed and accuracy. For example,
+on X11 and Mac OS X, drawing on a <tt>QWidget</tt> or
+<tt>QPixmap</tt><a name="the platform"></a> relies on the
+platform's native paint engine. On X11, this ensures that
+communication with the X server is kept to a minimum; only paint
+commands are sent rather than actual image data. The main drawback
+of this approach is that Qt is limited by the platform's native
+support:</p>
+
+<ul>
+<li>
+<p class="docList"><a name="features such"></a>On X11, features
+such as antialiasing and support for fractional coordinates are
+available only if the X Render extension is present on the X
+server.</p>
+</li>
+
+<li>
+<p class="docList"><a name="different algorithms"></a>On Mac OS X,
+the native aliased graphics engine uses different algorithms for
+drawing polygons than X11 and Windows, with slightly different
+results.</p>
+</li>
+</ul>
+
+<p class="docText"><a name="than efficiency"></a>When accuracy is
+more important than efficiency, we can draw to a
+<tt>QImage</tt><a name="own internal"></a> and copy the result onto
+the screen. This always uses Qt's own internal paint engine, giving
+identical results on all platforms. The only restriction is that
+the <tt>QImage</tt><a name="with an"></a> on which we paint must be
+created with an argument of either <tt>QImage::Format_RGB32</tt> or
+<tt>QImage::Format_ARGB32_Premultiplied</tt>.</p>
+
+<p class="docText"><a name="the conventional"></a>The premultiplied
+ARGB32 format is almost identical to the conventional ARGB32 format
+(<tt>0x</tt><span class=
+"docEmphasis"><tt>AARRGGBB</tt></span><a name="being that"></a>),
+the difference being that the red, green, and blue channels are
+"premultiplied" with the alpha channel. This means that the RGB
+values, which normally range from <tt>0x00</tt> to <tt>0xFF</tt>,
+are scaled from <tt>0x00</tt> to the alpha <a name=
+"iddle1145"></a><a name="iddle1173"></a><a name=
+"iddle1726"></a><a name="iddle2545"></a><a name=
+"iddle3169"></a><a name="iddle3212"></a><a name=
+"iddle4142"></a><a name="iddle4227"></a><a name=
+"iddle5191"></a><a name="iddle5499"></a><a name=
+"iddle5504"></a><a name="iddle5545"></a><a name=
+"iddle6561"></a><a name="iddle7090"></a><a name=
+"iddle8207"></a><a name="iddle8684"></a>value. For example, a
+50%-transparent blue color is represented as <tt>0x7F0000FF</tt> in
+ARGB32 format, but <tt>0x7F00007F</tt> in premultiplied ARGB32
+format, and similarly a 75%-transparent dark green of
+<tt>0x3F008000</tt> in ARGB32 format would be <tt>0x3F002000</tt>
+in premultiplied ARGB32 format.</p>
+
+<p class="docText"><a name="and we"></a>Let's suppose we want to
+use antialiasing for drawing a widget, and we want to obtain good
+results even on X11 systems with no X Render extension. The
+original <tt>paintEvent()</tt><a name="which relies"></a> handler,
+which relies on X Render for the antialiasing, might look like
+this:</p>
+
+<div class="docText">
+<pre>
+void MyWidget::paintEvent(QPaintEvent *event)
+{
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    draw(&amp;painter);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="rewrite the"></a>Here's how to rewrite
+the widget's <tt>paintEvent()</tt><a name="to use"></a> function to
+use Qt's platform-independent graphics engine:</p>
+
+<div class="docText">
+<pre>
+void MyWidget::paintEvent(QPaintEvent *event)
+{
+    QImage image(size(), QImage::Format_ARGB32_Premultiplied);
+    QPainter imagePainter(&amp;image);
+    imagePainter.initFrom(this);
+    imagePainter.setRenderHint(QPainter::Antialiasing, true);
+    imagePainter.eraseRect(rect());
+    draw(&amp;imagePainter);
+    imagePainter.end();
+
+    QPainter widgetPainter(this);
+    widgetPainter.drawImage(0, 0, image);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">We create a <tt>QImage</tt><a name="and a"></a>
+of the same size as the widget in premultiplied ARGB32 format, and
+a <tt>QPainter</tt> to draw on the image. The
+<tt>initFrom()</tt><a name="based on"></a> call initializes the
+painter's pen, background, and font based on the widget. We perform
+the drawing using the <tt>QPainter</tt> as usual, and at the end we
+reuse the <tt>QPainter</tt><a name="produces identical"></a> object
+to copy the image onto the widget. This approach produces identical
+high-quality results on all platforms, with the exception of font
+rendering, which depends on the installed fonts.</p>
+
+<p class="docText"><a name="is its"></a>One particularly powerful
+feature of Qt's graphics engine is its support for composition
+modes. These specify how a source and a destination pixel are
+merged together when drawing. This applies to all painting
+operations, including pen, brush, gradient, and image drawing.</p>
+
+<p class="docText">The default composition mode is
+<tt>QImage::CompositionMode_SourceOver</tt><a name=
+"are drawing"></a>, meaning that the source pixel (the pixel we are
+drawing) is blended on top of the destination pixel (the existing
+pixel) in such a way that the alpha component of the source defines
+its translucency. <a class="docLink" href="#ch08fig13">Figure
+8.13</a><a name="result of"></a> shows the result of drawing a
+semi-transparent butterfly (the "source" image) on top of a checker
+pattern (the "destination" image) with the different modes.</p>
+
+<p class="docText">
+</p>
+<a name="ch08fig13"></a>
+<center>
+<h5 class="docFigureTitle">Figure 8.13. <tt>QPainter</tt>'s
+composition modes</h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZmlmYWlwY3RoM2cwOC9pMXNsLl9n.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="382" src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZmlncGNmaDNnMDgvaTFpcy4-.jpg"
+alt="">
+</center>
+<br>
+
+<p class="docText"><a name="iddle1473"></a><a name=
+"iddle1602"></a><a name="iddle1664"></a><a name=
+"iddle1668"></a><a name="iddle2001"></a><a name=
+"iddle2106"></a><a name="iddle2107"></a><a name=
+"iddle2108"></a><a name="iddle2109"></a><a name=
+"iddle2110"></a><a name="iddle2153"></a><a name=
+"iddle2649"></a><a name="iddle2951"></a><a name=
+"iddle2979"></a><a name="iddle3351"></a><a name=
+"iddle3547"></a><a name="iddle3951"></a><a name=
+"iddle4199"></a><a name="iddle4365"></a><a name=
+"iddle4799"></a><a name="iddle5110"></a><a name=
+"iddle5138"></a><a name="iddle5141"></a><a name=
+"iddle5558"></a><a name="iddle7036"></a><a name=
+"iddle7042"></a><a name="iddle7157"></a><a name=
+"iddle7557"></a><a name="iddle7580"></a><a name=
+"iddle7582"></a><a name="iddle7584"></a><a name=
+"iddle7585"></a><a name="iddle7586"></a><a name=
+"iddle8722"></a>Composition modes are set using
+<tt>QPainter::setCompositionMode()</tt>. For example, here's how to
+create a <tt>QImage</tt> containing the XOR of the butterfly and
+the checker pattern:</p>
+
+<div class="docText">
+<pre>
+QImage resultImage = checkerPatternImage;
+QPainter painter(&amp;resultImage);
+painter.setCompositionMode(QPainter::CompositionMode_Xor);
+painter.drawImage(0, 0, butterflyImage);
+</pre>
+</div>
+<br>
+
+<p class="docText">One issue to be aware of is that the
+<tt>QImage::CompositionMode_Xor</tt><a name="if we"></a> operation
+also applies to the alpha channel. This means that if we XOR the
+color white (<tt>0xFFFFFFFF</tt><a name="with itself"></a>) with
+itself, we obtain a transparent color (<tt>0x00000000</tt>), not
+black (<tt>0xFF000000</tt>).</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch08lev1sec2.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch08lev1sec4.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

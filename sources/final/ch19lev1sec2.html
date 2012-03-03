@@ -1,0 +1,1340 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch19lev1sec2.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch19lev1sec2.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch19lev1sec2.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch19lev1sec2.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch19lev1sec1.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch20.html"><img src="images/next.gif" width="20" height="20"
+border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch19lev1sec2"></a>
+<h3 class="docSection1Title" id="-100000">Subclassing QStyle</h3>
+
+<p class="docText"><a name="The"></a>The <tt>QStyle</tt><a name=
+"introduced with"></a> class was introduced with Qt 2.0 to provide
+a means of encapsulating an application's look and feel. Classes
+such as <tt>QWindowsStyle</tt>, <tt>QMotifStyle</tt>, and
+<tt>QCDEStyle</tt><a name="the look"></a> implemented the look and
+feel for the platforms and desktop environments on which Qt ran at
+the time. Qt 4.3 provides eight styles, in addition to the
+<tt>QStyle</tt> abstract base class and the convenience base class
+<tt>QCommonStyle</tt>. <a class="docLink" href="#ch19fig16">Figure
+19.16</a> shows how they relate to each other.</p>
+<a name="ch19fig16"></a>
+<center>
+<h5 class="docFigureTitle">Figure 19.16. Inheritance tree for Qt's
+built-in styles</h5>
+
+<p class="docText"><img border="0" id="" width="479" height="188"
+src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83cC45aGZpZmcvaXMxaWNnMTY-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText">For Qt developers, the <tt>QStyle</tt><a name=
+"and feel"></a> architecture makes it possible to develop a custom
+look and feel by subclassing <tt>QStyle</tt><a name="We can"></a>
+or one of the existing styles. We can perform minor customizations
+on an existing style (e.g., <tt>QWindowsStyle</tt>), or we can
+develop an entire custom style from scratch.</p>
+
+<p class="docText">The <tt>QStyle</tt> API consists of functions
+for drawing graphical elements (<tt>drawPrimitive()</tt>,
+<tt>drawControl()</tt>, <tt>drawComplexControl()</tt>, etc.) and
+for querying the style (<tt>pixelMetrics()</tt>,
+<tt>styleHint()</tt>, <tt>hitTest()</tt>, etc.). The
+<tt>QStyle</tt> member functions typically take a
+<tt>QStyleOption</tt> object that holds both general information
+about the <a name="iddle1497"></a><a name="iddle1601"></a><a name=
+"iddle2246"></a><a name="iddle3214"></a><a name=
+"iddle3647"></a><a name="iddle3890"></a><a name=
+"iddle4228"></a><a name="iddle4321"></a><a name=
+"iddle4739"></a><a name="iddle4801"></a><a name=
+"iddle4814"></a><a name="iddle4841"></a><a name=
+"iddle5312"></a><a name="iddle5406"></a><a name=
+"iddle5595"></a><a name="iddle5976"></a><a name=
+"iddle5996"></a><a name="iddle6562"></a><a name=
+"iddle6604"></a><a name="iddle6632"></a><a name=
+"iddle6657"></a><a name="iddle6660"></a><a name=
+"iddle6662"></a><a name="iddle7334"></a><a name=
+"iddle7338"></a><a name="iddle7802"></a><a name=
+"iddle8466"></a><a name="iddle8651"></a><a name=
+"iddle8725"></a><a name="text of"></a>widget to be drawn (such as
+its palette) and widget-specific information (e.g., the text of a
+button). The functions also take an optional pointer to a
+<tt>QWidget</tt>, to cater to situations when the
+<tt>QStyleOption</tt> doesn't provide all the necessary
+information.</p>
+
+<p class="docText">Suppose we want to create a
+<tt>MyPushButton</tt><a name="push button"></a> class, which would
+look like a standard Qt push button but without deriving from
+<tt>QPushButton</tt><a name="the relationship"></a>. (This example
+is rather contrived, but it will help us to clarify the
+relationship between widgets and styles.) In the
+<tt>MyPushButton</tt><a name="would set"></a> paint event handler,
+we would set up a <tt>QStyleOption</tt> (actually, a
+<tt>QStyleOptionButton</tt>) and call
+<tt>QStyle::drawControl()</tt> as follows:</p>
+
+<div class="docText">
+<pre>
+void MyPushButton::paintEvent(QPaintEvent * /* event */)
+{
+    QPainter painter(this);
+
+    QStyleOptionButton option;
+    option.initFrom(this);
+    if (isFlat())
+        option.features |= QStyleOptionButton::Flat;
+    option.text = text();
+
+    style()-&gt;drawControl(QStyle::CE_PushButton, &amp;option, &amp;painter,
+                         this);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>QStyleOption::initFrom()</tt><a name=
+"the fundamental"></a> function initializes the fundamental member
+variables that represent a widget, such as <tt>rect</tt>,
+<tt>state</tt><a name="and"></a> (enabled, focused, etc.), and
+<tt>palette</tt><a name="specific to"></a>. Member variables
+specific to <tt>QStyleOptionButton</tt><a name=
+"be initialized"></a> must be initialized manually. In the
+<tt>MyPushButton</tt> example, we initialize <tt>features</tt> and
+<tt>text</tt> and let <tt>icon</tt> and <tt>iconSize</tt> take
+their default values.</p>
+
+<p class="docText">The <tt>QWidget::style()</tt><a name=
+"style is"></a> function returns the appropriate style for drawing
+the widget. The style is normally set for the entire application
+using <tt>QApplication::setStyle()</tt><a name="to override"></a>,
+but it is also possible to override it for individual widgets using
+<tt>QWidget::setStyle()</tt>.</p>
+
+<p class="docText"><a name="iddle1378"></a><a name=
+"iddle1437"></a><a name="iddle1488"></a><a name=
+"iddle2247"></a><a name="iddle2569"></a><a name=
+"iddle4575"></a><a name="iddle5407"></a><a name=
+"iddle5642"></a><a name="iddle5994"></a><a name="iddle6005"></a>The
+<tt>drawControl()</tt> function is reimplemented by the various
+<tt>QStyle</tt> subclasses to draw <tt>QPushButton</tt> and other
+simple widgets. A typical implementation might look like this:</p>
+
+<div class="docText">
+<pre>
+void QMotifStyle::drawControl(ControlElement element,
+                              const QStyleOption *option,
+                              QPainter *painter,
+                              const QWidget *widget) const
+{
+    switch (element) {
+    case CE_CheckBox:
+        ...
+    case CE_RadioButton:
+        ...
+    case CE_PushButton:
+        if (const QStyleOptionButton *buttonOption =
+                qstyleoption_cast&lt;const QStyleOptionButton *&gt;(option)) {
+           // draw push button
+        }
+        break;
+        ...
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The first parameter, <tt>element</tt><a name=
+"is"></a>, indicates the type of widget to draw. If the type is
+<tt>CE_PushButton</tt>, the style attempts to cast the
+<tt>option</tt> parameter to <tt>QStyleOptionButton</tt><a name=
+"push button"></a>. If the cast is successful, it draws the push
+button described by <tt>QStyleOptionButton</tt>. The cast from
+<tt>const QStyleOption *</tt> to <tt>const QStyleOptionButton
+*</tt> is performed using <tt>qstyleoption_cast&lt;T&gt;()</tt>,
+which returns a null pointer if <tt>option</tt> doesn't point to a
+<tt>QStyleOptionButton</tt> instance.</p>
+
+<p class="docText">Instead of relying on the <tt>QStyleOption</tt>,
+a <tt>QStyle</tt> subclass may also query the widget directly:</p>
+
+<div class="docText">
+<pre>
+case CE_PushButton:
+    if (const QPushButton *button =
+            qobject_cast&lt;const QPushButton *&gt;(widget)) {
+       // draw push button
+    }
+    break;
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="is tied"></a>The drawback with this
+version is that the style code is tied to
+<tt>QPushButton</tt><a name="be used"></a> and thus cannot be used
+to render, say, a <tt>MyPushButton</tt><a name="the built"></a>.
+For this reason, the built-in <tt>QStyle</tt><a name=
+"subclasses use"></a> subclasses use the
+<tt>QStyleOption</tt><a name="possible to"></a> parameter whenever
+possible to obtain information about the widget to draw, and resort
+to using the <tt>QWidget</tt><a name="only if"></a> parameter only
+if that is the only thing that will provide the required
+information.</p>
+
+<p class="docText"><a name="code for"></a>In the rest of this
+section, we will review the code for the Bronze style shown in
+<a class="docLink" href="#ch19fig17">Figure 19.17</a><a name=
+"buttons with"></a>. The Bronze style features round buttons with a
+gradient background, unconventional placement of spin box buttons,
+extravagant checkmarks, and a "brushed bronze" background. To
+implement this, it uses advanced 2D graphics features such as
+antialiasing, semi-transparency, linear gradients, and composition
+modes.</p>
+
+<p class="docText">
+</p>
+<a name="ch19fig17"></a>
+<center>
+<h5 class="docFigureTitle">Figure 19.17. Widgets in the Bronze
+style</h5>
+
+<p class="docText"><img border="0" id="" width="432" height="126"
+src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83dHBwcHJodW91c2gvYmlzbmN6YnRvZS4tZ25q.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="iddle1379"></a><a name=
+"iddle6658"></a><a name="iddle7873"></a>Here is the
+<tt>BronzeStyle</tt> class definition:</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+class BronzeStyle : public QWindowsStyle
+{
+    Q_OBJECT
+
+public:
+    BronzeStyle() {}
+
+    void polish(QPalette &amp;palette);
+    void polish(QWidget *widget);
+    void unpolish(QWidget *widget);
+    int styleHint(StyleHint which, const QStyleOption *option,
+                  const QWidget *widget = 0,
+                  QStyleHintReturn *returnData = 0) const;
+    int pixelMetric(PixelMetric which, const QStyleOption *option,
+                    const QWidget *widget = 0) const;
+    void drawPrimitive(PrimitiveElement which,
+                       const QStyleOption *option, QPainter *painter,
+                       const QWidget *widget = 0) const;
+    void drawComplexControl(ComplexControl which,
+                            const QStyleOptionComplex *option,
+                            QPainter *painter,
+                            const QWidget *widget = 0) const;
+    QRect subControlRect(ComplexControl whichControl,
+                         const QStyleOptionComplex *option,
+                         SubControl whichSubControl,
+                         const QWidget *widget = 0) const;
+public slots:
+    QIcon standardIconImplementation(StandardPixmap which,
+                                     const QStyleOption *option,
+                                     const QWidget *widget = 0) const;
+private:
+    void drawBronzeFrame(const QStyleOption *option,
+                         QPainter *painter) const;
+    void drawBronzeBevel(const QStyleOption *option,
+                         QPainter *painter) const;
+    void drawBronzeCheckBoxIndicator(const QStyleOption *option,
+                                     QPainter *painter) const;
+    void drawBronzeSpinBoxButton(SubControl which,
+                                 const QStyleOptionComplex *option,
+                                 QPainter *painter) const;
+};
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1319"></a><a name=
+"iddle1388"></a><a name="iddle4246"></a><a name=
+"iddle4376"></a><a name="iddle4378"></a><a name=
+"iddle4842"></a><a name="iddle5313"></a><a name=
+"iddle5579"></a><a name="iddle5981"></a><a name=
+"iddle5983"></a><a name="iddle5984"></a><a name=
+"iddle5989"></a><a name="iddle7698"></a><a name=
+"iddle7700"></a><a name="iddle8314"></a><a name=
+"an existing"></a>When creating a custom style, we usually base it
+on an existing style so that we don't have to do everything from
+scratch. For this example, we chose <tt>QWindowsStyle</tt><a name=
+"style doesn"></a>, the classic Windows style. Even though the
+Bronze style doesn't look much like the Windows style, there is a
+large body of code in <tt>QWindowsStyle</tt> and its base class
+<tt>QCommonStyle</tt><a name="any style"></a> that can be reused as
+is to implement just about any style we can imagine. This is why
+<tt>QMacStyle</tt> is derived from <tt>QWindowsStyle</tt><a name=
+"look very"></a> even though they look very different.</p>
+
+<p class="docText"><tt>BronzeStyle</tt><a name=
+"public functions"></a> reimplements several public functions
+declared by <tt>QStyle</tt><a name="The"></a>. The
+<tt>polish()</tt> and <tt>unpolish()</tt><a name="called when"></a>
+functions are called when the style is installed or uninstalled.
+They make it possible to tweak the widgets or the palette. The
+other public functions are either query functions
+(<tt>styleHint()</tt>, <tt>pixelMetric()</tt>,
+<tt>subControlRect()</tt><a name="functions that"></a>) or
+functions that draw a graphical element (<tt>drawPrimitive()</tt>,
+<tt>drawComplexControl()</tt>).</p>
+
+<p class="docText"><tt>BronzeStyle</tt> also provides a public slot
+called <tt>standardIconImplementation()</tt><a name=
+"is invoked"></a>. This slot is discovered by Qt using
+introspection and is invoked when necessary as though it had been a
+virtual function. Qt sometimes uses this idiom to add functions
+that should have been virtual without breaking binary compatibility
+with earlier Qt 4 releases. It is expected that Qt 5 will replace
+the <tt>standardIconImplementation()</tt> slot with a
+<tt>standardIcon()</tt> virtual function.</p>
+
+<p class="docText">The <tt>BronzeStyle</tt><a name=
+"private functions"></a> class also declares a few private
+functions. These will be explained after we have covered the public
+functions.</p>
+
+<div class="docText">
+<pre>
+void BronzeStyle::polish(QPalette &amp;palette)
+{
+    QPixmap backgroundImage(":/images/background.png");
+    QColor bronze(207, 155, 95);
+    QColor veryLightBlue(239, 239, 247);
+    QColor lightBlue(223, 223, 239);
+    QColor darkBlue(95, 95, 191);
+
+    palette = QPalette(bronze);
+    palette.setBrush(QPalette::Window, backgroundImage);
+    palette.setBrush(QPalette::BrightText, Qt::white);
+    palette.setBrush(QPalette::Base, veryLightBlue);
+    palette.setBrush(QPalette::AlternateBase, lightBlue);
+    palette.setBrush(QPalette::Highlight, darkBlue);
+    palette.setBrush(QPalette::Disabled, QPalette::Highlight,
+                     Qt::darkGray);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="is its"></a>One of the outstanding
+characteristics of the Bronze style is its color scheme. No matter
+what colors the user has set on their window system, the Bronze
+style has a bronze appearance. A custom style's color scheme can be
+set up in one of two ways: We can ignore the widget's
+<tt>QPalette</tt><a name="light bronze"></a> and draw everything
+using our favorite colors (bronze, light bronze, dark bronze,
+etc.), or we can reimplement <tt>QStyle::polish(QPalette
+&amp;)</tt><a name="second approach"></a> to adjust the
+application's or widget's palette and then use the palette. The
+second approach is more flexible because we can <a name=
+"iddle1389"></a><a name="iddle1391"></a><a name=
+"iddle1393"></a><a name="iddle2512"></a><a name=
+"iddle2738"></a><a name="iddle3069"></a><a name=
+"iddle4377"></a><a name="iddle4379"></a><a name=
+"iddle5982"></a><a name="iddle5987"></a><a name=
+"iddle5990"></a><a name="iddle6088"></a><a name=
+"iddle7803"></a><a name="iddle8313"></a><a name=
+"iddle8315"></a><a name="iddle8502"></a><a name=
+"scheme in"></a>override the color scheme in a subclass (say,
+<tt>SilverStyle</tt>) by reimplementing <tt>polish()</tt>.</p>
+
+<p class="docText"><a name="of polishing"></a>The concept of
+polishing is generalized to widgets. When a style is applied to a
+widget, <tt>polish(QWidget *)</tt><a name="is called"></a> is
+called, allowing us to perform last-minute customizations:</p>
+
+<div class="docText">
+<pre>
+void BronzeStyle::polish(QWidget *widget)
+{
+    if (qobject_cast&lt;QAbstractButton *&gt;(widget)
+            || qobject_cast&lt;QAbstractSpinBox *&gt;(widget))
+        widget-&gt;setAttribute(Qt::WA_Hover, true);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">Here, we reimplement <tt>polish(QWidget
+*)</tt><a name="the"></a> to set the <tt>Qt::WA_Hover</tt><a name=
+"on buttons"></a> attribute on buttons and spin boxes. When this
+attribute is set, a paint event is generated when the mouse enters
+or leaves the area occupied by a widget. This gives us the
+opportunity to paint a widget differently depending on whether or
+not the mouse is hovering over it.</p>
+
+<p class="docText"><a name="created and"></a>This function is
+called after the widget has been created and before it is shown for
+the first time, using the current style. It is then only ever
+called if the current style is dynamically changed.</p>
+
+<div class="docText">
+<pre>
+void BronzeStyle::unpolish(QWidget *widget)
+{
+    if (qobject_cast&lt;QAbstractButton *&gt;(widget)
+            || qobject_cast&lt;QAbstractSpinBox *&gt;(widget))
+        widget-&gt;setAttribute(Qt::WA_Hover, false);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">Just as <tt>polish(QWidget *)</tt><a name=
+"is applied"></a> is called when a style is applied to a widget,
+<tt>unpolish(QWidget *)</tt><a name="of"></a> is called whenever
+the style is dynamically changed. The purpose of
+<tt>unpolish()</tt> is to undo the effects of the
+<tt>polish()</tt><a name="state to"></a> so that the widget is in a
+state to be polished by the new style. Well-behaved styles try to
+undo what they did in their <tt>polish()</tt> function.</p>
+
+<p class="docText">A common use of <tt>polish(QWidget
+*)</tt><a name="on a"></a> is to install our style subclass as an
+event filter on a widget. This is necessary for some more advanced
+customizations; for example, <tt>QWindowsVistaStyle</tt> and
+<tt>QMacStyle</tt><a name="to animate"></a> use this technique to
+animate default buttons.</p>
+
+<div class="docText">
+<pre>
+int BronzeStyle::styleHint(StyleHint which, const QStyleOption *option,
+                           const QWidget *widget,
+                           QStyleHintReturn *returnData) const
+{
+    switch (which) {
+    case SH_DialogButtonLayout:
+        return int(QDialogButtonBox::MacLayout);
+    case SH_EtchDisabledText:
+        return int(true);
+    case SH_DialogButtonBox_ButtonsHaveIcons:
+        return int(true);
+    case SH_UnderlineShortcut:
+        return int(false);
+    default:
+        return QWindowsStyle::styleHint(which, option, widget,
+                                        returnData);
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1387"></a><a name=
+"iddle1390"></a><a name="iddle1423"></a><a name=
+"iddle1546"></a><a name="iddle4311"></a><a name=
+"iddle4811"></a><a name="iddle4946"></a><a name=
+"iddle5980"></a><a name="iddle5985"></a><a name=
+"iddle5992"></a><a name="iddle7699"></a><a name="iddle7701"></a>The
+<tt>styleHint()</tt><a name="some hints"></a> function returns some
+hints about the look and feel provided by the style. For example,
+we return <tt>MacLayout</tt><a name="for"></a> for
+<tt>SH_DialogButtonLayout</tt><a name="that we"></a> to signify
+that we want <tt>QDialogButtonBox</tt><a name="follow the"></a> to
+follow the Mac OS X guidelines, with <span class=
+"docEmphRomanAlt">OK</span> to the right of <span class=
+"docEmphRomanAlt">Cancel</span>. The return type of
+<tt>styleHint()</tt> is <tt>int</tt><a name="as integers"></a>. For
+the few style hints that cannot be represented as integers,
+<tt>styleHint()</tt> provides a pointer to a
+<tt>QStyleHintReturn</tt> object that can be used.</p>
+
+<div class="docText">
+<pre>
+int BronzeStyle::pixelMetric(PixelMetric which,
+                             const QStyleOption *option,
+                             const QWidget *widget) const
+{
+    switch (which) {
+    case PM_ButtonDefaultIndicator:
+        return 0;
+    case PM_IndicatorWidth:
+    case PM_IndicatorHeight:
+        return 16;
+    case PM_CheckBoxLabelSpacing:
+        return 8;
+    case PM_DefaultFrameWidth:
+        return 2;
+    default:
+        return QWindowsStyle::pixelMetric(which, option, widget);
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>pixelMetric()</tt><a name=
+"pixels that"></a> function returns a dimension in pixels that is
+used for a user interface element. By reimplementing this function,
+we affect both the drawing of the built-in Qt widgets and their
+size hints.</p>
+
+<p class="docText">We return 0 for
+<tt>PM_ButtonDefaultIndicator</tt><a name="default buttons"></a>
+because we don't want to reserve any extra spacing around default
+buttons (the default is 1 pixel in <tt>QWindowsStyle</tt>). For
+checkboxes, <tt>PM_IndicatorWidth</tt> and
+<tt>PM_IndicatorHeight</tt><a name="small square"></a> control the
+size of the indicator (usually a small square), and
+<tt>PM_CheckBoxLabelSpacing</tt><a name="to its"></a> controls the
+spacing between the checkbox indicator and the text to its right
+(see <a class="docLink" href="#ch19fig18">Figure 19.18</a>).
+Finally, <tt>PM_DefaultFrameWidth</tt><a name="of the"></a> defines
+the width of the line used around <tt>QFrame</tt>,
+<tt>QPushButton</tt>, <tt>QSpinBox</tt><a name=
+"other widgets"></a>, and many other widgets. For other
+<tt>PM_</tt><span class="docEmphasis"><tt>xxx</tt></span><a name=
+"we inherit"></a> values, we inherit the pixel metric value from
+the base class.</p>
+<a name="ch19fig18"></a>
+<center>
+<h5 class="docFigureTitle"><a name="of a"></a>Figure 19.18.
+Structure of a <tt>QCheckBox</tt></h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83aXBfOWhnZnQvYWwxc2NpaWcuZjE4.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="183" src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83cC45aGZpZmcvaXMxaWNnMTg-.jpg"
+alt="">
+</center>
+<br>
+
+<div class="docText">
+<pre>
+QIcon BronzeStyle::standardIconImplementation(StandardPixmap which,
+        const QStyleOption *option, const QWidget *widget) const
+{
+    QImage image = QWindowsStyle::standardPixmap(which, option, widget)
+                   .toImage();
+    if (image.isNull())
+        return QIcon();
+    QPalette palette;
+    if (option) {
+        palette = option-&gt;palette;
+    } else if (widget) {
+        palette = widget-&gt;palette();
+    }
+    QPainter painter(&amp;image);
+    painter.setOpacity(0.25);
+    painter.setCompositionMode(QPainter::CompositionMode_SourceAtop);
+    painter.fillRect(image.rect(), palette.highlight());
+    painter.end();
+
+    return QIcon(QPixmap::fromImage(image));
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1386"></a><a name=
+"iddle1727"></a><a name="iddle2275"></a><a name=
+"iddle2277"></a><a name="iddle5192"></a><a name=
+"iddle5500"></a><a name="iddle5978"></a><a name=
+"iddle5986"></a><a name="iddle7092"></a><a name=
+"iddle7583"></a><a name="iddle7703"></a><a name=
+"iddle8209"></a><a name="explained earlier"></a>As explained
+earlier, Qt invokes the
+<tt>standardIconImplementation()</tt><a name="used in"></a> slot to
+obtain the standard icons that should be used in user interfaces.
+We call the base class's <tt>standardPixmap()</tt><a name=
+"try to"></a> to obtain the icon and try to give it a slight blue
+tint, to make it blend in with the rest of the style. The tinting
+is achieved by drawing a 25% opaque blue color on top of the
+existing icon. By using the <tt>SourceAtop</tt><a name=
+"stay transparent"></a> composition mode, we make sure that the
+existing transparent areas stay transparent, instead of becoming
+25% blue and 75% transparent. We describe composition modes in the
+"<a class="docLink" href=
+"ch08lev1sec3.html#ch08lev1sec3">High-Quality Rendering with
+QImage</a>" section of <a class="docLink" href=
+"ch08.html#ch08">Chapter 8</a> (p. <a class="docLink" href=
+"ch08lev1sec3.html#ch08fig13">195</a>).</p>
+
+<div class="docText">
+<pre>
+void BronzeStyle::drawPrimitive(PrimitiveElement which,
+                                const QStyleOption *option,
+                                QPainter *painter,
+                                const QWidget *widget) const
+{
+    switch (which) {
+    case PE_IndicatorCheckBox:
+        drawBronzeCheckBoxIndicator(option, painter);
+        break;
+    case PE_PanelButtonCommand:
+        drawBronzeBevel(option, painter);
+        break;
+    case PE_Frame:
+        drawBronzeFrame(option, painter);
+        break;
+    case PE_FrameDefaultButton:
+        break;
+    default:
+        QWindowsStyle::drawPrimitive(which, option, painter, widget);
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1385"></a><a name=
+"iddle2245"></a><a name="iddle4576"></a><a name=
+"iddle5643"></a><a name="iddle5975"></a>Qt calls the
+<tt>drawPrimitive()</tt><a name="are typically"></a> function to
+draw "primitive" user interface elements. These elements are
+typically used by several widgets. For example,
+<tt>PE_IndicatorCheckBox</tt> is used by <tt>QCheckBox</tt>,
+<tt>QGroupBox</tt>, and <tt>QItemDelegate</tt> to draw a checkbox
+indicator.</p>
+
+<p class="docText">In the Bronze style, we reimplement
+<tt>drawPrimitive()</tt> to provide a custom look to checkbox
+indicators, push buttons, and frames. For example, <a class=
+"docLink" href="#ch19fig19">Figure 19.19</a> shows the structure of
+a <tt>QPushButton</tt> which the Bronze style must handle. The
+<tt>drawBronzeCheckBoxIndicator()</tt>, <tt>drawBronzeBevel()</tt>,
+and <tt>drawBronzeFrame()</tt> functions are private functions that
+we will review later.</p>
+<a name="ch19fig19"></a>
+<center>
+<h5 class="docFigureTitle">Figure 19.19. Structure of a
+<tt>QPushButton</tt></h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83aXBfOWhnZnQvYWwxc2NpaWcuZjE5.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="98" src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83cC45aGZpZmcvaXMxaWNnMTk-.jpg"
+alt="">
+</center>
+<br>
+
+<p class="docText">For <tt>PE_FrameDefaultButton</tt><a name=
+"frame around"></a>, we simply do nothing, because we don't want to
+draw an extra frame around default buttons. For all other primitive
+elements, we simply forward the call to the base class.</p>
+
+<div class="docText">
+<pre>
+void BronzeStyle::drawComplexControl(ComplexControl which,
+                                     const QStyleOptionComplex *option,
+                                     QPainter *painter,
+                                     const QWidget *widget) const
+{
+    if (which == CC_SpinBox) {
+        drawBronzeSpinBoxButton(SC_SpinBoxDown, option, painter);
+        drawBronzeSpinBoxButton(SC_SpinBoxUp, option, painter);
+
+        QRect rect = subControlRect(CC_SpinBox, option,
+                                    SC_SpinBoxEditField)
+                     .adjusted(-1, 0, +1, 0);
+        painter-&gt;setPen(QPen(option-&gt;palette.mid(), 1.0));
+        painter-&gt;drawLine(rect.topLeft(), rect.bottomLeft());
+        painter-&gt;drawLine(rect.topRight(), rect.bottomRight());
+    } else {
+        return QWindowsStyle::drawComplexControl(which, option, painter,
+                                                 widget);
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1392"></a><a name=
+"iddle5265"></a><a name="iddle5786"></a><a name=
+"iddle5988"></a><a name="iddle7614"></a><a name="iddle7815"></a>Qt
+calls the <tt>drawComplexControl()</tt><a name="widgets that"></a>
+function to draw widgets that consist of multiple
+subcontrols—notably <tt>QSpinBox</tt><a name="want to"></a>. Since
+we want to give a radically new look to <tt>QSpinBox</tt><a name=
+"we reimplement"></a>, we reimplement
+<tt>drawComplexControl()</tt><a name="the"></a> and handle the
+<tt>CC_SpinBox</tt> case.</p>
+
+<p class="docText"><a name="draw a"></a>To draw a
+<tt>QSpinBox</tt><a name="the frame"></a> we must draw the up and
+down buttons and the frame around the entire spin box. (The
+structure of a <tt>QSpinBox</tt> is shown in <a class="docLink"
+href="#ch19fig20">Figure 19.20</a><a name="drawing an"></a>.) Since
+the code required for drawing an up button is almost identical to
+that for drawing a down button, we have factored it out into the
+<tt>drawBronzeSpinBoxButton()</tt><a name="entire spin"></a>
+private function. The function also draws the frame around the
+entire spin box.</p>
+<a name="ch19fig20"></a>
+<center>
+<h5 class="docFigureTitle">Figure 19.20. Structure of a
+<tt>QSpinBox</tt></h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83aXBfOWhnZnQvYWwxc2NpaWcuZjIw.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="128" src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83cC45aGZpZmcvaXMxaWNnMjA-.jpg"
+alt="">
+</center>
+<br>
+
+<p class="docText"><tt>QSpinBox</tt> uses a
+<tt>QLineEdit</tt><a name="so we"></a> to represent the editable
+part of the widget, so we don't need to draw that part of the
+widget. However, to cleanly separate the <tt>QLineEdit</tt><a name=
+"lines at"></a> and the spin box buttons, we draw two light brown
+vertical lines at the edge of the <tt>QLineEdit</tt>. The
+<tt>QLineEdit</tt><a name="by calling"></a>'s geometry is obtained
+by calling <tt>subControlRect()</tt> with
+<tt>SC_SpinBoxEditField</tt><a name="third argument"></a> as the
+third argument.</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+QRect BronzeStyle::subControlRect(ComplexControl whichControl,
+                                  const QStyleOptionComplex *option,
+                                  SubControl whichSubControl,
+                                  const QWidget *widget) const
+{
+    if (whichControl == CC_SpinBox) {
+        int frameWidth = pixelMetric(PM_DefaultFrameWidth, option,
+                                     widget);
+
+        int buttonWidth = 16;
+
+        switch (whichSubControl) {
+        case SC_SpinBoxFrame:
+            return option-&gt;rect;
+        case SC_SpinBoxEditField:
+            return option-&gt;rect.adjusted(+buttonWidth, +frameWidth,
+                                         -buttonWidth, -frameWidth);
+        case SC_SpinBoxDown:
+            return visualRect(option-&gt;direction, option-&gt;rect,
+                              QRect(option-&gt;rect.x(), option-&gt;rect.y(),
+                                    buttonWidth,
+                                    option-&gt;rect.height()));
+        case SC_SpinBoxUp:
+            return visualRect(option-&gt;direction, option-&gt;rect,
+                              QRect(option-&gt;rect.right() - buttonWidth,
+                                    option-&gt;rect.y(),
+                                    buttonWidth,
+                                    option-&gt;rect.height()));
+        default:
+            return QRect();
+        }
+    } else {
+        return QWindowsStyle::subControlRect(whichControl, option,
+                                             whichSubControl, widget);
+    }
+}
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1198"></a><a name=
+"iddle1383"></a><a name="iddle2242"></a><a name=
+"iddle3015"></a><a name="iddle3509"></a><a name=
+"iddle5040"></a><a name="iddle5991"></a><a name=
+"iddle6940"></a><a name="iddle6941"></a><a name=
+"iddle6958"></a><a name="iddle8473"></a><a name="Qt calls"></a>Qt
+calls the <tt>subControlRect()</tt><a name="determine where"></a>
+function to determine where the subcontrols of a widget are
+located. For example, <tt>QSpinBox</tt><a name="it to"></a> calls
+it to determine where to place its <tt>QLineEdit</tt><a name=
+"find out"></a>. It is also used when reacting to mouse events, to
+find out which subcontrol was clicked. In addition, we called it
+ourselves when implementing <tt>drawComplexControl()</tt><a name=
+"again from"></a>, and we will call it again from
+<tt>drawBronzeSpinBoxButton()</tt>.</p>
+
+<p class="docText"><a name="spin box"></a>In our reimplementation,
+we check whether the widget is a spin box, and if this is the case,
+we return meaningful rectangles for the spin box's frame, edit
+field, down button, and up button. <a class="docLink" href=
+"#ch19fig20">Figure 19.20</a><a name="For the"></a> shows how these
+rectangles relate to each other. For the other widgets, including
+<tt>QPushButton</tt>, we rely on the base class's
+implementation.</p>
+
+<p class="docText">The rectangles we return for
+<tt>SC_SpinBoxDown</tt> and <tt>SC_SpinBoxUp</tt> are passed
+through <tt>QStyle::visualRect()</tt>. Calls to
+<tt>visualRect()</tt> have the following syntax:</p>
+
+<div class="docText">
+<pre>
+visualRect(<span class="docEmphasis">direction</span>, <span class=
+"docEmphasis">outerRect</span>, <span class=
+"docEmphasis">logicalRect</span>)
+</pre>
+</div>
+<br>
+
+<p class="docText">If the <span class=
+"docEmphasis"><tt>direction</tt></span> is
+<tt>Qt::LeftToRight</tt>, then <span class=
+"docEmphasis"><tt>logicalRect</tt></span> is returned unchanged;
+otherwise, <span class="docEmphasis"><tt>logicalRect</tt></span> is
+flipped with respect to <span class=
+"docEmphasis"><tt>outerRect</tt></span><a name="used for"></a>.
+This ensures that graphical elements are mirrored in right-to-left
+mode, which is used for languages such as Arabic and Hebrew. For
+symmetric elements such as <tt>SC_SpinBoxFrame</tt> and
+<tt>SC_SpinBoxEditField</tt><a name="no effect"></a>, flipping
+would have no effect, so we don't bother calling
+<tt>visualRect()</tt><a name="a style"></a>. To test a style in
+right-to-left mode, we can simply pass the
+<tt>-reverse</tt><a name="option to"></a> command-line option to an
+application that uses the style. <a class="docLink" href=
+"#ch19fig21">Figure 19.21</a><a name="Bronze style"></a> shows the
+Bronze style in right-to-left mode.</p>
+<a name="ch19fig21"></a>
+<center>
+<h5 class="docFigureTitle"><a name="The Bronze"></a>Figure 19.21.
+The Bronze style in right-to-left mode</h5>
+
+<p class="docText"><img border="0" id="" width="371" height="321"
+src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83ZXBycmhzb2VlL3ZzYmljbnpyLmplZ3At.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="from"></a>This completes our review of
+the public functions reimplemented from
+<tt>QWindowsStyle</tt><a name="private drawing"></a>. The next four
+functions are private drawing functions.</p>
+
+<div class="docText">
+<pre>
+void BronzeStyle::drawBronzeFrame(const QStyleOption *option,
+                                  QPainter *painter) const
+{
+    painter-&gt;save();
+    painter-&gt;setRenderHint(QPainter::Antialiasing, true);
+    painter-&gt;setPen(QPen(option-&gt;palette.foreground(), 1.0));
+    painter-&gt;drawRect(option-&gt;rect.adjusted(+1, +1, -1, -1));
+    painter-&gt;restore();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1174"></a><a name=
+"iddle1381"></a><a name="iddle2240"></a><a name=
+"iddle5041"></a><a name="iddle5549"></a><a name=
+"iddle5554"></a><a name="iddle5564"></a><a name=
+"iddle5644"></a><a name="iddle6920"></a><a name=
+"iddle7011"></a><a name="iddle7305"></a><a name="iddle7809"></a>The
+<tt>drawBronzeFrame()</tt> function was called from
+<tt>drawPrimitive()</tt> to draw a <tt>PE_Frame</tt><a name=
+"a"></a> primitive element. This is used to draw the frame around a
+<tt>QFrame</tt> (or a subclass, such as <tt>QTreeView</tt>) when
+the frame shape is <tt>QFrame::StyledPanel</tt>. (The other frame
+shapes, such as <tt>Box</tt>, <tt>Panel</tt>, and <tt>VLine</tt>,
+are drawn directly by <tt>QFrame</tt> without going through the
+style.)</p>
+
+<p class="docText"><a name="outline around"></a>The frame we draw
+is an antialiased 1-pixel-wide outline around the widget, using the
+palette's foreground brush (available through the
+<tt>QStyleOption</tt>'s <tt>palette</tt><a name="an integer"></a>
+member variable). Since the rectangle is antialiased and is located
+on an integer coordinate, the resulting effect is a blurred
+2-pixel-wide outline, which is precisely what we want for the
+Bronze style.</p>
+
+<p class="docText"><a name="we leave"></a>To ensure that we leave
+the <tt>QPainter</tt><a name="same state"></a> in the same state as
+we got it, we call <tt>save()</tt><a name="before we"></a> before
+we call <tt>setRenderHint()</tt> and <tt>setPen()</tt>, and call
+<tt>restore()</tt><a name="This is"></a> at the end. This is
+necessary because Qt optimizes drawing by reusing the same
+<tt>QPainter</tt><a name="draw several"></a> to draw several
+graphical elements.</p>
+
+<p class="docText">The next function we will study is
+<tt>drawBronzeBevel()</tt>, which draws the background of a
+<tt>QPushButton</tt>:</p>
+
+<div class="docText">
+<pre>
+void BronzeStyle::drawBronzeBevel(const QStyleOption *option,
+                                  QPainter *painter) const
+{
+    QColor buttonColor = option-&gt;palette.button().color();
+    int coeff = (option-&gt;state &amp; State_MouseOver) ? 115 : 105;
+
+    QLinearGradient gradient(0, 0, 0, option-&gt;rect.height());
+    gradient.setColorAt(0.0, option-&gt;palette.light().color());
+    gradient.setColorAt(0.2, buttonColor.lighter(coeff));
+    gradient.setColorAt(0.8, buttonColor.darker(coeff));
+    gradient.setColorAt(1.0, option-&gt;palette.dark().color());
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle2947"></a><a name=
+"iddle3557"></a><a name="iddle5275"></a><a name=
+"iddle5997"></a><a name="iddle6006"></a>We start by setting up the
+<tt>QLinearGradient</tt><a name="light at"></a> that is used to
+fill the background. The gradient is light at the top and dark at
+the bottom, and goes through intermediate shades of bronze in
+between. The intermediate steps at 0.2 and 0.8 contribute to giving
+the button a fake 3D effect. The <tt>coeff</tt><a name="a"></a>
+factor controls how much of a 3D look the button should have. When
+the mouse hovers over the button, we use 115% as the <tt>coeff</tt>
+to make the button rise up slightly.</p>
+
+<div class="docText">
+<pre>
+    double penWidth = 1.0;
+    if (const QStyleOptionButton *buttonOpt =
+            qstyleoption_cast&lt;const QStyleOptionButton *&gt;(option)) {
+        if (buttonOpt-&gt;features &amp; QStyleOptionButton::DefaultButton)
+            penWidth = 2.0;
+    }
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="and a"></a>The Bronze style uses a
+2-pixel-wide outline around default buttons and a 1-pixel-wide
+outline otherwise. To find out whether the push button is a default
+button, we cast <tt>option</tt> to a <tt>const QStyleOptionButton
+*</tt> and check its <tt>features</tt> member variable.</p>
+
+<div class="docText">
+<pre>
+    QRect roundRect = option-&gt;rect.adjusted(+1, +1, -1, -1);
+    if (!roundRect.isValid())
+        return;
+
+    int diameter = 12;
+    int cx = 100 * diameter / roundRect.width();
+    int cy = 100 * diameter / roundRect.height();
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="be used"></a>We define some more
+variables that will be used below to draw the button. The
+<tt>cx</tt> and <tt>cy</tt><a name="to be"></a> coefficients
+specify how rounded we want the push button corners to be. They are
+computed in terms of <tt>diameter</tt><a name=
+"rounded corners"></a>, which specifies the rounded corners'
+desired diameters.</p>
+
+<div class="docText">
+<pre>
+    painter-&gt;save();
+    painter-&gt;setPen(Qt::NoPen);
+    painter-&gt;setBrush(gradient);
+    painter-&gt;drawRoundRect(roundRect, cx, cy);
+
+    if (option-&gt;state &amp; (State_On | State_Sunken)) {
+        QColor slightlyOpaqueBlack(0, 0, 0, 63);
+        painter-&gt;setBrush(slightlyOpaqueBlack);
+        painter-&gt;drawRoundRect(roundRect, cx, cy);
+    }
+
+    painter-&gt;setRenderHint(QPainter::Antialiasing, true);
+    painter-&gt;setPen(QPen(option-&gt;palette.foreground(), penWidth));
+    painter-&gt;setBrush(Qt::NoBrush);
+    painter-&gt;drawRoundRect(roundRect, cx, cy);
+    painter-&gt;restore();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1384"></a><a name=
+"iddle2243"></a><a name="the drawing"></a>Finally, we perform the
+drawing. We start by drawing the background using the
+<tt>QLinearGradient</tt><a name="that we"></a> that we defined
+earlier in the function. If the button is currently pressed (or is
+a toggle button in its "on" state), we draw a 75% transparent black
+color on top of it to make it a bit darker.</p>
+
+<p class="docText"><a name="have drawn"></a>Once we have drawn the
+background, we turn on antialiasing to obtain smooth rounded
+corners, we set an appropriate pen, we clear the brush, and we draw
+the outline.</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+void BronzeStyle::drawBronzeSpinBoxButton(SubControl which,
+        const QStyleOptionComplex *option, QPainter *painter) const
+{
+    PrimitiveElement arrow = PE_IndicatorArrowLeft;
+    QRect buttonRect = option-&gt;rect;
+    if ((which == SC_SpinBoxUp)
+            != (option-&gt;direction == Qt::RightToLeft)) {
+        arrow = PE_IndicatorArrowRight;
+        buttonRect.translate(buttonRect.width() / 2, 0);
+    }
+    buttonRect.setWidth((buttonRect.width() + 1) / 2);
+
+    QStyleOption buttonOpt(*option);
+
+    painter-&gt;save();
+    painter-&gt;setClipRect(buttonRect, Qt::IntersectClip);
+    if (!(option-&gt;activeSubControls &amp; which))
+        buttonOpt.state &amp;= ~(State_MouseOver | State_On | State_Sunken);
+    drawBronzeBevel(&amp;buttonOpt, painter);
+
+    QStyleOption arrowOpt(buttonOpt);
+    arrowOpt.rect = subControlRect(CC_SpinBox, option, which)
+                    .adjusted(+3, +3, -3, -3);
+    if (arrowOpt.rect.isValid())
+        drawPrimitive(arrow, &amp;arrowOpt, painter);
+    painter-&gt;restore();
+}
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>drawBronzeSpinBoxButton()</tt><a name=
+"draws the"></a> function draws the up or down button of a spin
+box, depending on whether <tt>which</tt> is <tt>SC_SpinBoxDown</tt>
+or <tt>SC_SpinBoxUp</tt><a name="on the"></a>. We start by setting
+up the arrow to draw on the button (a left or a right arrow) and
+the rectangle in which we draw the button.</p>
+
+<p class="docText">If <tt>which</tt> is <tt>SC_SpinBoxDown</tt> (or
+<tt>which</tt> is <tt>SC_SpinBoxUp</tt><a name="we use"></a> and
+the layout direction is right-to-left), we use a left arrow
+(<tt>PE_IndicatorArrowLeft</tt><a name="of the"></a>) and we draw
+the button in the left half of the spin box's rectangle; otherwise,
+we use a right arrow and we draw the button in the right half.</p>
+
+<p class="docText">To draw the button, we call
+<tt>drawBronzeBevel()</tt> with a <tt>QStyleOption</tt><a name=
+"spin box"></a> that correctly reflects the state of the spin box
+button we want to draw. For example, if the mouse is hovering over
+the spin box but not over the spin box button corresponding to
+<tt>which</tt>, we clear the <tt>State_MouseOver</tt>,
+<tt>State_On</tt>, and <tt>State_Sunken</tt> flags from the
+<tt>QStyleOption</tt><a name="buttons behave"></a>'s state. This is
+necessary to ensure that the two spin box buttons behave
+independently of each other.</p>
+
+<p class="docText"><a name="iddle1382"></a><a name=
+"iddle1548"></a><a name="iddle2241"></a><a name=
+"iddle2278"></a><a name="iddle2285"></a><a name=
+"iddle5537"></a><a name="iddle5979"></a><a name=
+"any drawing"></a>Before we perform any drawing, we call
+<tt>setClipRect()</tt><a name="the clipping"></a> to set the
+clipping rectangle on the <tt>QPainter</tt><a name="This is"></a>.
+This is because we want to draw only the left or right half of a
+button bevel, not the entire button bevel.</p>
+
+<p class="docText"><a name="we draw"></a>Finally, at the end, we
+draw the arrow by calling <tt>drawPrimitive()</tt>. The
+<tt>QStyleOption</tt><a name="to draw"></a> used to draw the arrow
+is set up with a rectangle that corresponds to the spin box
+button's rectangle (<tt>SC_SpinBoxUp</tt> or
+<tt>SC_SpinBoxDown</tt>) but is a bit smaller, to obtain a smaller
+arrow.</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+void BronzeStyle::drawBronzeCheckBoxIndicator(
+        const QStyleOption *option, QPainter *painter) const
+{
+    painter-&gt;save();
+    painter-&gt;setRenderHint(QPainter::Antialiasing, true);
+
+    if (option-&gt;state &amp; State_MouseOver) {
+        painter-&gt;setBrush(option-&gt;palette.alternateBase());
+    } else {
+        painter-&gt;setBrush(option-&gt;palette.base());
+    }
+    painter-&gt;drawRoundRect(option-&gt;rect.adjusted(+1, +1, -1, -1));
+
+    if (option-&gt;state &amp; (State_On | State_NoChange)) {
+        QPixmap pixmap;
+        if (!(option-&gt;state &amp; State_Enabled)) {
+            pixmap.load(":/images/checkmark-disabled.png");
+        } else if (option-&gt;state &amp; State_NoChange) {
+            pixmap.load(":/images/checkmark-partial.png");
+        } else {
+            pixmap.load(":/images/checkmark.png");
+        }
+
+        QRect pixmapRect = pixmap.rect()
+                                 .translated(option-&gt;rect.topLeft())
+                                 .translated(+2, -6);
+        QRect painterRect = visualRect(option-&gt;direction, option-&gt;rect,
+                                       pixmapRect);
+        if (option-&gt;direction == Qt::RightToLeft) {
+            painter-&gt;scale(-1.0, +1.0);
+            painterRect.moveLeft(-painterRect.right() - 1);
+        }
+        painter-&gt;drawPixmap(painterRect, pixmap);
+    }
+    painter-&gt;restore();
+}
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText">Although the
+<tt>drawBronzeCheckBoxIndicator()</tt><a name="indicator is"></a>
+code might look complex at first sight, drawing a checkbox
+indicator is actually quite simple: We draw a rectangle using
+<tt>drawRoundRect()</tt><a name="using"></a>, and we draw the
+checkmark using <tt>drawPixmap()</tt><a name=
+"different background"></a>. The complications arise because we
+want to use a different background color when the mouse hovers over
+the checkbox indicator, because we distinguish between normal
+checkmarks, disabled checkmarks, and partial checkmarks (for
+tri-state checkboxes), and because we flip the checkmark in
+right-to-left mode (by flipping the <tt>QPainter</tt>'s coordinate
+system).</p>
+
+<p class="docText">
+</p>
+<a name="ch19sb01"></a>
+<table cellspacing="0" width="90%" border="1" cellpadding="5">
+<tr>
+<td>
+<h2 class="docSidebarTitle">QStyleOption Versioning</h2>
+
+<p class="docText"><a name="iddle1320"></a><a name=
+"iddle5995"></a><a name="iddle5999"></a><a name=
+"iddle6007"></a><a name="iddle8431"></a>The information that
+<tt>QStyle</tt><a name="around using"></a> needs to draw a widget
+is passed around using <tt>QStyleOption</tt> and its subclasses
+(<tt>QStyleOptionButton</tt>, <tt>QStyleOptionComboBox</tt>,
+<tt>QStyleOptionFrame</tt>, etc.). For performance reasons, the
+data is stored in public member variables.</p>
+
+<p class="docText"><a name="new member"></a>To ensure binary
+compatibility across all Qt 4 versions, Trolltech cannot add new
+member variables to these classes until Qt 5. To allow enhancements
+in future Qt 4.<span class="docEmphasis">x</span> releases,
+<tt>QStyleOption</tt> has a <tt>version</tt><a name="be used"></a>
+variable that can be used to distinguish between different versions
+of the same class. When new data members are needed, Trolltech adds
+them to a subclass identified by the same <tt>type</tt><a name=
+"a different"></a> but with a different <tt>version</tt><a name=
+"For example"></a>. For example, Qt 4.1 introduced
+<tt>QStyleOptionFrameV2</tt><a name="derived from"></a>, which is
+derived from <tt>QStyleOptionFrame</tt><a name="also provides"></a>
+but also provides a <tt>features</tt> member variable that the
+style can query. The <tt>QStyleOptionFrameV2</tt> subclass is of
+<tt>type SO_Frame</tt>, but its <tt>version</tt> is 2 instead of
+1.</p>
+
+<p class="docText">In a <tt>QStyle</tt> subclass, we can use
+<tt>QStyleOptionFrame</tt> as usual, and if we want to access the
+<tt>features</tt><a name="can write"></a> variable, which is
+defined only in version 2 of the class, we can write code such as
+this:</p>
+
+<div class="docText">
+<pre>
+if (const QStyleOptionFrame *frameOption =
+            qstyleoption_cast&lt;const QStyleOptionFrame *&gt;(option)) {
+    QStyleOptionFrameV2 frameOptionV2(*frameOption);
+
+    int lineWidth = frameOptionV2.lineWidth;
+    bool flat = (frameOptionV2.features &amp; QStyleOptionFrameV2::Flat);
+    ...
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>QStyleOptionFrameV2</tt><a name=
+"and version"></a> copy constructor accepts both version 1 and
+version 2 instances of the class. If a version 1 object is
+supplied, the copy constructor will initialize the
+<tt>features</tt> field with a default value of <tt>None</tt>;
+otherwise, it will copy the <tt>features</tt> field from
+<tt>frameOption</tt> object.</p>
+
+<p class="docText"><a name="a copy"></a>Another way to achieve the
+same effect, but without performing a copy, is to use
+<tt>qstyleoption_cast&lt;T&gt;()</tt> to distinguish between
+different versions:</p>
+
+<div class="docText">
+<pre>
+if (const QStyleOptionFrame *frameOption =
+        qstyleoption_cast&lt;const QStyleOptionFrame *&gt;(option)) {
+    int lineWidth = frameOption.lineWidth;
+    bool flat = false;
+
+    if (const QStyleOptionFrame *frameOptionV2 =
+            qstyleoption_cast&lt;const QStyleOptionFrameV2 *&gt;(option))
+        flat = (frameOptionV2.features &amp; QStyleOptionFrameV2::Flat);
+    ...
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">In Qt 5, the <tt>features</tt> variable will
+most probably be moved to <tt>QStyleOptionFrame</tt><a name=
+"between major"></a>, because Qt does not maintain binary
+compatibility between major releases.</p>
+</td>
+</tr>
+</table>
+<br>
+
+<p class="docText"><a name="iddle4740"></a><a name=
+"iddle4904"></a><a name="iddle4976"></a><a name=
+"iddle6405"></a><a name="iddle7335"></a>We have now completed the
+implementation of our Bronze <tt>QStyle</tt> subclass. In the
+screenshots shown in <a class="docLink" href="#ch19fig17">Figure
+19.17</a>, a <tt>QDateEdit</tt> and a <tt>QTreeWidget</tt><a name=
+"we have"></a> are shown, both of which use the Bronze style even
+though we have not written any code specifically for them. This is
+because <tt>QDateEdit</tt>, <tt>QDoubleSpinBox</tt><a name=
+"widgets are"></a>, and some other widgets are all "spin boxes",
+and so make use of the Bronze style code for rendering themselves;
+similarly, <tt>QTreeWidget</tt><a name="other widget"></a> and all
+other widget classes that are derived from <tt>QFrame</tt><a name=
+"get the"></a> get the custom look defined by the Bronze style.</p>
+
+<p class="docText"><a name="style presented"></a>The Bronze style
+presented in this section can easily be used in an application, by
+linking it in and calling</p>
+
+<div class="docText">
+<pre>
+QApplication::setStyle(new BronzeStyle);
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="the application"></a>in the
+application's <tt>main()</tt><a name="have a"></a> function.
+Widgets that aren't handled explicitly by the Bronze style will
+have a classic Windows look. Custom styles can also be compiled as
+plugins and used afterwards in <span class="docEmphasis">Qt
+Designer</span><a name="In"></a> to preview forms using that style.
+In <a class="docLink" href="ch21.html#ch21">Chapter 21</a><a name=
+"available as"></a>, we will show how to make the Bronze style
+available as a Qt plugin.</p>
+
+<p class="docText"><a name="about"></a>Although the style developed
+here is only about 300 lines of code, be aware that developing a
+fully functional custom style is a major undertaking that typically
+requires 3000 to 5000 lines of C++ code. For this reason, it is
+often easier and more convenient to use Qt style sheets whenever
+possible, or to use a hybrid approach, combining style sheets and a
+custom <tt>QStyle</tt>. If you plan to create a custom
+<tt>QStyle</tt><a name="document"></a>, implementing styles and
+style-aware widgets is covered in depth in the document <a class=
+"docLink" target="_blank" href=
+"http://doc.trolltech.com/4.3/style-reference.html">http://doc.trolltech.com/4.3/style-reference.html</a>.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch19lev1sec1.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch20.html"><img src="images/next.gif" width="20" height="20"
+border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

@@ -1,0 +1,1061 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch22lev1sec4.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch22lev1sec4.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch22lev1sec4.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch22lev1sec4.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch22lev1sec3.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch23.html"><img src="images/next.gif" width="20" height="20"
+border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch22lev1sec4"></a>
+<h3 class="docSection1Title" id="-100000">Automating Tasks through
+Scripting</h3>
+
+<p class="docText"><a name="Sometimes we"></a>Sometimes we use GUI
+applications to manipulate data sets in the same way each time. If
+the manipulation consists of invoking many menu options, or
+interacting with a dialog, not only does it become tedious but
+there is a risk that on some occasions we may miss steps, or
+transpose the order of a couple of steps—and perhaps not realize
+that a mistake has been made. One way to make <a name=
+"iddle2588"></a><a name="iddle2882"></a><a name=
+"for users"></a>things easier for users is to allow them to write
+scripts to perform sequences of actions automatically.</p>
+
+<p class="docText"><a name="this section"></a>In this section, we
+will present a GUI application that offers a command-line option,
+<tt>-script</tt><a name="application will"></a>, that lets the user
+specify a script to execute. The application will then start up,
+execute the script, and terminate, with no GUI appearing at
+all.</p>
+
+<p class="docText"><a name="to illustrate"></a>The application we
+will use to illustrate this technique is called Gas Pump. It reads
+in lists of transactions recorded by a trucker gas station's pumps
+and presents the data in a tabular format, as shown in <a class=
+"docLink" href="#ch22fig05">Figure 22.5</a>.</p>
+<a name="ch22fig05"></a>
+<center>
+<h5 class="docFigureTitle">Figure 22.5. The Gas Pump
+application</h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83cHBfYWhqc3QvYWxnc2NpcHUuZ21w.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="352" src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83cC5haHNwZ2ovaXNncGN1bXA-.jpg"
+alt="">
+</center>
+<br>
+
+<p class="docText"><a name="the pump"></a>Each transaction is
+recorded by date and time, and by the pump, the quantity taken, the
+company ID and user ID of the trucker, and the transaction's
+status. The Gas Pump application can be used to manipulate the data
+in quite sophisticated ways, sorting it, filtering it, computing
+totals, and converting between liters and gallons.</p>
+
+<p class="docText"><a name="in two"></a>The Gas Pump application
+supports transaction data in two formats: "Pump 2000", a plain text
+format with extension <tt>.p20</tt>, and "XML Gas Pump", an XML
+format with extension <tt>.gpx</tt><a name="can be"></a>. The
+application can load and save in both formats, so it can be used to
+convert between them, simply by loading in one format and saving in
+the other.</p>
+
+<p class="docText"><a name="supplied with"></a>The application is
+supplied with four standard scripts:</p>
+
+<ul>
+<li>
+<p class="docList"><tt>onlyok.js</tt><a name=
+"transactions whose"></a> removes all transactions whose status is
+not "OK".</p>
+</li>
+
+<li>
+<p class="docList"><tt>p20togpx.js</tt><a name="converts a"></a>
+converts a Pump 2000 file to the XML Gas Pump file format.</p>
+</li>
+
+<li>
+<p class="docList"><a name=
+"iddle4564"></a><tt>tohtml.js</tt><a name="in HTML"></a> produces
+reports in HTML format.</p>
+</li>
+
+<li>
+<p class="docList"><tt>toliters.js</tt><a name="the units"></a>
+converts the units from gallons to liters.</p>
+</li>
+</ul>
+
+<p class="docText">The scripts are invoked using the
+<tt>-script</tt><a name="the name"></a> command-line option
+followed by the name of the script, and then the name of the files
+to operate on. For example:</p>
+
+<div class="docText">
+<pre>
+gaspump -script scripts/toliters.js data/2008q2.p20
+</pre>
+</div>
+<br>
+
+<p class="docText">Here, we run the <tt>toliters.js</tt> script
+from the <tt>scripts</tt> subdirectory on the <tt>2008q2.p20</tt>
+Pump 2000 data file from the <tt>data</tt><a name=
+"quantity values"></a> subdirectory. The script converts all the
+quantity values from gallons to liters, changing the file
+in-place.</p>
+
+<p class="docText"><a name="other C"></a>The Gas Pump application
+is written just like any other C++/Qt application. In fact, its
+code is very similar to the Spreadsheet example from <a class=
+"docLink" href="ch03.html#ch03">Chapters 3</a> and <a class=
+"docLink" href="ch04.html#ch04">4</a>. The application has a
+<tt>QMainWindow</tt> subclass called <tt>PumpWindow</tt><a name=
+"menus are"></a> that provides the application's framework,
+including its actions and menus. (The menus are shown in <a class=
+"docLink" href="#ch22fig06">Figure 22.6</a>.) There is also a
+custom <tt>QTableWidget</tt> called <tt>PumpSpreadsheet</tt> for
+displaying the data. And there is a <tt>QDialog</tt> subclass,
+<tt>FilterDialog</tt> shown in <a class="docLink" href=
+"#ch22fig07">Figure 22.7</a><a name="there are"></a>, that the user
+can use to specify their filter options. Because there are a lot of
+filter options, they are stored together in a class called
+<tt>PumpFilter</tt><a name="briefly review"></a>. We will very
+briefly review these classes, and then we will see how to add
+scripting support to the application.</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+class PumpSpreadsheet : public QTableWidget
+{
+
+    Q_OBJECT
+    Q_ENUMS(FileFormat Column)
+
+public:
+    enum FileFormat { Pump2000, GasPumpXml };
+    enum Column { Date, Time, Pump, Company, User, Quantity, Status,
+                  ColumnCount };
+
+    PumpSpreadsheet(QWidget *parent = 0);
+
+public slots:
+    void clearData();
+    bool addData(const QString &amp;fileName, FileFormat format);
+    bool saveData(const QString &amp;fileName, FileFormat format);
+    void sortByColumn(Column column,
+                      Qt::SortOrder order = Qt::AscendingOrder);
+    void applyFilter(const PumpFilter &amp;filter);
+    void convertUnits(double factor);
+    void computeTotals(Column column);
+    void setText(int row, int column, const QString &amp;text);
+    QString text(int row, int column) const;
+
+private:
+    ...
+};
+
+                                          
+</pre>
+</div>
+<br>
+<a name="ch22fig06"></a>
+<center>
+<h5 class="docFigureTitle"><a name="Gas Pump"></a>Figure 22.6. The
+Gas Pump application's menus</h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83X3BwLWFoc3NtZW4vZ2lzcGN1dWFsbS5wZ3Rq.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="98" src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83LnAtYWhzc21uL2VzZ2ljcHV1anBtZ3A-.jpg"
+alt="">
+</center>
+<br>
+<a name="ch22fig07"></a>
+<center>
+<h5 class="docFigureTitle"><a name="Figure"></a>Figure 22.7. The
+Filter dialog</h5>
+
+<p class="docText"><img border="0" id="" width="424" height="338"
+src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83cnAtYWhlc2ZsL2lzZ2ljcHV0LmptZ3Bw.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText">The <tt>PumpSpreadsheet</tt><a name=
+"data and"></a> holds the data and provides the functions (which we
+have made into slots) that the user can use to manipulate the data.
+The slots are <a name="iddle2735"></a><a name=
+"iddle3603"></a><a name="iddle4565"></a><a name=
+"iddle4590"></a><a name="through the"></a>accessible through the
+user interface, and will also be available for scripting. The
+<tt>Q_ENUMS()</tt> macro is used to generate meta-information about
+the <tt>FileFormat</tt> and <tt>Column</tt> enum types; we will
+come back to this shortly.</p>
+
+<p class="docText">The <tt>QMainWindow</tt> subclass,
+<tt>PumpWindow</tt>, has a <tt>loadData()</tt> function that makes
+use of some <tt>PumpSpreadsheet</tt> slots:</p>
+
+<div class="docText">
+<pre>
+void PumpWindow::loadData()
+{
+    QString fileName = QFileDialog::getOpenFileName(this,
+                               tr("Open Data File"), ".",
+                               fileFilters);
+    if (!fileName.isEmpty()) {
+        spreadsheet-&gt;clearData();
+        spreadsheet-&gt;addData(fileName, fileFormat(fileName));
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>PumpSpreadsheet</tt> is stored in the
+<tt>PumpWindow</tt> as a member variable called
+<tt>spreadsheet</tt>. The <tt>PumpWindow</tt>'s <tt>filter()</tt>
+slot is less typical:</p>
+
+<div class="docText">
+<pre>
+void PumpWindow::filter()
+{
+    FilterDialog dialog(this);
+    dialog.initFromSpreadsheet(spreadsheet);
+    if (dialog.exec())
+    spreadsheet-&gt;applyFilter(dialog.filter());
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle4010"></a><a name=
+"iddle4561"></a><a name="iddle4591"></a><a name="iddle5703"></a>The
+<tt>initFromSpreadsheet()</tt> function populates the
+<tt>FilterDialog</tt><a name="are in"></a>'s comboboxes with the
+pumps, company IDs, user IDs, and status codes that are in use in
+the current data set. When <tt>exec()</tt> is called, the dialog
+shown in <a class="docLink" href="#ch22fig07">Figure 22.7</a> pops
+up. If the user clicks <span class="docEmphRomanAlt">OK</span>, the
+<tt>FilterDialog</tt>'s <tt>filter()</tt> function returns a
+<tt>PumpFilter</tt><a name="to"></a> object that we pass on to
+<tt>PumpSpreadsheet::applyFilter()</tt>.</p>
+
+<div class="docText">
+<pre>
+class PumpFilter
+{
+public:
+    PumpFilter();
+
+    QDate fromDate;
+    QDate toDate;
+    QTime fromTime;
+    QTime toTime;
+    QString pump;
+    QString company;
+    QString user;
+    double fromQuantity;
+    double toQuantity;
+    QString status;
+};
+</pre>
+</div>
+<br>
+
+<p class="docText">The purpose of <tt>PumpFilter</tt><a name=
+"options as"></a> is to make it easier to pass around filter
+options as a group rather than having ten separate parameters.</p>
+
+<p class="docText"><a name="The only"></a>So far, all we have seen
+has been unsurprising. The only barely noticeable differences are
+that we have made all the <tt>PumpSpreadsheet</tt><a name=
+"used the"></a> functions that we want scriptable into public
+slots, and we have used the <tt>Q_ENUMS()</tt><a name=
+"Pump scriptable"></a> macro. To make Gas Pump scriptable, we must
+do two more things. First, we must change <tt>main.cpp</tt><a name=
+"the command"></a> to add the command-line processing and to
+execute the script if one is specified. Second, we must make the
+application's functionality available to scripts.</p>
+
+<p class="docText"><a name="The"></a>The <span class=
+"docEmphasis">QtScript</span><a name="two general"></a> module
+provides two general ways of exposing C++ classes to scripts. The
+easiest way is to define the functionality in a
+<tt>QObject</tt><a name="and to"></a> class and to expose one or
+more instances of that class to the script, using
+<tt>QScriptEngine::newQObject()</tt><a name="by its"></a>. The
+properties and slots defined by the class (and optionally by its
+ancestors) are then available to scripts. The more difficult but
+also more flexible approach is to write a C++ prototype for the
+class and possibly a constructor function, for classes that need to
+be instantiated from the script using the <tt>new</tt><a name=
+"both approaches"></a> operator. The Gas Pump example illustrates
+both approaches.</p>
+
+<p class="docText"><a name="us look"></a>Before we study the
+infrastructure used to run scripts, let us look at one of the
+scripts that is supplied with Gas Pump. Here is the complete
+<tt>onlyok.js</tt> script:</p>
+
+<div class="docText">
+<pre>
+if (args.length == 0)
+    throw Error("No files specified on the command line");
+
+for (var i = 0; i &lt; args.length; ++i) {
+     spreadsheet.clearData();
+    if (!spreadsheet.addData(args[i], PumpSpreadsheet.Pump2000))
+        throw Error("Error loading Pump 2000 data");
+
+    var filter = new PumpFilter;
+    filter.status = "OK";
+
+    spreadsheet.applyFilter(filter);
+    if (!spreadsheet.saveData(args[i], PumpSpreadsheet.Pump2000))
+        throw Error("Error saving Pump 2000 data");
+
+    print("Removed erroneous transactions from " + args[i]);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle3666"></a>This script relies on
+two global variables: <tt>args</tt> and <tt>spreadsheet</tt>. The
+<tt>args</tt> variable returns the command-line arguments supplied
+after the <tt>-script</tt> option. The <tt>spreadsheet</tt>
+variable is a reference to a <tt>PumpSpreadsheet</tt><a name=
+"various operations"></a> object that we can use to perform various
+operations (file format conversion, unit conversion, filtering,
+etc.). The script also calls some slots on the
+<tt>PumpSpreadsheet</tt> object, instantiates and initializes
+<tt>PumpFilter</tt> objects, and uses the
+<tt>PumpSpreadsheet::FileFormat</tt> enum.</p>
+
+<p class="docText"><a name="file name"></a>We begin with a simple
+sanity check, and then for each file name listed on the command
+line we clear the global <tt>spreadsheet</tt><a name="to load"></a>
+object and attempt to load in the file's data. We assume that the
+files are all in Pump 2000 (<tt>.p20</tt><a name=
+"successfully loaded"></a>) format. For each successfully loaded
+file, we create a new <tt>PumpFilter</tt><a name="We set"></a>
+object. We set the filter's <tt>status</tt><a name="then call"></a>
+property and then call the <tt>PumpSpreadsheet</tt>'s
+<tt>applyFilter()</tt><a name="is accessible"></a> function (which
+is accessible because we made it a slot). Finally, we save the
+updated spreadsheet data back to the original file, and output a
+message to the user.</p>
+
+<p class="docText"><a name="included with"></a>The other three
+scripts have a similar structure; they are included with the book's
+source code.</p>
+
+<p class="docText"><a name="the"></a>To support scripts such as the
+<tt>onlyok.js</tt><a name="Gas Pump"></a> script, we need to
+perform the following steps in the Gas Pump application:</p>
+<a name="ch22pro03"></a>
+<table border="0" class="docText">
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>1.</b>
+</div>
+</td>
+<td>
+<div class="docText">Detect the <tt>-script</tt> command-line
+option.<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>2.</b>
+</div>
+</td>
+<td>
+<div class="docText">Load the specified script file.<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>3.</b>
+</div>
+</td>
+<td>
+<div class="docText">Expose a <tt>PumpSpreadsheet</tt> instance to
+the interpreter.<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>4.</b>
+</div>
+</td>
+<td>
+<div class="docText">Expose the command-line arguments to the
+interpreter.<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>5.</b>
+</div>
+</td>
+<td>
+<div class="docText">Expose the <tt>FileFormat</tt> and
+<tt>Column</tt> enums to the interpreter.<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>6.</b>
+</div>
+</td>
+<td>
+<div class="docText">Wrap the <tt>PumpFilter</tt> class so that its
+member variables can be accessed from the script.<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>7.</b>
+</div>
+</td>
+<td>
+<div class="docText">Make it possible to instantiate
+<tt>PumpFilter</tt> objects from the script.<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>8.</b>
+</div>
+</td>
+<td>
+<div class="docText">Execute the script.<br>
+<br></div>
+</td>
+</tr>
+</table>
+
+<p class="docText">The relevant code is located in
+<tt>main.cpp</tt>, <tt>scripting.cpp</tt>, and
+<tt>scripting.h</tt>. Let's begin with <tt>main.cpp</tt>:</p>
+
+<div class="docText">
+<pre>
+int main(int argc, char *argv[])
+{
+    QApplication app(argc, argv);
+    QStringList args = QApplication::arguments();
+    if (args.count() &gt;= 3 &amp;&amp; args[1] == "-script") {
+        runScript(args[2], args.mid(3));
+        return 0;
+    } else if (args.count() == 1) {
+        PumpWindow window;
+        window.show();
+        window.resize(600, 400);
+        return app.exec();
+    } else {
+        std::cerr &lt;&lt; "Usage: gaspump [-script myscript.js &lt;arguments&gt;]"
+                  &lt;&lt; std::endl;
+        return 1;
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1215"></a><a name=
+"iddle4858"></a><a name="iddle6993"></a>The command-line arguments
+are accessible through the <tt>QApplication::arguments()</tt>
+function, which returns a <tt>QStringList</tt><a name=
+"the application"></a>. The first item in the list is the
+application's name. If there are at least three arguments and the
+second argument is <tt>-script</tt><a name="this case"></a>, we
+assume that the third argument is a script name. In this case, we
+call <tt>runScript()</tt><a name="as its"></a> with the script's
+name as its first argument and the rest of the string list as its
+second parameter. Once the script has been run, the application
+terminates immediately.</p>
+
+<p class="docText"><a name="is just"></a>If there is just one
+argument, the application's name, we create and show a
+<tt>PumpWindow</tt><a name="and start"></a>, and start off the
+application's event loop in the conventional way.</p>
+
+<p class="docText"><a name="support is"></a>The application's
+scripting support is provided by <tt>scripting.h</tt> and
+<tt>scripting.cpp</tt><a name="files define"></a>. These files
+define the <tt>runScript()</tt> function, the
+<tt>pumpFilterConstructor()</tt> support function, and the
+<tt>PumpFilterPrototype</tt><a name="the Gas"></a> supporting
+class. The supporting function and class are specific to the Gas
+Pump application, but we will still review them since they
+illustrate some general points about making applications
+scriptable.</p>
+
+<p class="docText">We will review the <tt>runScript()</tt><a name=
+"contains several"></a> function in several parts, since it
+contains several subtle details.</p>
+
+<div class="docText">
+<pre>
+bool runScript(const QString &amp;fileName, const QStringList &amp;args)
+{
+    QFile file(fileName);
+    if (!file.open(QIODevice::ReadOnly)) {
+        std::cerr &lt;&lt; "Error: Cannot read file " &lt;&lt; qPrintable(fileName)
+                  &lt;&lt; ": " &lt;&lt; qPrintable(file.errorString())
+                  &lt;&lt; std::endl;
+        return false;
+    }
+
+    QTextStream in(&amp;file);
+    in.setCodec("UTF-8");
+    QString script = in.readAll();
+    file.close();
+</pre>
+</div>
+<br>
+
+<p class="docText">We start by reading the script into a
+<tt>QString</tt>.</p>
+
+<div class="docText">
+<pre>
+    QScriptEngine interpreter;
+
+    PumpSpreadsheet spreadsheet;
+    QScriptValue qsSpreadsheet = interpreter.newQObject(&amp;spreadsheet);
+    interpreter.globalObject().setProperty("spreadsheet",
+                                           qsSpreadsheet);
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle3811"></a><a name=
+"iddle4009"></a><a name="iddle4557"></a><a name=
+"iddle4592"></a><a name="iddle5696"></a><a name=
+"iddle5702"></a><a name="iddle5704"></a><a name=
+"iddle5712"></a><a name="iddle7194"></a>Once we have the script in
+a <tt>QString</tt>, we create a <tt>QScriptEngine</tt> and a
+<tt>PumpSpreadsheet</tt> instance. We then create a
+<tt>QScriptValue</tt> to refer to the
+<tt>PumpSpreadsheet</tt><a name="making it"></a> instance, and set
+this as a global property of the interpreter, making it accessible
+inside scripts as the <tt>spreadsheet</tt> global variable. All the
+<tt>PumpSpreadsheet</tt>'s slots and properties are available
+through the <tt>spreadsheet</tt><a name="use them"></a> variable to
+any script that cares to use them.</p>
+
+<div class="docText">
+<pre>
+    QScriptValue qsArgs = qScriptValueFromSequence(&amp;interpreter, args);
+    interpreter.globalObject().setProperty("args", qsArgs);
+</pre>
+</div>
+<br>
+
+<p class="docText">The (possibly empty) <tt>args</tt> list of type
+<tt>QStringList</tt> that is passed to the
+<tt>runScript()</tt><a name="the script"></a> function contains the
+command-line arguments the user wants to pass to the script. To
+make these arguments accessible to scripts, we must, as always,
+create a <tt>QScriptValue</tt><a name="convert a"></a> to represent
+them. To convert a sequential container such as
+<tt>QList&lt;T&gt;</tt> or <tt>QVector&lt;T&gt;</tt> to a
+<tt>QScriptValue</tt><a name="use the"></a>, we can use the global
+<tt>qScriptValueFromSequence()</tt><a name="function provided"></a>
+function provided by the <span class=
+"docEmphasis">QtScript</span><a name="the arguments"></a> module.
+We make the arguments available to scripts as a global variable
+called <tt>args</tt>.</p>
+
+<div class="docText">
+<pre>
+    QScriptValue qsMetaObject =
+            interpreter.newQMetaObject(spreadsheet.metaObject());
+    interpreter.globalObject().setProperty("PumpSpreadsheet",
+                                           qsMetaObject);
+</pre>
+</div>
+<br>
+
+<p class="docText">In <tt>pumpspreadsheet.h</tt><a name=
+"defined the"></a>, we defined the <tt>FileFormat</tt> and
+<tt>Column</tt> enums. In addition we also included a
+<tt>Q_ENUMS()</tt> declaration that specified these enums. It is
+rare to use <tt>Q_ENUMS()</tt><a name="are creating"></a> in
+general Qt programming; its main use is when we are creating custom
+widgets that we want to make accessible to <span class=
+"docEmphasis">Qt Designer</span><a name="in a"></a>. But it is also
+useful in a scripting context, since we can make the enums
+available to scripts by registering the meta-object of the class
+that contains them.</p>
+
+<p class="docText">By adding the <tt>PumpSpreadsheet</tt>'s
+meta-object as the <tt>PumpSpreadsheet</tt> global variable, the
+<tt>FileFormat</tt> and <tt>Column</tt><a name="to enum"></a> enums
+are made accessible to scripts. Script writers can refer to enum
+values by typing, say, <tt>PumpSpreadsheet.Pump2000</tt>.</p>
+
+<div class="docText">
+<pre>
+    PumpFilterPrototype filterProto;
+    QScriptValue qsFilterProto = interpreter.newQObject(&amp;filterProto);
+    interpreter.setDefaultPrototype(qMetaTypeId&lt;PumpFilter&gt;(),
+                                    qsFilterProto);
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="in the"></a>Because ECMAScript uses
+prototypes rather than classes in the C++ sense, if we want to make
+a custom C++ class available for scripting, we must take a rather
+round-about approach. In the Gas Pump example, we want to make the
+<tt>PumpFilter</tt> class scriptable.</p>
+
+<p class="docText"><a name="have it"></a>One approach would be to
+change the class itself and have it use Qt's meta-object system to
+export its data members as Qt properties. For the Gas Pump example,
+<a name="iddle1792"></a><a name="iddle2478"></a><a name=
+"iddle4004"></a><a name="iddle4562"></a><a name=
+"iddle5698"></a><a name="iddle5700"></a><a name="to keep"></a>we
+have chosen to keep the original application intact and create a
+wrapper class, <tt>PumpFilterPrototype</tt><a name="hold and"></a>,
+that can hold and provide access to a <tt>PumpFilter</tt><a name=
+"to show"></a>, to show how it's done.</p>
+
+<p class="docText"><a name="to"></a>The call to
+<tt>setDefaultPrototype()</tt><a name="earlier tells"></a> shown
+earlier tells the interpreter to use a <tt>PumpFilterPrototype</tt>
+instance as the implicit prototype for all <tt>PumpFilter</tt>
+objects. This prototype is derived from <tt>QObject</tt> and
+provides Qt properties for accessing the <tt>PumpFilter</tt> data
+members.</p>
+
+<div class="docText">
+<pre>
+    QScriptValue qsFilterCtor =
+            interpreter.newFunction(pumpFilterConstructor,
+                                    qsFilterProto);
+    interpreter.globalObject().setProperty("PumpFilter", qsFilterCtor);
+</pre>
+</div>
+<br>
+
+<p class="docText">We register a constructor for
+<tt>PumpFilter</tt> so that script writers can instantiate
+<tt>PumpFilter</tt>. Behind the scenes, accesses to
+<tt>PumpFilter</tt> instances are mediated through
+<tt>PumpFilterPrototype</tt>.</p>
+
+<p class="docText"><a name="into a"></a>The preliminaries are now
+complete. We have read the script into a <tt>QString</tt><a name=
+"the script"></a>, and we have set up the script environment,
+providing two global variables, <tt>spreadsheet</tt> and
+<tt>args</tt>. We have also made the <tt>PumpSpreadsheet</tt>
+meta-object available and provided wrapped access to
+<tt>PumpFilter</tt> instances. Now we are ready to execute the
+script.</p>
+
+<div class="docText">
+<pre>
+    interpreter.evaluate(script);
+    if (interpreter.hasUncaughtException()) {
+        std::cerr &lt;&lt; "Uncaught exception at line "
+                  &lt;&lt; interpreter.uncaughtExceptionLineNumber() &lt;&lt; ": "
+                  &lt;&lt; qPrintable(interpreter.uncaughtException()
+                                           .toString())
+                  &lt;&lt; std::endl &lt;&lt; "Backtrace: "
+                  &lt;&lt; qPrintable(interpreter.uncaughtExceptionBacktrace()
+                                           .join(", "))
+                  &lt;&lt; std::endl;
+        return false;
+    }
+
+    return true;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">As usual, we call <tt>evaluate()</tt><a name=
+"other problems"></a> to run the script. If there are syntax errors
+or other problems, we output suitable error information.</p>
+
+<p class="docText"><a name="supporting function"></a>Now we will
+look at the tiny supporting function,
+<tt>pumpFilterConstructor()</tt>, and at the longer (but simple)
+supporting class, <tt>PumpFilterPrototype</tt>.</p>
+
+<div class="docText">
+<pre>
+QScriptValue pumpFilterConstructor(QScriptContext * /* context */,
+                                   QScriptEngine *interpreter)
+{
+    return interpreter-&gt;toScriptValue(PumpFilter());
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="new object"></a>The constructor
+function is invoked whenever the script creates a new object using
+the ECMAScript syntax <tt>new PumpFilter</tt><a name="to the"></a>.
+The arguments passed to the <a name="iddle1978"></a><a name=
+"iddle4563"></a><a name="iddle4586"></a><a name=
+"iddle4611"></a><a name="iddle5707"></a><a name=
+"iddle5713"></a><a name="iddle7855"></a><a name=
+"iddle8125"></a><a name="iddle8660"></a><a name=
+"accessible using"></a>constructor are accessible using the
+<tt>context</tt><a name="We simply"></a> parameter. We simply
+ignore them here and create a default <tt>PumpFilter</tt><a name=
+"a"></a> object, wrapped in a <tt>QScriptValue</tt>. The
+<tt>toScriptValue&lt;T&gt;()</tt><a name="is a"></a> function is a
+template function that converts its argument of type <tt>T</tt> to
+a <tt>QScriptValue</tt>. The type <tt>T</tt> (in our case,
+<tt>PumpFilter</tt>) must be registered using
+<tt>Q_DECLARE_METATYPE()</tt>:</p>
+
+<div class="docText">
+<pre>
+Q_DECLARE_METATYPE(PumpFilter)
+</pre>
+</div>
+<br>
+
+<p class="docText">Here's the prototype class's definition:</p>
+
+<div class="docText">
+<pre>
+class PumpFilterPrototype : public QObject, public QScriptable
+{
+    Q_OBJECT
+    Q_PROPERTY(QDate fromDate READ fromDate WRITE setFromDate)
+    Q_PROPERTY(QDate toDate READ toDate WRITE setToDate)
+    ...
+    Q_PROPERTY(QString status READ status WRITE setStatus)
+
+public:
+    PumpFilterPrototype(QObject *parent = 0);
+
+    void setFromDate(const QDate &amp;date);
+    QDate fromDate() const;
+    void setToDate(const QDate &amp;date);
+    QDate toDate() const;
+    ...
+    void setStatus(const QString &amp;status);
+    QString status() const;
+
+private:
+    PumpFilter *wrappedFilter() const;
+};
+</pre>
+</div>
+<br>
+
+<p class="docText">The prototype class is derived from both
+<tt>QObject</tt> and <tt>QScriptable</tt>. We have used
+<tt>Q_PROPERTY()</tt> for every getter/setter accessor pair.
+Normally, we bother using <tt>Q_PROPERTY()</tt><a name=
+"that we"></a> only to make properties available to custom widget
+classes that we want to integrate with <span class="docEmphasis">Qt
+Designer</span><a name="in the"></a>, but they are also useful in
+the context of scripting. When we want to make functions available
+for scripting, we can make them either public slots or
+properties.</p>
+
+<p class="docText"><a name="one typical"></a>All the accessors are
+similar, so we will just show one typical example pair:</p>
+
+<div class="docText">
+<pre>
+void PumpFilterPrototype::setFromDate(const QDate &amp;date)
+{
+    wrappedFilter()-&gt;fromDate = date;
+}
+
+QDate PumpFilterPrototype::fromDate() const
+{
+    return wrappedFilter()-&gt;fromDate;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">And here's the <tt>wrappedFilter()</tt> private
+function:</p>
+
+<div class="docText">
+<pre>
+PumpFilter *PumpFilterPrototype::wrappedFilter() const
+{
+    return qscriptvalue_cast&lt;PumpFilter *&gt;(thisObject());
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1210"></a><a name=
+"iddle1489"></a><a name="iddle1979"></a><a name=
+"iddle4587"></a><a name="iddle5692"></a><a name=
+"iddle5714"></a><a name="iddle5715"></a><a name="iddle8035"></a>The
+<tt>QScriptable::thisObject()</tt> function returns the
+<tt>this</tt><a name="is returned"></a> object associated with the
+interpreter's currently executing function. It is returned as a
+<tt>QScriptValue</tt><a name="case a"></a>, and we cast it to the
+C++/Qt type it represents, in this case a <tt>PumpFilter
+*</tt><a name="work only"></a>. The cast will work only if we
+register <tt>PumpFilter *</tt> using
+<tt>Q_DECLARE_METATYPE()</tt>:</p>
+
+<div class="docText">
+<pre>
+Q_DECLARE_METATYPE(PumpFilter *)
+</pre>
+</div>
+<br>
+
+<p class="docText">Finally, here's the <tt>PumpFilterPrototype</tt>
+constructor:</p>
+
+<div class="docText">
+<pre>
+PumpFilterPrototype::PumpFilterPrototype(QObject *parent)
+    : QObject(parent)
+{
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="we don"></a>In this example, we don't
+let script writers instantiate their own
+<tt>PumpSpreadsheet</tt><a name="we provide"></a> objects; instead,
+we provide a global singleton object, <tt>spreadsheet</tt><a name=
+"can use"></a>, that they can use. To allow script writers to
+instantiate <tt>PumpSpreadsheet</tt><a name="for themselves"></a>s
+for themselves, we would need to register a
+<tt>pumpSpreadsheetConstructor()</tt> function, like we did for
+<tt>PumpFilter</tt>.</p>
+
+<p class="docText"><a name="scripts with"></a>In the Gas Pump
+example, it was sufficient to provide scripts with access to the
+application's widgets (e.g., to <tt>PumpSpreadsheet</tt><a name=
+"classes such"></a>) and to the application's custom data classes
+such as <tt>PumpFilter</tt><a name="sometimes also"></a>. Although
+not necessary for the Gas Pump example, it is sometimes also useful
+to make functions in C++ available to scripts. For example, here is
+a simple function defined in C++ that can be made accessible to a
+script:</p>
+
+<div class="docText">
+<pre>
+QScriptValue square(QScriptContext *context, QScriptEngine *interpreter)
+{
+    double x = context-&gt;argument(0).toNumber();
+    return QScriptValue(interpreter, x * x);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="intended for"></a>The signature for
+this and other functions intended for script use is always</p>
+
+<div class="docText">
+<pre>
+QScriptValue <span class=
+"docEmphasis">myFunc</span>(QScriptContext *context, QScriptEngine *interpreter)
+</pre>
+</div>
+<br>
+
+<p class="docText">The function's arguments are accessible through
+the <tt>QScriptContext::argument()</tt> function. The return value
+is a <tt>QScriptValue</tt>, and we create this with the
+<tt>QScriptEngine</tt> that was passed in as its first
+argument.</p>
+
+<p class="docText">The next example is more elaborate:</p>
+
+<div class="docText">
+<pre>
+QScriptValue sum(QScriptContext *context, QScriptEngine *interpreter)
+{
+    QScriptValue unaryFunc;
+    int i = 0;
+
+    if (context-&gt;argument(0).isFunction()) {
+        unaryFunc = context-&gt;argument(0);
+        i = 1;
+    }
+
+    double result = 0.0;
+    while (i &lt; context-&gt;argumentCount()) {
+        QScriptValue qsArg = context-&gt;argument(i);
+        if (unaryFunc.isValid()) {
+            QScriptValueList qsArgList;
+            qsArgList &lt;&lt; qsArg;
+            qsArg = unaryFunc.call(QScriptValue(), qsArgList);
+        }
+        result += qsArg.toNumber();
+        ++i;
+    }
+    return QScriptValue(interpreter, result);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle4005"></a><a name=
+"iddle5701"></a><a name="iddle5706"></a><a name="iddle7294"></a>The
+<tt>sum()</tt><a name="is to"></a> function can be called in two
+different ways. The simple way is to call it with numbers as
+arguments. In this case, <tt>unaryFunc</tt><a name="invalid"></a>
+will be an invalid <tt>QScriptValue</tt><a name=
+"action performed"></a>, and the action performed will be simply to
+sum the given numbers and return the result. The subtler way is to
+call the function with an ECMAScript function as the first
+argument, followed by any number of numeric arguments. In this
+case, the given function is called for each number, and the sum of
+the results of these calls is accumulated and returned. We saw this
+same function written in ECMAScript in the first section of this
+chapter (p. <a class="docLink" href=
+"ch22lev1sec1.html#page_514">514</a><a name="Using C"></a>). Using
+C++ rather than ECMAScript to implement low-level functionality can
+sometimes lead to significant performance gains.</p>
+
+<p class="docText"><a name="can call"></a>Before we can call C++
+functions from a script, we must make them available to the
+interpreter using <tt>newFunction()</tt> and
+<tt>setProperty()</tt>:</p>
+
+<div class="docText">
+<pre>
+QScriptValue qsSquare = interpreter.newFunction(square);
+interpreter.globalObject().setProperty("square", qsSquare);
+
+QScriptValue qsSum = interpreter.newFunction(sum);
+interpreter.globalObject().setProperty("sum", qsSum);
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="have made"></a>We have made both
+<tt>square()</tt> and <tt>sum()</tt><a name="use them"></a>
+available as global functions to the interpreter. Now we can use
+them in scripts, as the following snippet shows:</p>
+
+<div class="docText">
+<pre>
+interpreter.evaluate("print(sum(1, 2, 3, 4, 5, 6));");
+interpreter.evaluate("print(sum(square, 1, 2, 3, 4, 5, 6));");
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="making Qt"></a>This concludes our
+coverage of making Qt applications scriptable using the
+<span class="docEmphasis">QtScript</span><a name=
+"broad overview"></a> module. The module is provided with extensive
+documentation including a broad overview, and detailed descriptions
+of the classes it provides, including <tt>QScriptContext</tt>,
+<tt>QScriptEngine</tt>, <tt>QScriptValue</tt>, and
+<tt>QScriptable</tt>, all of which are worth reading.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch22lev1sec3.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch23.html"><img src="images/next.gif" width="20" height="20"
+border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

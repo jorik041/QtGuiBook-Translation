@@ -1,0 +1,582 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch08lev1sec1.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch08lev1sec1.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch08lev1sec1.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch08lev1sec1.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href="ch08.html"><img src=
+"images/prev.gif" width="20" height="20" border="0" align=
+"absmiddle" alt="Previous Page"></a> <a href=
+"ch08lev1sec2.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch08"></a>
+<h2 id="title-ID0E25NM" class="docChapterTitle">8. 2D Graphics</h2>
+
+<p class="docText"><img border="0" id="" width="200" height="131"
+src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzcmduZV9laXBjX2hwaDA4L2FjcnNvdGouZXBw.jpg"
+alt="">
+</p>
+
+<ul>
+<li>
+<p class="docList"><a name="iddle2949"></a><a name=
+"iddle3170"></a><a name="iddle4215"></a><a name=
+"iddle4242"></a><a name="iddle4316"></a><a name=
+"iddle5189"></a><a name="iddle5496"></a><a name=
+"iddle5584"></a><a name="iddle8250"></a><span class=
+"docEmphasis"><a class="docLink" href=
+"ch08lev1sec1.html#ch08lev1sec1">Painting with QPainter</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch08lev1sec2.html#ch08lev1sec2">Coordinate System
+Transformations</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch08lev1sec3.html#ch08lev1sec3">High-Quality Rendering with
+QImage</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch08lev1sec4.html#ch08lev1sec4">Item-Based Rendering with
+Graphics View</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch08lev1sec5.html#ch08lev1sec5">Printing</a></span>
+</p>
+</li>
+</ul>
+
+<p class="docText"><a name="graphics engine"></a>Qt's 2D graphics
+engine is based on the <tt>QPainter</tt> class.
+<tt>QPainter</tt><a name="geometric shapes"></a> can draw geometric
+shapes (points, lines, rectangles, ellipses, arcs, chords, pie
+segments, polygons, and Bézier curves), as well as pixmaps, images,
+and text. Furthermore, <tt>QPainter</tt><a name=
+"advanced features"></a> supports advanced features such as
+antialiasing (for text and shape edges), alpha blending, gradient
+filling, and vector paths. <tt>QPainter</tt> also supports linear
+transformations, such as translation, rotation, shearing, and
+scaling.</p>
+
+<p class="docText"><tt>QPainter</tt><a name="a"></a> can be used to
+draw on a "paint device", such as a <tt>QWidget</tt>, a
+<tt>QPixmap</tt>, a <tt>QImage</tt>, or a <tt>QSvgGenerator</tt>.
+<tt>QPainter</tt><a name="conjunction with"></a> can also be used
+in conjunction with <tt>QPrinter</tt><a name="we can"></a> for
+printing and for generating PDF documents. This means that we can
+often use the same code to display data on-screen and to produce
+printed reports.</p>
+
+<p class="docText">By reimplementing
+<tt>QWidget::paintEvent()</tt><a name="complete control"></a>, we
+can create custom widgets and exercise complete control over their
+appearance, as we saw in <a class="docLink" href=
+"ch05.html#ch05">Chapter 5</a><a name="predefined Qt"></a>. For
+customizing the look and feel of predefined Qt widgets, we can also
+specify a style sheet or create a <tt>QStyle</tt><a name=
+"both of"></a> subclass; we cover both of these approaches in
+<a class="docLink" href="ch19.html#ch19">Chapter 19</a>.</p>
+
+<p class="docText"><a name="numbers of"></a>A common requirement is
+the need to display large numbers of lightweight arbitrarily shaped
+items that the user can interact with on a 2D canvas. Qt 4.2
+introduced a completely new "graphics view" architecture centered
+on the <tt>QGraphicsView</tt>, <tt>QGraphicsScene</tt><a name=
+"and"></a>, and <tt>QGraphicsItem</tt><a name="offers a"></a>
+classes. This architecture offers a high-level interface for doing
+item-based graphics, and supports standard user actions on items,
+including moving, selecting, and grouping. The items themselves are
+drawn using <tt>QPainter</tt><a name="usual and"></a> as usual and
+can be transformed individually. We cover this architecture later
+in the chapter.</p>
+
+<p class="docText">An alternative to <tt>QPainter</tt><a name=
+"for drawing"></a> is to use OpenGL commands. OpenGL is a standard
+library for drawing 3D graphics. In <a class="docLink" href=
+"ch20.html#ch20">Chapter 20</a><a name="use the"></a>, we will see
+how to use the <span class="docEmphasis">QtOpenGL</span><a name=
+"Qt applications"></a> module, which makes it easy to integrate
+OpenGL code into Qt applications.</p>
+<a name="ch08lev1sec1"></a>
+<h3 class="docSection1Title" id="-100000">Painting with
+QPainter</h3>
+
+<p class="docText"><a name="iddle1199"></a><a name=
+"iddle1310"></a><a name="iddle1562"></a><a name=
+"iddle1568"></a><a name="iddle2238"></a><a name=
+"iddle2244"></a><a name="iddle2249"></a><a name=
+"iddle2252"></a><a name="iddle2260"></a><a name=
+"iddle2262"></a><a name="iddle2263"></a><a name=
+"iddle2265"></a><a name="iddle2268"></a><a name=
+"iddle2269"></a><a name="iddle2270"></a><a name=
+"iddle2271"></a><a name="iddle2274"></a><a name=
+"iddle2280"></a><a name="iddle2282"></a><a name=
+"iddle2288"></a><a name="iddle2364"></a><a name=
+"iddle2543"></a><a name="iddle2898"></a><a name=
+"iddle4225"></a><a name="iddle4308"></a><a name=
+"iddle4380"></a><a name="iddle4383"></a><a name=
+"iddle5510"></a><a name="iddle5511"></a><a name=
+"iddle5512"></a><a name="iddle5513"></a><a name=
+"iddle5517"></a><a name="iddle5519"></a><a name=
+"iddle5520"></a><a name="iddle5522"></a><a name=
+"iddle5525"></a><a name="iddle5526"></a><a name=
+"iddle5527"></a><a name="iddle5528"></a><a name=
+"iddle5531"></a><a name="iddle5532"></a><a name=
+"iddle5534"></a><a name="iddle5540"></a><a name=
+"iddle6559"></a><a name="iddle6969"></a><a name=
+"iddle7616"></a><a name="a widget"></a>To start painting to a paint
+device (typically a widget), we simply create a <tt>QPainter</tt>
+and pass a pointer to the device. For example:</p>
+
+<div class="docText">
+<pre>
+void MyWidget::paintEvent(QPaintEvent *event)
+{
+    QPainter painter(this);
+    ...
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">We can draw various shapes using
+<tt>QPainter</tt>'s <tt>draw...()</tt> functions. <a class=
+"docLink" href="#ch08fig01">Figure 8.1</a><a name="drawing is"></a>
+lists the most important ones. The way the drawing is performed is
+influenced by <a name="iddle1132"></a><a name=
+"iddle1156"></a><a name="iddle1170"></a><a name=
+"iddle1311"></a><a name="iddle1399"></a><a name=
+"iddle2072"></a><a name="iddle2253"></a><a name=
+"iddle2266"></a><a name="iddle2365"></a><a name=
+"iddle2733"></a><a name="iddle2816"></a><a name=
+"iddle4297"></a><a name="iddle4309"></a><a name=
+"iddle4788"></a><a name="iddle5030"></a><a name=
+"iddle5514"></a><a name="iddle5523"></a><a name=
+"iddle5556"></a><a name="iddle5559"></a><a name=
+"iddle5561"></a><a name="iddle5562"></a><a name=
+"iddle5581"></a><a name="iddle6867"></a><a name=
+"iddle7134"></a><a name="iddle7226"></a><a name=
+"iddle7282"></a><a name="iddle7303"></a><a name=
+"iddle7617"></a><a name="iddle8025"></a><tt>QPainter</tt><a name=
+"these are"></a>'s settings. Some of these are adopted from the
+device, whereas others are initialized to default values. The three
+main painter settings are the pen, the brush, and the font:</p>
+<a name="ch08fig01"></a>
+<center>
+<h5 class="docFigureTitle">Figure 8.1. <tt>QPainter</tt>'s most
+frequently used <tt>draw...()</tt> functions</h5>
+
+<p class="docText"><img border="0" id="" width="500" height="606"
+src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZmlncGNmaDFnMDgvaTBpcy4-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<ul>
+<li>
+<p class="docList">The <span class="docEmphasis">pen</span><a name=
+"of a"></a> is used for drawing lines and shape outlines. It
+consists of a color, a width, a line style, a cap style, and a join
+style. The pen styles are shown in <a class="docLink" href=
+"#ch08fig02">Figures 8.2</a><a name="and"></a> and <a class=
+"docLink" href="#ch08fig03">8.3</a>.</p>
+<a name="ch08fig02"></a>
+<center>
+<h5 class="docFigureTitle"><a name="and join"></a>Figure 8.2. Cap
+and join styles</h5>
+
+<p class="docText"><img border="0" id="" width="500" height="284"
+src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZmlncGNmaDJnMDgvaTBpcy4-.jpg"
+alt="">
+</p>
+</center>
+<a name="ch08fig03"></a>
+<center>
+<h5 class="docFigureTitle"><a name="Line styles"></a>Figure 8.3.
+Line styles</h5>
+
+<p class="docText"><img border="0" id="" width="500" height="156"
+src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZmlncGNmaDNnMDgvaTBpcy4-.jpg"
+alt="">
+</p>
+</center>
+</li>
+
+<li>
+<p class="docList">The <span class=
+"docEmphasis">brush</span><a name="consists of"></a> is the pattern
+used for filling geometric shapes. It normally consists of a color
+and a style, but it can also be a texture (a pixmap that is
+repeated infinitely) or a gradient. The brush styles are shown in
+<a class="docLink" href="#ch08fig04">Figure 8.4</a>.</p>
+<a name="ch08fig04"></a>
+<center>
+<h5 class="docFigureTitle">Figure 8.4. Predefined brush styles</h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZmlmYWlwY3RoNGcwOC9pMHNsLl9n.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="244" src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZmlncGNmaDRnMDgvaTBpcy4-.jpg"
+alt="">
+</center>
+</li>
+
+<li>
+<p class="docList">The <span class=
+"docEmphasis">font</span><a name="font has"></a> is used for
+drawing text. A font has many attributes, including a family and a
+point size.</p>
+</li>
+</ul>
+
+<p class="docText"><a name="calling"></a>These settings can be
+modified at any time by calling <tt>setPen()</tt>,
+<tt>setBrush()</tt>, and <tt>setFont()</tt> with a <tt>QPen</tt>,
+<tt>QBrush</tt>, or <tt>QFont</tt> object.</p>
+
+<p class="docText"><a name="to draw"></a>Let's see a few examples
+in practice. Here's the code to draw the ellipse shown in <a class=
+"docLink" href="#ch08fig05">Figure 8.5 (a)</a>:</p>
+
+<div class="docText">
+<pre>
+QPainter painter(this);
+painter.setRenderHint(QPainter::Antialiasing, true);
+painter.setPen(QPen(Qt::black, 12, Qt::DashDotLine, Qt::RoundCap));
+painter.setBrush(QBrush(Qt::green, Qt::SolidPattern));
+painter.drawEllipse(80, 80, 400, 240);
+</pre>
+</div>
+<br>
+<a name="ch08fig05"></a>
+<center>
+<h5 class="docFigureTitle">Figure 8.5. Geometric shape
+examples</h5>
+
+<p class="docText"><img border="0" id="" width="500" height="129"
+src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZmlqcGNnaDVnMDgvaTBwcy4-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText">The <tt>setRenderHint()</tt> call enables
+antialiasing, telling <tt>QPainter</tt><a name="edges to"></a> to
+use different color intensities on the edges to reduce the visual
+distortion that normally occurs when the edges of a shape are
+converted into pixels. The result is smoother edges on platforms
+and devices that support this feature.</p>
+
+<p class="docText"><a name="to draw"></a>Here's the code to draw
+the pie segment shown in <a class="docLink" href=
+"#ch08fig05">Figure 8.5 (b)</a>:</p>
+
+<div class="docText">
+<pre>
+QPainter painter(this);
+painter.setRenderHint(QPainter::Antialiasing, true);
+painter.setPen(QPen(Qt::black, 15, Qt::SolidLine, Qt::RoundCap,
+                    Qt::MiterJoin));
+painter.setBrush(QBrush(Qt::blue, Qt::DiagCrossPattern));
+painter.drawPie(80, 80, 400, 240, 60 * 16, 270 * 16);
+</pre>
+</div>
+<br>
+
+<p class="docText">The last two arguments to <tt>drawPie()</tt> are
+expressed in sixteenths of a degree.</p>
+
+<p class="docText">Here's the code to draw the cubic Bézier curve
+shown in <a class="docLink" href="#ch08fig05">Figure 8.5
+(c)</a>:</p>
+
+<div class="docText">
+<pre>
+QPainter painter(this);
+painter.setRenderHint(QPainter::Antialiasing, true);
+
+QPainterPath path;
+path.moveTo(80, 320);
+path.cubicTo(200, 80, 320, 80, 480, 320);
+
+painter.setPen(QPen(Qt::black, 8));
+painter.drawPath(path);
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1298"></a><a name=
+"iddle1309"></a><a name="iddle1474"></a><a name=
+"iddle1924"></a><a name="iddle2002"></a><a name=
+"iddle2003"></a><a name="iddle2004"></a><a name=
+"iddle2096"></a><a name="iddle2118"></a><a name=
+"iddle2217"></a><a name="iddle2704"></a><a name=
+"iddle2779"></a><a name="iddle3056"></a><a name=
+"iddle3399"></a><a name="iddle3850"></a><a name=
+"iddle4025"></a><a name="iddle4061"></a><a name=
+"iddle4298"></a><a name="iddle6024"></a><a name=
+"iddle6025"></a><a name="iddle6027"></a><a name=
+"iddle6028"></a><a name="iddle6029"></a><a name=
+"iddle6030"></a><a name="iddle6031"></a><a name=
+"iddle6032"></a><a name="iddle6039"></a><a name=
+"iddle6048"></a><a name="iddle6049"></a><a name=
+"iddle6052"></a><a name="iddle6060"></a><a name=
+"iddle6062"></a><a name="iddle6063"></a><a name=
+"iddle6065"></a><a name="iddle6066"></a><a name=
+"iddle6068"></a><a name="iddle6069"></a><a name=
+"iddle6070"></a><a name="iddle6082"></a><a name=
+"iddle6967"></a><a name="iddle6968"></a><a name=
+"iddle7558"></a><a name="iddle7559"></a><a name=
+"iddle7679"></a><a name="iddle8420"></a><a name=
+"iddle1673"></a><a name="iddle2944"></a><a name=
+"iddle3555"></a><a name="iddle4241"></a><a name=
+"iddle4286"></a><a name="iddle4320"></a><a name=
+"iddle5109"></a><a name="iddle5572"></a><a name=
+"iddle6736"></a><a name="iddle7150"></a><a name="iddle8417"></a>The
+<tt>QPainterPath</tt><a name="graphical elements"></a> class can
+specify arbitrary vector shapes by connecting basic graphical
+elements together: straight lines, ellipses, polygons, arcs, Bézier
+curves, and other painter paths. Painter paths are the ultimate
+drawing primitive in the sense that any shape or combination of
+shapes can be expressed as a painter path.</p>
+
+<p class="docText"><a name="A path"></a>A path specifies an
+outline, and the area described by the outline can be filled using
+a brush. In the example in <a class="docLink" href=
+"#ch08fig05">Figure 8.5 (c)</a><a name="a brush"></a>, we didn't
+set a brush, so only the outline is drawn.</p>
+
+<p class="docText"><a name="three examples"></a>These three
+examples use built-in brush patterns (<tt>Qt::SolidPattern</tt>,
+<tt>Qt::DiagCrossPattern</tt>, and <tt>Qt::NoBrush</tt><a name=
+"monochrome fill"></a>). In modern applications, gradient fills are
+a popular alternative to monochrome fill patterns. Gradients rely
+on color interpolation to obtain smooth transitions between two or
+more colors. They are frequently used to produce 3D effects; for
+example, the Plastique and Cleanlooks styles use gradients to
+render <tt>QPushButton</tt>s.</p>
+
+<p class="docText"><a name="and radial"></a>Qt supports three types
+of gradients: linear, conical, and radial. The Oven Timer example
+in the next section combines all three types of gradients in a
+single widget to make it look like the real thing.</p>
+
+<ul>
+<li>
+<p class="docList"><span class="docEmphasis">Linear
+gradients</span><a name="series of"></a> are defined by two control
+points and by a series of "color stops" on the line that connects
+these two points. For example, the linear gradient in <a class=
+"docLink" href="#ch08fig06">Figure 8.6</a> is created using the
+following code:</p>
+
+<div class="docText">
+<pre>
+QLinearGradient gradient(50, 100, 300, 350);
+gradient.setColorAt(0.0, Qt::white);
+gradient.setColorAt(0.2, Qt::green);
+gradient.setColorAt(1.0, Qt::black);
+</pre>
+</div>
+<a name="ch08fig06"></a>
+<center>
+<h5 class="docFigureTitle">Figure 8.6. <tt>QPainter</tt>'s gradient
+brushes</h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZ3BmYWlwY3RoNmcwOC9pMHNsLl9q.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="346" src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZmlqcGNnaDZnMDgvaTBwcy4-.jpg"
+alt="">
+</center>
+
+<p class="docList"><a name="positions between"></a>We specify three
+colors at three different positions between the two control points.
+Positions are specified as floating-point values between 0 and 1,
+where 0 corresponds to the first control point and 1 to the second
+control point. Colors between the specified stops are linearly
+interpolated.</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis">Radial
+gradients</span> are defined by a center point (<span class=
+"docEmphasis">x</span><sub>c</sub>, <span class=
+"docEmphasis">y</span><sub>c</sub>), a radius <span class=
+"docEmphasis">r</span>, and a focal point (<span class=
+"docEmphasis">x</span><sub>f</sub>, <span class=
+"docEmphasis">y</span><sub>f</sub><a name="point and"></a>), in
+addition to the color stops. The center point and the radius
+specify a circle. The colors spread outward from the focal point,
+which can be the center point or any other point inside the
+circle.</p>
+</li>
+
+<li>
+<p class="docList"><a name="iddle1157"></a><a name=
+"iddle1277"></a><a name="iddle1335"></a><a name=
+"iddle1620"></a><a name="iddle1725"></a><a name=
+"iddle1742"></a><a name="iddle1872"></a><a name=
+"iddle2116"></a><a name="iddle3622"></a><a name=
+"iddle4144"></a><a name="iddle4240"></a><a name=
+"iddle4305"></a><a name="iddle5498"></a><a name=
+"iddle5502"></a><a name="iddle6064"></a><a name=
+"iddle6080"></a><a name="iddle8210"></a><a name=
+"iddle8441"></a><a name="iddle8633"></a><a name=
+"iddle8657"></a><span class="docEmphasis">Conical
+gradients</span><a name="by a"></a> are defined by a center point
+(<span class="docEmphasis">x</span><sub>c</sub>, <span class=
+"docEmphasis">y</span><sub>c</sub><a name="point like"></a>) and an
+angle a. The colors spread around the center point like the sweep
+of a watch's seconds hand.</p>
+</li>
+</ul>
+
+<p class="docText"><a name="So far"></a>So far, we have mentioned
+<tt>QPainter</tt><a name="In addition"></a>'s pen, brush, and font
+settings. In addition to these, <tt>QPainter</tt><a name=
+"other settings"></a> has other settings that influence the way
+shapes and text are drawn:</p>
+
+<ul>
+<li>
+<p class="docList">The <span class="docEmphasis">background
+brush</span><a name="the brush"></a> is used to fill the background
+of geometric shapes (underneath the brush pattern), text, or
+bitmaps when the <span class="docEmphasis">background mode</span>
+is <tt>Qt::OpaqueMode</tt> (the default is
+<tt>Qt::TransparentMode</tt>).</p>
+</li>
+
+<li>
+<p class="docList">The <span class="docEmphasis">brush
+origin</span><a name="brush patterns"></a> is the starting point
+for brush patterns, normally the top-left corner of the widget.</p>
+</li>
+
+<li>
+<p class="docList">The <span class="docEmphasis">clip
+region</span><a name="Painting outside"></a> is the area of the
+device that can be painted. Painting outside the clip region has no
+effect.</p>
+</li>
+
+<li>
+<p class="docList">The <span class="docEmphasis">viewport</span>,
+<span class="docEmphasis">window</span>, and <span class=
+"docEmphasis">world transform</span> determine how logical
+<tt>QPainter</tt><a name="these are"></a> coordinates map to
+physical paint device coordinates. By default, these are set up so
+that the logical and physical coordinate systems coincide. We cover
+coordinate systems in the next section.</p>
+</li>
+
+<li>
+<p class="docList">The <span class="docEmphasis">composition
+mode</span><a name="interact with"></a> specifies how the newly
+drawn pixels should interact with the pixels already present on the
+paint device. The default is "source over", where drawn pixels are
+alpha-blended on top of existing pixels. This is supported only on
+certain devices and is covered later in this chapter.</p>
+</li>
+</ul>
+
+<p class="docText"><a name="iddle1171"></a><a name=
+"iddle2281"></a><a name="iddle2970"></a><a name=
+"iddle5533"></a><a name="iddle5547"></a><a name=
+"iddle5552"></a><a name="iddle6918"></a><a name=
+"iddle7009"></a><a name="iddle8442"></a><a name=
+"iddle8634"></a><a name="we can"></a>At any time, we can save the
+current state of a painter on an internal stack by calling
+<tt>save()</tt> and restore it later on by calling
+<tt>restore()</tt><a name="change some"></a>. This can be useful if
+we want to temporarily change some painter settings and then reset
+them to their previous values, as we will see in the next
+section.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href="ch08.html"><img src=
+"images/prev.gif" width="20" height="20" border="0" align=
+"absmiddle" alt="Previous Page"></a> <a href=
+"ch08lev1sec2.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

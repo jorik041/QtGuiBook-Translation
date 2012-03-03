@@ -1,0 +1,144 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch09lev1sec3.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch09lev1sec3.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch09lev1sec3.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch09lev1sec3.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch09lev1sec2.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch10.html"><img src="images/next.gif" width="20" height="20"
+border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch09lev1sec3"></a>
+<h3 class="docSection1Title" id="-100000">Clipboard Handling</h3>
+
+<p class="docText"><a name="Most applications"></a>Most
+applications make use of Qt's built-in clipboard handling in one
+way or another. For example, the <tt>QTextEdit</tt> class provides
+<tt>cut()</tt>, <tt>copy()</tt>, and <tt>paste()</tt><a name=
+"well as"></a> slots as well as keyboard shortcuts, so little or no
+additional code is required.</p>
+
+<p class="docText"><a name="writing our"></a>When writing our own
+classes, we can access the clipboard through
+<tt>QApplication::clipboard()</tt>, which returns a pointer to the
+application's <tt>QClipboard</tt> object. Handling the system
+clipboard is easy: Call <tt>setText()</tt>, <tt>setImage()</tt>, or
+<tt>setPixmap()</tt> to put data onto the clipboard, and call
+<tt>text()</tt>, <tt>image()</tt>, or <tt>pixmap()</tt><a name=
+"examples of"></a> to retrieve data from the clipboard. We have
+already seen examples of clipboard use in the Spreadsheet
+application from <a class="docLink" href="ch04.html#ch04">Chapter
+4</a>.</p>
+
+<p class="docText"><a name="not be"></a>For some applications, the
+built-in functionality might not be sufficient. For example, we
+might want to provide data that isn't just text or an image, or we
+might want to provide data in many different formats for maximum
+interoperability with other applications. The issue is very similar
+to what we encountered earlier with drag and drop, and the answer
+is also similar: We can subclass <tt>QMimeData</tt> and reimplement
+a few virtual functions.</p>
+
+<p class="docText"><a name="custom"></a>If our application supports
+drag and drop through a custom <tt>QMimeData</tt> subclass, we can
+simply reuse the <tt>QMimeData</tt><a name="using the"></a>
+subclass and put it on the clipboard using the
+<tt>setMimeData()</tt> function. To retrieve the data, we can call
+<tt>mimeData()</tt> on the clipboard.</p>
+
+<p class="docText"><a name="a selection"></a>On X11, it is usually
+possible to paste a selection by clicking the middle button of a
+three-button mouse. This is done using a separate "selection"
+clipboard. If you want your widgets to support this kind of
+clipboard as well as the standard one, you must pass
+<tt>QClipboard::Selection</tt><a name="additional argument"></a> as
+an additional argument to the various clipboard calls. For example,
+here's how we would reimplement
+<tt>mouseReleaseEvent()</tt><a name="middle mouse"></a> in a text
+editor to support pasting using the middle mouse button:</p>
+
+<div class="docText">
+<pre>
+void MyTextEditor::mouseReleaseEvent(QMouseEvent *event)
+{
+    QClipboard *clipboard = QApplication::clipboard();
+    if (event-&gt;button() == Qt::MidButton
+            &amp;&amp; clipboard-&gt;supportsSelection()) {
+        QString text = clipboard-&gt;text(QClipboard::Selection);
+        pasteText(text);
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle2021"></a><a name=
+"iddle7890"></a><a name="On X"></a>On X11, the
+<tt>supportsSelection()</tt> function returns <tt>true</tt><a name=
+"it returns"></a>. On other platforms, it returns
+<tt>false</tt>.</p>
+
+<p class="docText"><a name="we want"></a>If we want to be notified
+whenever the clipboard's contents change, we can connect the
+<tt>QClipboard::dataChanged()</tt> signal to a custom slot.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch09lev1sec2.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch10.html"><img src="images/next.gif" width="20" height="20"
+border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

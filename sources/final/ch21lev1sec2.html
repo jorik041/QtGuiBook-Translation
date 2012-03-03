@@ -1,0 +1,305 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch21lev1sec2.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch21lev1sec2.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch21lev1sec2.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch21lev1sec2.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch21lev1sec1.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch21lev1sec3.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch21lev1sec2"></a>
+<h3 class="docSection1Title" id="-100000">Making Applications
+Plugin-Aware</h3>
+
+<p class="docText"><a name="An application"></a>An application
+plugin is a dynamic library that implements one or more
+<span class="docEmphasis">interfaces</span><a name="is a"></a>. An
+interface is a class that consists exclusively of pure virtual
+functions. The communication between the application and the
+plugins is done through the interface's virtual table. In this
+section, we will focus on how to use a plugin in a Qt application
+through its interfaces, and in the next section we will show how to
+implement a plugin.</p>
+
+<p class="docText"><a name="provide a"></a>To provide a concrete
+example, we will create the simple Text Art application shown in
+<a class="docLink" href="#ch21fig03">Figure 21.3</a><a name=
+"the list"></a>. The text effects are provided by plugins; the
+application retrieves the list of text effects provided by each
+plugin and iterates over them to show each one as an item in a
+<tt>QListWidget</tt>.</p>
+<a name="ch21fig03"></a>
+<center>
+<h5 class="docFigureTitle">Figure 21.3. The Text Art
+application</h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83cHBfZWhqeHQvYWx0c2NpdGEuZ3J0.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="328" src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83cC5laHhwZ2ovaXN0dGNhcnQ-.jpg"
+alt="">
+</center>
+<br>
+
+<p class="docText"><a name="one interface"></a>The Text Art
+application defines one interface:</p>
+
+<div class="docText">
+<pre>
+class TextArtInterface
+{
+public:
+    virtual ~TextArtInterface() { }
+
+    virtual QStringList effects() const = 0;
+    virtual QPixmap applyEffect(const QString &amp;effect,
+                                const QString &amp;text,
+                                const QFont &amp;font, const QSize &amp;size,
+                                const QPen &amp;pen,
+                                const QBrush &amp;brush) = 0;
+};
+
+Q_DECLARE_INTERFACE(TextArtInterface,
+                    "com.software-inc.TextArt.TextArtInterface/1.0")
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="function that"></a>An interface class
+normally declares a virtual destructor, a virtual function that
+returns a <tt>QStringList</tt><a name="destructor is"></a>, and one
+or more other virtual functions. The destructor is there primarily
+to silence the compiler, which might otherwise complain about
+<a name="iddle7998"></a><a name="has virtual"></a>the lack of a
+virtual destructor in a class that has virtual functions. In this
+example, the <tt>effects()</tt><a name="list of"></a> function
+returns a list of the text effects the plugin can provide. We can
+think of this list as a list of keys. Every time we call one of the
+other functions, we pass one of these keys as first argument,
+making it possible to implement multiple effects in one plugin.</p>
+
+<p class="docText"><a name="we use"></a>At the end, we use the
+<tt>Q_DECLARE_INTERFACE()</tt><a name="macro to"></a> macro to
+associate an identifier to the interface. The identifier normally
+has four components: an inverted domain name specifying the creator
+of the interface, the name of the application, the name of the
+interface, and a version number. Whenever we alter the interface
+(e.g., by adding a virtual function or changing the signature of an
+existing function), we must remember to increase the version
+number; otherwise, the application might crash trying to access an
+outdated plugin.</p>
+
+<p class="docText"><a name="is implemented"></a>The application is
+implemented in a class called <tt>TextArtDialog</tt><a name=
+"will show"></a>. We will show only the code that is relevant to
+making it plugin-aware. Let's start with the constructor:</p>
+
+<div class="docText">
+<pre>
+TextArtDialog::TextArtDialog(const QString &amp;text, QWidget *parent)
+    : QDialog(parent)
+{
+    listWidget = new QListWidget;
+    listWidget-&gt;setViewMode(QListWidget::IconMode);
+    listWidget-&gt;setMovement(QListWidget::Static);
+    listWidget-&gt;setIconSize(QSize(260, 80));
+    ...
+    loadPlugins();
+    populateListWidget(text);
+    ...
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle3245"></a><a name=
+"iddle3606"></a><a name="iddle3947"></a><a name=
+"iddle4387"></a><a name="iddle5489"></a><a name=
+"iddle5596"></a><a name="iddle7999"></a><a name="iddle8000"></a>The
+constructor creates a <tt>QListWidget</tt> to list the available
+effects. It calls the private function <tt>loadPlugins()</tt> to
+find and load any plugins that implement the
+<tt>TextArtInterface</tt><a name="private function"></a> and
+populates the list widget accordingly by calling another private
+function, <tt>populateListWidget()</tt>.</p>
+
+<div class="docText">
+<pre>
+void TextArtDialog::loadPlugins()
+{
+    QDir pluginsDir = directoryOf("plugins");
+    foreach (QString fileName, pluginsDir.entryList(QDir::Files)) {
+        QPluginLoader loader(pluginsDir.absoluteFilePath(fileName));
+        if (TextArtInterface *interface =
+                    qobject_cast&lt;TextArtInterface *&gt;(loader.instance()))
+            interfaces.append(interface);
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">In <tt>loadPlugins()</tt>, we start by
+retrieving the application's <tt>plugins</tt><a name="all the"></a>
+directory. Then we attempt to load all the files in the
+<tt>plugins</tt> directory. The <tt>directoryOf()</tt><a name=
+"used in"></a> function is the same as the one we first used in
+<a class="docLink" href="ch17.html#ch17">Chapter 17</a> (p.
+<a class="docLink" href="ch17lev1sec2.html#page_410">410</a>).</p>
+
+<p class="docText"><a name="is a"></a>If the file we try to load is
+a Qt plugin that uses the same version of Qt as the application,
+<tt>QPluginLoader::instance()</tt> will return a <tt>QObject *</tt>
+that points to a Qt plugin. We use <tt>qobject_cast&lt;T&gt;()</tt>
+to check whether the plugin implements the
+<tt>TextArtInterface</tt><a name="the"></a>. Each time the cast is
+successful, we add the interface to the
+<tt>TextArtDialog</tt><a name="type"></a>'s list of interfaces (of
+type <tt>QList&lt;TextArtInterface *&gt;</tt>).</p>
+
+<p class="docText"><a name="may want"></a>Some applications may
+want to load two or more different interfaces. In such cases, the
+code for obtaining the interfaces would look more like this:</p>
+
+<div class="docText">
+<pre>
+QObject *plugin = loader.instance();
+if (TextArtInterface *i = qobject_cast&lt;TextArtInterface *&gt;(plugin))
+    textArtInterfaces.append(i);
+if (BorderArtInterface *i = qobject_cast&lt;BorderArtInterface *&gt;(plugin))
+    borderArtInterfaces.append(i);
+if (TextureInterface *i = qobject_cast&lt;TextureInterface *&gt;(plugin))
+    textureInterfaces.append(i);
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="The same"></a>The same plugin may
+successfully cast to more than one interface pointer if it uses
+multiple inheritance.</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+void TextArtDialog::populateListWidget(const QString &amp;text)
+{
+    QFont font("Helvetica", iconSize.height(), QFont::Bold);
+    QSize iconSize = listWidget-&gt;iconSize();
+    QPen pen(QColor("darkseagreen"));
+
+    QLinearGradient gradient(0, 0, iconSize.width() / 2,
+                             iconSize.height() / 2);
+    gradient.setColorAt(0.0, QColor("darkolivegreen"));
+    gradient.setColorAt(0.8, QColor("darkgreen"));
+    gradient.setColorAt(1.0, QColor("lightgreen"));
+
+    foreach (TextArtInterface *interface, interfaces) {
+        foreach (QString effect, interface-&gt;effects()) {
+            QListWidgetItem *item = new QListWidgetItem(effect,
+                                                        listWidget);
+            QPixmap pixmap = interface-&gt;applyEffect(effect, text, font,
+                                                       iconSize, pen,
+                                                       gradient);
+            item-&gt;setData(Qt::DecorationRole, pixmap);
+        }
+    }
+    listWidget-&gt;setCurrentRow(0);
+}
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1295"></a><a name=
+"iddle1296"></a><a name="iddle2566"></a><a name=
+"iddle5297"></a><a name="iddle7822"></a>The
+<tt>populateListWidget()</tt><a name="by creating"></a> function
+begins by creating some variables to pass to the
+<tt>applyEffect()</tt><a name="particular a"></a> function, in
+particular a font, a pen, and a linear gradient. It then iterates
+over every <tt>TextArtInterface</tt> that was found by
+<tt>loadPlugins()</tt>. For each effect provided by each interface,
+a new <tt>QListWidgetItem</tt><a name="of the"></a> is created with
+its text set to the name of the effect, and with a <tt>QPixmap</tt>
+created using <tt>applyEffect()</tt>.</p>
+
+<p class="docText"><a name="how to"></a>In this section, we have
+seen how to load plugins by calling <tt>loadPlugins()</tt><a name=
+"in"></a> in the constructor, and how to make use of them in
+<tt>populateListWidget()</tt><a name="no plugins"></a>. The code
+copes gracefully whether there are no plugins providing
+<tt>TextArtInterface</tt><a name="time the"></a>s, just one, or
+more than one. Furthermore, additional plugins could be added
+later: Every time the application starts up, it loads whatever
+plugins it finds that provide the interfaces it wants. This makes
+it easy to extend the application's functionality without changing
+the application itself.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch21lev1sec1.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch21lev1sec3.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

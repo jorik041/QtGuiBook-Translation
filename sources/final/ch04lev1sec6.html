@@ -1,0 +1,710 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch04lev1sec6.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch04lev1sec6.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch04lev1sec6.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch04lev1sec6.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch04lev1sec5.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch05.html"><img src="images/next.gif" width="20" height="20"
+border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch04lev1sec6"></a>
+<h3 class="docSection1Title" id="-100000">Subclassing
+QTableWidgetItem</h3>
+
+<p class="docText"><a name="The"></a>The <tt>Cell</tt><a name=
+"derived from"></a> class is derived from
+<tt>QTableWidgetItem</tt><a name="class is"></a>. The class is
+designed to work well with <tt>Spreadsheet</tt><a name=
+"and could"></a>, but it has no specific dependencies on that class
+and could in theory be used in any <tt>QTableWidget</tt>. Here's
+the header file:</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+#ifndef CELL_H
+#define CELL_H
+
+#include &lt;QTableWidgetItem&gt;
+
+class Cell : public QTableWidgetItem
+{
+public:
+    Cell();
+
+    QTableWidgetItem *clone() const;
+    void setData(int role, const QVariant &amp;value);
+    QVariant data(int role) const;
+    void setFormula(const QString &amp;formula);
+    QString formula() const;
+    void setDirty();
+
+private:
+    QVariant value() const;
+    QVariant evalExpression(const QString &amp;str, int &amp;pos) const;
+    QVariant evalTerm(const QString &amp;str, int &amp;pos) const;
+    QVariant evalFactor(const QString &amp;str, int &amp;pos) const;
+
+    mutable QVariant cachedValue;
+    mutable bool cacheIsDirty;
+};
+
+#endif
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1500"></a><a name=
+"iddle2173"></a><a name="iddle2337"></a><a name=
+"iddle3957"></a><a name="iddle6033"></a><a name="iddle6040"></a>The
+<tt>Cell</tt> class extends <tt>QTableWidgetItem</tt> by adding two
+private variables:</p>
+
+<ul>
+<li>
+<p class="docList"><tt>cachedValue</tt> caches the cell's value as
+a <tt>QVariant</tt>.</p>
+</li>
+
+<li>
+<p class="docList"><tt>cacheIsDirty</tt> is <tt>true</tt> if the
+cached value isn't up-to-date.</p>
+</li>
+</ul>
+
+<p class="docText">We use <tt>QVariant</tt> because some cells have
+a <tt>double</tt> value, while others have a <tt>QString</tt>
+value.</p>
+
+<p class="docText">The <tt>cachedValue</tt> and
+<tt>cacheIsDirty</tt> variables are declared with the C++
+<tt>mutable</tt><a name="these variables"></a> keyword. This allows
+us to modify these variables in const functions. Alternatively, we
+could recalculate the value each time <tt>text()</tt> is called,
+but that would be needlessly inefficient.</p>
+
+<p class="docText">Notice that there is no <tt>Q_OBJECT</tt> macro
+in the class definition. <tt>Cell</tt> is a plain C++ class, with
+no signals or slots. In fact, because <tt>QTableWidgetItem</tt>
+isn't derived from <tt>QObject</tt>, we cannot have signals and
+slots in <tt>Cell</tt> as it stands. Qt's item classes are not
+derived from <tt>QObject</tt><a name="and slots"></a> to keep their
+overhead to the barest minimum. If signals and slots are needed,
+they can be implemented in the widget that contains the items or,
+exceptionally, using multiple inheritance with
+<tt>QObject</tt>.</p>
+
+<p class="docText">Here's the start of <tt>cell.cpp</tt>:</p>
+
+<div class="docText">
+<pre>
+#include &lt;QtGui&gt;
+
+#include "cell.h"
+
+Cell::Cell()
+{
+    setDirty();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="set the"></a>In the constructor, we
+only need to set the cache as dirty. There is no need to pass a
+parent; when the cell is inserted into a <tt>QTableWidget</tt> with
+<tt>setItem()</tt>, the <tt>QTableWidget</tt> will automatically
+take ownership of it.</p>
+
+<p class="docText">Every <tt>QTableWidgetItem</tt> can hold some
+data, up to one <tt>QVariant</tt><a name="are"></a> for each data
+"role". The most commonly used roles are <tt>Qt::EditRole</tt> and
+<tt>Qt::DisplayRole</tt><a name="edit role"></a>. The edit role is
+used for data that is to be edited, and the display role is for
+data that is to be displayed. Often the data for both is the same,
+but in <tt>Cell</tt><a name="role corresponds"></a> the edit role
+corresponds to the cell's formula and the display role corresponds
+to the cell's value (the result of evaluating the formula).</p>
+
+<div class="docText">
+<pre>
+QTableWidgetItem *Cell::clone() const
+{
+    return new Cell(*this);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1501"></a><a name=
+"iddle1506"></a><a name="iddle1507"></a><a name=
+"iddle1508"></a><a name="iddle1509"></a><a name=
+"iddle1628"></a><a name="iddle2174"></a><a name=
+"iddle2338"></a><a name="iddle2841"></a><a name=
+"iddle6034"></a><a name="iddle6041"></a><a name=
+"iddle6210"></a><a name="iddle6223"></a><a name=
+"iddle6228"></a><a name="iddle6231"></a><a name=
+"iddle7178"></a><a name="iddle7190"></a><a name=
+"iddle7196"></a><a name="iddle7228"></a><a name=
+"iddle7255"></a><a name="iddle7989"></a><a name="The"></a>The
+<tt>clone()</tt><a name="called by"></a> function is called by
+<tt>QTableWidget</tt><a name="it needs"></a> when it needs to
+create a new cell—for example, when the user starts typing into an
+empty cell that has not been used before. The instance passed to
+<tt>QTableWidget::setItemPrototype()</tt><a name="for"></a> is the
+item that is cloned. Since member-wise copying is sufficient for
+<tt>Cell</tt><a name="default copy"></a>, we are relying on the
+default copy constructor automatically created by C++ to create new
+<tt>Cell</tt> instances in the <tt>clone()</tt> function.</p>
+
+<div class="docText">
+<pre>
+void Cell::setFormula(const QString &amp;formula)
+{
+    setData(Qt::EditRole, formula);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>setFormula()</tt><a name=
+"for calling"></a> function sets the cell's formula. It is simply a
+convenience function for calling <tt>setData()</tt><a name=
+"from"></a> with the edit role. It is called from
+<tt>Spreadsheet::setFormula()</tt>.</p>
+
+<div class="docText">
+<pre>
+QString Cell::formula() const
+{
+    return data(Qt::EditRole).toString();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>formula()</tt> function is called from
+<tt>Spreadsheet::formula()</tt>. Like <tt>setFormula()</tt>, it is
+a convenience function, this time retrieving the item's
+<tt>EditRole</tt> data.</p>
+
+<div class="docText">
+<pre>
+void Cell::setData(int role, const QVariant &amp;value)
+{
+    QTableWidgetItem::setData(role, value);
+    if (role == Qt::EditRole)
+        setDirty();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">If we have a new formula, we set
+<tt>cacheIsDirty</tt> to <tt>true</tt><a name="next time"></a> to
+ensure that the cell is recalculated the next time <tt>text()</tt>
+is called.</p>
+
+<p class="docText"><a name="is no"></a>There is no <tt>text()</tt>
+function defined in <tt>Cell</tt>, although we call <tt>text()</tt>
+on <tt>Cell</tt> instances in <tt>Spreadsheet::text()</tt>. The
+<tt>text()</tt> function is a convenience function provided by
+<tt>QTableWidgetItem</tt>; it is the equivalent of calling
+<tt>data(Qt::DisplayRole).toString()</tt>.</p>
+
+<div class="docText">
+<pre>
+void Cell::setDirty()
+{
+    cacheIsDirty = true;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>setDirty()</tt><a name=
+"simply sets"></a> function is called to force a recalculation of
+the cell's value. It simply sets <tt>cacheIsDirty</tt><a name=
+"to"></a> to <tt>true</tt>, meaning that
+<tt>cachedValue</tt><a name="longer up"></a> is no longer
+up-to-date. The recalculation isn't performed until it is
+necessary.</p>
+
+<div class="docText">
+<pre>
+QVariant Cell::data(int role) const
+{
+    if (role == Qt::DisplayRole) {
+        if (value().isValid()) {
+            return value().toString();
+        } else {
+            return "####";
+        }
+    } else if (role == Qt::TextAlignmentRole) {
+        if (value().type() == QVariant::String) {
+            return int(Qt::AlignLeft | Qt::AlignVCenter);
+        } else {
+            return int(Qt::AlignRight | Qt::AlignVCenter);
+        }
+    } else {
+        return QTableWidgetItem::data(role);
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1136"></a><a name=
+"iddle1502"></a><a name="iddle1510"></a><a name=
+"iddle2006"></a><a name="iddle2018"></a><a name=
+"iddle3287"></a><a name="iddle3341"></a><a name=
+"iddle4067"></a><a name="iddle4806"></a><a name=
+"iddle6073"></a><a name="iddle6225"></a><a name=
+"iddle6458"></a><a name="iddle6459"></a><a name=
+"iddle7993"></a><a name="iddle8130"></a><a name="iddle8384"></a>The
+<tt>data()</tt><a name="is reimplemented"></a> function is
+reimplemented from <tt>QTableWidgetItem</tt><a name=
+"the spreadsheet"></a>. It returns the text that should be shown in
+the spreadsheet if called with <tt>Qt::DisplayRole</tt><a name=
+"with"></a>, and the formula if called with <tt>Qt::EditRole</tt>.
+It returns a suitable alignment if called with
+<tt>Qt::TextAlignmentRole</tt>. In the <tt>DisplayRole</tt> case,
+it relies on <tt>value()</tt><a name="formula is"></a> to compute
+the cell's value. If the value is invalid (because the formula is
+wrong), we return "####".</p>
+
+<p class="docText">The <tt>Cell::value()</tt> function used in
+<tt>data()</tt> returns a <tt>QVariant</tt>. A
+<tt>QVariant</tt><a name="as"></a> can store values of different
+types, such as <tt>double</tt> and <tt>QString</tt><a name=
+"other types"></a>, and provides functions to convert the variant
+to other types. For example, calling <tt>toString()</tt><a name=
+"a variant"></a> on a variant that holds a <tt>double</tt> value
+produces a string representation of the <tt>double</tt>. A
+<tt>QVariant</tt> constructed using the default constructor is an
+"invalid" variant.</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+const QVariant Invalid;
+QVariant Cell::value() const
+{
+    if (cacheIsDirty) {
+        cacheIsDirty = false;
+
+        QString formulaStr = formula();
+        if (formulaStr.startsWith('\'')) {
+            cachedValue = formulaStr.mid(1);
+        } else if (formulaStr.startsWith('=')) {
+            cachedValue = Invalid;
+            QString expr = formulaStr.mid(1);
+            expr.replace(" ", "");
+            expr.append(QChar::Null);
+
+            int pos = 0;
+            cachedValue = evalExpression(expr, pos);
+            if (expr[pos] != QChar::Null)
+                cachedValue = Invalid;
+        } else {
+            bool ok;
+            double d = formulaStr.toDouble(&amp;ok);
+            if (ok) {
+                cachedValue = d;
+            } else {
+                cachedValue = formulaStr;
+            }
+        }
+    }
+    return cachedValue;
+}
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle2644"></a><a name=
+"iddle3958"></a><a name="iddle4068"></a><a name=
+"iddle4807"></a><a name="iddle5943"></a><a name="iddle8105"></a>The
+<tt>value()</tt> private function returns the cell's value. If
+<tt>cacheIsDirty</tt> is <tt>true</tt>, we need to recalculate the
+value.</p>
+
+<p class="docText"><a name="quote occupies"></a>If the formula
+starts with a single quote (e.g., "'12345"), the single quote
+occupies position 0 and the value is the string from position 1 to
+the end.</p>
+
+<p class="docText"><a name="If the"></a>If the formula starts with
+an equals sign ('='), we take the string from position 1 and remove
+any spaces it may contain. Then we call
+<tt>evalExpression()</tt><a name="the value"></a> to compute the
+value of the expression. The <tt>pos</tt><a name="is passed"></a>
+argument is passed by reference; it indicates the position of the
+character where parsing should begin. After the call to
+<tt>evalExpression()</tt>, the character at position <tt>pos</tt>
+should be the <tt>QChar::Null</tt><a name="failed before"></a>
+character we appended, if it was successfully parsed. If the parse
+failed before the end, we set <tt>cachedValue</tt> to be
+<tt>Invalid</tt>.</p>
+
+<p class="docText"><a name="a single"></a>If the formula doesn't
+begin with a single quote or an equals sign, we attempt to convert
+it to a floating-point value using <tt>toDouble()</tt>. If the
+conversion works, we set <tt>cachedValue</tt> to be the resulting
+number; otherwise, we set <tt>cachedValue</tt> to be the formula
+string. For example, a formula of "1.50" causes <tt>toDouble()</tt>
+to set <tt>ok</tt> to <tt>true</tt> and return 1.5, while a formula
+of "World Population" causes <tt>toDouble()</tt> to set <tt>ok</tt>
+to <tt>false</tt> and return 0.0.</p>
+
+<p class="docText">By giving <tt>toDouble()</tt> a pointer to a
+<tt>bool</tt><a name="a string"></a>, we are able to distinguish
+between the conversion of a string that represents the numeric
+value 0.0 and a conversion error (where 0.0 is also returned but
+the <tt>bool</tt> is set to <tt>false</tt><a name="value on"></a>).
+Sometimes the returning of a zero value on conversion failure is
+exactly what we need, in which case we do not bother passing a
+pointer to a <tt>bool</tt><a name="to report"></a>. For performance
+and portability reasons, Qt never uses C++ exceptions to report
+failure. This doesn't prevent you from using them in Qt programs if
+your compiler supports them.</p>
+
+<p class="docText">The <tt>value()</tt><a name="is declared"></a>
+function is declared const. We had to declare <tt>cachedValue</tt>
+and <tt>cacheIsValid</tt><a name="to modify"></a> as mutable
+variables so that the compiler will allow us to modify them in
+const functions. It might be tempting to make
+<tt>value()</tt><a name="and remove"></a> non-const and remove the
+<tt>mutable</tt><a name="would not"></a> keywords, but that would
+not compile because we call <tt>value()</tt> from
+<tt>data()</tt><a name="const function"></a>, a const function.</p>
+
+<blockquote>
+<p class="docText">
+_________________________________________________________________</p>
+</blockquote>
+
+<p class="docText"><a name="The rest"></a>We have now completed the
+Spreadsheet application, apart from parsing formulas. The rest of
+this section covers <tt>evalExpression()</tt> and the two helper
+functions <tt>evalTerm()</tt> and <tt>evalFactor()</tt><a name=
+"but it"></a>. The code is a bit complicated, but it is included
+here to make the application complete. Since the code is not
+related to GUI programming, you can safely skip it and continue
+reading from <a class="docLink" href="ch05.html#ch05">Chapter
+5</a>.</p>
+
+<p class="docText"><a name="iddle1503"></a><a name=
+"iddle2474"></a><a name="iddle4274"></a><a name="iddle6808"></a>The
+<tt>evalExpression()</tt><a name="is defined"></a> function returns
+the value of a spreadsheet expression. An expression is defined as
+one or more terms separated by '+' or '-' operators. The terms
+themselves are defined as one or more factors separated by '*' or
+'/' operators. By breaking down expressions into terms and terms
+into factors, we ensure that the operators are applied with the
+correct precedence.</p>
+
+<p class="docText"><a name="its first"></a>For example, "2*C5+D6"
+is an expression with "2*C5" as its first term and "D6" as its
+second term. The term "2*C5" has "2" as its first factor and "C5"
+as its second factor, and the term "D6" consists of the single
+factor "D6". A factor can be a number ("2"), a cell location
+("C5"), or an expression in parentheses, optionally preceded by a
+unary minus.</p>
+
+<p class="docText">The syntax of spreadsheet expressions is defined
+in <a class="docLink" href="#ch04fig10">Figure 4.10</a>. For each
+symbol in the grammar (<span class="docEmphasis">Expression</span>,
+<span class="docEmphasis">Term</span>, and <span class=
+"docEmphasis">Factor</span><a name="it and"></a>), there is a
+corresponding member function that parses it and whose structure
+closely follows the grammar. Parsers written this way are called
+<span class="docEmphasis">recursive-descent parsers</span>.</p>
+<a name="ch04fig10"></a>
+<center>
+<h5 class="docFigureTitle"><a name="Syntax diagram"></a>Figure
+4.10. Syntax diagram for spreadsheet expressions</h5>
+
+<p class="docText"><img border="0" id="" width="481" height="111"
+src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzcGlnZmlzaC9mMGk0Z2MwLjE-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText">Let's start with <tt>evalExpression()</tt>, the
+function that parses an <span class=
+"docEmphasis">Expression</span>:</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+QVariant Cell::evalExpression(const QString &amp;str, int &amp;pos) const
+{
+    QVariant result = evalTerm(str, pos);
+    while (str[pos] != QChar::Null) {
+        QChar op = str[pos];
+        if (op != '+' &amp;&amp; op != '-')
+            return result;
+        ++pos;
+
+        QVariant term = evalTerm(str, pos);
+        if (result.type() == QVariant::Double
+                &amp;&amp; term.type() == QVariant::Double) {
+            if (op == '+') {
+                result = result.toDouble() + term.toDouble();
+            } else {
+                result = result.toDouble() - term.toDouble();
+            }
+        } else {
+            result = Invalid;
+        }
+    }
+    return result;
+}
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1504"></a><a name=
+"iddle1505"></a><a name="iddle2179"></a><a name=
+"iddle2475"></a><a name="iddle2476"></a>First, we call
+<tt>evalTerm()</tt><a name="character is"></a> to get the value of
+the first term. If the following character is '+' or '-', we
+continue by calling <tt>evalTerm()</tt><a name="a second"></a> a
+second time; otherwise, the expression consists of a single term,
+and we return its value as the value of the whole expression. After
+we have the value of the first two terms, we compute the result of
+the operation, depending on the operator. If both terms evaluated
+to a <tt>double</tt><a name="the result"></a>, we compute the
+result as a <tt>double</tt><a name="set the"></a>; otherwise, we
+set the result to be <tt>Invalid</tt>.</p>
+
+<p class="docText"><a name="This works"></a>We continue like this
+until there are no more terms. This works correctly because
+addition and subtraction are left-associative; that is, "1-2-3"
+means "(1-2)-3", not "1-(2-3)".</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+QVariant Cell::evalTerm(const QString &amp;str, int &amp;pos) const
+{
+    QVariant result = evalFactor(str, pos);
+    while (str[pos] != QChar::Null) {
+        QChar op = str[pos];
+        if (op != '*' &amp;&amp; op != '/')
+            return result;
+        ++pos;
+
+        QVariant factor = evalFactor(str, pos);
+        if (result.type() == QVariant::Double
+                &amp;&amp; factor.type() == QVariant::Double) {
+            if (op == '*') {
+                result = result.toDouble() * factor.toDouble();
+            } else {
+                if (factor.toDouble() == 0.0) {
+                    result = Invalid;
+                } else {
+                    result = result.toDouble() / factor.toDouble();
+                }
+            }
+        } else {
+            result = Invalid;
+        }
+    }
+    return result;
+}
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>evalTerm()</tt> function is very similar
+to <tt>evalExpression()</tt><a name="multiplication and"></a>,
+except that it deals with multiplication and division. The only
+subtlety in <tt>evalTerm()</tt><a name="is an"></a> is that we must
+avoid division by zero, since it is an error on some processors.
+While it is generally inadvisable to test floating-point values for
+equality because of rounding errors, it is safe to test for
+equality against 0.0 to prevent division by zero.</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+QVariant Cell::evalFactor(const QString &amp;str, int &amp;pos) const
+{
+    QVariant result;
+    bool negative = false;
+
+    if (str[pos] == '-') {
+        negative = true;
+        ++pos;
+    }
+    if (str[pos] == '(') {
+        ++pos;
+        result = evalExpression(str, pos);
+        if (str[pos] != ')')
+            result = Invalid;
+        ++pos;
+    } else {
+        QRegExp regExp("[A-Za-z][1-9][0-9]{0,2}");
+        QString token;
+
+        while (str[pos].isLetterOrNumber() || str[pos] == '.') {
+            token += str[pos];
+            ++pos;
+        }
+        if (regExp.exactMatch(token)) {
+            int column = token[0].toUpper().unicode() - 'A';
+            int row = token.mid(1).toInt() - 1;
+
+            Cell *c = static_cast&lt;Cell *&gt;(
+                              tableWidget()-&gt;item(row, column));
+            if (c) {
+                result = c-&gt;value();
+            } else {
+                result = 0.0;
+            }
+        } else {
+            bool ok;
+            result = token.toDouble(&amp;ok);
+            if (!ok)
+                result = Invalid;
+        }
+    }
+
+    if (negative) {
+        if (result.type() == QVariant::Double) {
+            result = -result.toDouble();
+        } else {
+            result = Invalid;
+        }
+    }
+    return result;
+}
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>evalFactor()</tt><a name="than"></a>
+function is a bit more complicated than <tt>evalExpression()</tt>
+and <tt>evalTerm()</tt><a name="We then"></a>. We start by noting
+whether the factor is negated. We then see if it begins with an
+open parenthesis. If it does, we evaluate the contents of the
+parentheses as an expression by calling
+<tt>evalExpression()</tt><a name="parsing a"></a>. When parsing a
+parenthesized expression, <tt>evalExpression()</tt> calls
+<tt>evalTerm()</tt>, which calls <tt>evalFactor()</tt>, which calls
+<tt>evalExpression()</tt> again. This is where recursion occurs in
+the parser.</p>
+
+<p class="docText"><a name="iddle5674"></a><a name=
+"iddle6829"></a><a name="should be"></a>If the factor isn't a
+nested expression, we extract the next token, which should be a
+cell location or a number. If the token matches the
+<tt>QRegExp</tt><a name="we take"></a>, we take it to be a cell
+reference and we call <tt>value()</tt><a name="cell at"></a> on the
+cell at the given location. The cell could be anywhere in the
+spreadsheet, and it could have dependencies on other cells. The
+dependencies are not a problem; they will simply trigger more
+<tt>value()</tt><a name="and"></a> calls and (for "dirty" cells)
+more parsing until all the dependent cell values are calculated. If
+the token isn't a cell location, we take it to be a number.</p>
+
+<p class="docText"><a name="cell A"></a>What happens if cell A1
+contains the formula "=A1"? Or if cell A1 contains "=A2" and cell
+A2 contains "=A1"? Although we have not written any special code to
+detect circular dependencies, the parser handles these cases
+gracefully by returning an invalid <tt>QVariant</tt>. This works
+because we set <tt>cacheIsDirty</tt> to <tt>false</tt> and
+<tt>cachedValue</tt> to <tt>Invalid</tt> in <tt>value()</tt> before
+we call <tt>evalExpression()</tt>. If <tt>evalExpression()</tt>
+recursively calls <tt>value()</tt> on the same cell, it returns
+<tt>Invalid</tt><a name="evaluates to"></a> immediately, and the
+whole expression then evaluates to <tt>Invalid</tt>.</p>
+
+<p class="docText"><a name="straightforward to"></a>We have now
+completed the formula parser. It would be straightforward to extend
+it to handle predefined spreadsheet functions, such as "sum()" and
+"avg()", by extending the grammatical definition of <span class=
+"docEmphasis">Factor</span><a name="the"></a>. Another easy
+extension is to implement the '+' operator with string operands (as
+concatenation); this requires no changes to the grammar.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch04lev1sec5.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch05.html"><img src="images/next.gif" width="20" height="20"
+border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

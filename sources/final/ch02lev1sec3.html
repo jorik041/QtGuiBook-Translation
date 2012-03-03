@@ -1,0 +1,941 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch02lev1sec3.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch02lev1sec3.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch02lev1sec3.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch02lev1sec3.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch02lev1sec2.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch02lev1sec4.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch02lev1sec3"></a>
+<h3 class="docSection1Title" id="-100000">Rapid Dialog Design</h3>
+
+<p class="docText"><a name="iddle1982"></a><a name=
+"iddle2100"></a><a name="iddle2141"></a><a name=
+"iddle2589"></a><a name="iddle2835"></a><a name=
+"iddle2934"></a><a name="iddle2937"></a><a name=
+"iddle2963"></a><a name="iddle6106"></a><a name=
+"iddle6107"></a><a name="iddle6112"></a><a name=
+"iddle6120"></a><a name="iddle7961"></a><a name=
+"iddle8264"></a><a name="Qt is"></a>Qt is designed to be pleasant
+and intuitive to hand-code, and it is not unusual for programmers
+to develop entire Qt applications purely by writing C++ source
+code. Still, many programmers prefer to use a visual approach for
+designing forms, because they find it more natural and faster than
+hand-coding, and they want to be able to experiment with and change
+designs more quickly and easily than is possible with hand-coded
+forms.</p>
+
+<p class="docText"><span class="docEmphasis">Qt
+Designer</span><a name="options available"></a> expands the options
+available to programmers by providing a visual design capability.
+<span class="docEmphasis">Qt Designer</span><a name="be used"></a>
+can be used to develop all or just some of an application's forms.
+Forms that are created using <span class="docEmphasis">Qt
+Designer</span> end up as C++ code, so <span class="docEmphasis">Qt
+Designer</span><a name="imposes no"></a> can be used with a
+conventional tool chain and imposes no special requirements on the
+compiler.</p>
+
+<p class="docText">In this section, we will use <span class=
+"docEmphasis">Qt Designer</span><a name="Cell dialog"></a> to
+create the Go to Cell dialog shown in <a class="docLink" href=
+"#ch02fig04">Figure 2.4</a>. Whether we do it in code or in
+<span class="docEmphasis">Qt Designer</span>, creating a dialog
+always involves the same fundamental steps:</p>
+<a name="ch02pro01"></a>
+<table border="0" class="docText">
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>1.</b>
+</div>
+</td>
+<td>
+<div class="docText">Create and initialize the child widgets.<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>2.</b>
+</div>
+</td>
+<td>
+<div class="docText">Put the child widgets in layouts.<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>3.</b>
+</div>
+</td>
+<td>
+<div class="docText">Set the tab order.<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>4.</b>
+</div>
+</td>
+<td>
+<div class="docText">Establish signal–slot connections.<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>5.</b>
+</div>
+</td>
+<td>
+<div class="docText">Implement the dialog's custom slots.<br>
+<br></div>
+</td>
+</tr>
+</table>
+<a name="ch02fig04"></a>
+<center>
+<h5 class="docFigureTitle">Figure 2.4. The Go to Cell dialog</h5>
+
+<p class="docText"><img border="0" id="" width="256" height="109"
+src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzcGlqZmlzaC9nNHAyZ2MwLjA-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText">To launch <span class="docEmphasis">Qt
+Designer</span>, click <span class="docEmphRomanAlt">Qt by
+Trolltech v4.x.y|Designer</span> in the <span class=
+"docEmphRomanAlt">Start</span> menu on Windows, type
+<tt>designer</tt> on the command line on Unix, or double-click
+<span class="docEmphRomanAlt">Designer</span> in the Mac OS X
+Finder. When <span class="docEmphasis">Qt Designer</span><a name=
+"then click"></a> starts, it will pop up a list of templates. Click
+the "Widget" template, then click <span class=
+"docEmphRomanAlt">Create</span><a name="for this"></a>. (The
+"Dialog with Buttons Bottom" template might look tempting, but for
+this example we will create the <span class=
+"docEmphRomanAlt">OK</span> and <span class=
+"docEmphRomanAlt">Cancel</span><a name="You should"></a> buttons by
+hand to show how it is done.) You should now have a window called
+"Untitled".</p>
+
+<p class="docText">By default, <span class="docEmphasis">Qt
+Designer</span><a name="interface consists"></a>'s user interface
+consists of several top-level windows. If you prefer an MDI-style
+interface, with one top-level window and several subwindows, as
+shown in <a class="docLink" href="#ch02fig05">Figure 2.5</a>, click
+<span class="docEmphRomanAlt">Edit|Preferences</span> and set the
+user interface mode to <span class="docEmphRomanAlt">Docked
+Window</span>.</p>
+
+<p class="docText">
+</p>
+<a name="ch02fig05"></a>
+<center>
+<h5 class="docFigureTitle">Figure 2.5. <span class="docEmphasis">Qt
+Designer</span> in docked window mode on Windows Vista</h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzZ3BpYWZpc2gvLjV0bDJnYzBfMHBq.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="341" src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzcGlqZmlzaC9nNXAyZ2MwLjA-.jpg"
+alt="">
+</center>
+<br>
+
+<p class="docText"><a name="iddle3521"></a><a name=
+"iddle4104"></a><a name="iddle4542"></a><a name=
+"iddle7590"></a><a name="iddle8578"></a><a name=
+"place them"></a>The first step is to create the child widgets and
+place them on the form. Create one label, one line editor, one
+horizontal spacer, and two push buttons. For each item, drag its
+name or icon from <span class="docEmphasis"><a name=
+"Qt Designer"></a>Qt Designer</span><a name="and drop"></a>'s
+widget box and drop the item roughly where it should go on the
+form. The spacer item, which is invisible in the final form, is
+shown in <span class="docEmphasis">Qt Designer</span><a name=
+"a blue"></a> as a blue spring.</p>
+
+<p class="docText"><a name="make it"></a>Now drag the bottom of the
+form up to make it shorter. This should produce a form that is
+similar to <a class="docLink" href="#ch02fig06">Figure
+2.6</a><a name="the items"></a>. Don't spend too much time
+positioning the items on the form; Qt's layout managers will lay
+them out precisely later on.</p>
+<a name="ch02fig06"></a>
+<center>
+<h5 class="docFigureTitle">Figure 2.6. The form with some
+widgets</h5>
+
+<p class="docText"><img border="0" id="" width="324" height="118"
+src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzcGlqZmlzaC9nNnAyZ2MwLjA-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText">Set each widget's properties using <span class=
+"docEmphasis">Qt Designer</span>'s property editor:</p>
+<a name="ch02pro02"></a>
+<table border="0" class="docText">
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>1.</b>
+</div>
+</td>
+<td>
+<div class="docText">Click the text label. Make sure that its
+<tt>objectName</tt> property is "label" and set the <tt>text</tt>
+property to "&amp;Cell Location:".<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>2.</b>
+</div>
+</td>
+<td>
+<div class="docText">Click the line editor. Make sure that the
+<tt>objectName</tt> property is "lineEdit".<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td>
+</td>
+<td>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>3.</b>
+</div>
+</td>
+<td>
+<div class="docText"><a name="iddle1374"></a><a name=
+"iddle1403"></a><a name="iddle1425"></a><a name=
+"iddle1433"></a><a name="iddle2055"></a><a name=
+"iddle3059"></a><a name="iddle3431"></a><a name=
+"iddle3488"></a><a name="iddle3496"></a><a name=
+"iddle4572"></a><a name="iddle6113"></a><a name=
+"iddle7428"></a><a name="iddle8435"></a>Click the first button. Set
+the <tt>objectName</tt> property to "okButton", the
+<tt>enabled</tt> property to "false", the <tt>text</tt> property to
+"OK", and the <tt>default</tt> property to "true".<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>4.</b>
+</div>
+</td>
+<td>
+<div class="docText">Click the second button. Set the
+<tt>objectName</tt> property to "cancelButton" and the
+<tt>text</tt> property to "Cancel".<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>5.</b>
+</div>
+</td>
+<td>
+<div class="docText">Click the form's background to select the form
+itself. Set the <tt>objectName</tt> property to "GoToCellDialog"
+and the <tt>windowTitle</tt> property to "Go to Cell".<br>
+<br></div>
+</td>
+</tr>
+</table>
+
+<p class="docText"><a name="shows"></a>All the widgets look fine
+now, except the text label, which shows <span class=
+"docEmphRomanAlt">&amp;Cell Location</span>. Click <span class=
+"docEmphRomanAlt">Edit|Edit Buddies</span><a name="allows you"></a>
+to enter a special mode that allows you to set buddies. Next, click
+the label and drag the red arrow line to the line editor, then
+release. The label should now appear as <span class=
+"docEmphRomanAlt"><span class="docEmphUl">C</span>ell
+Location</span>, as shown in <a class="docLink" href=
+"#ch02fig07">Figure 2.7</a>, and have the line editor as its buddy.
+Click <span class="docEmphRomanAlt">Edit|Edit Widgets</span> to
+leave buddy mode.</p>
+<a name="ch02fig07"></a>
+<center>
+<h5 class="docFigureTitle">Figure 2.7. The form with properties
+set</h5>
+
+<p class="docText"><img border="0" id="" width="324" height="118"
+src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzcGlqZmlzaC9nN3AyZ2MwLjA-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="widgets on"></a>The next step is to lay
+out the widgets on the form:</p>
+<a name="ch02pro03"></a>
+<table border="0" class="docText">
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>1.</b>
+</div>
+</td>
+<td>
+<div class="docText">Click the <span class="docEmphRomanAlt">Cell
+Location</span> label and press <span class=
+"docEmphRomanAlt">Shift</span> as you click the line editor next to
+it so that they are both selected. Click <span class=
+"docEmphRomanAlt">Form|Lay Out Horizontally</span>.<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>2.</b>
+</div>
+</td>
+<td>
+<div class="docText">Click the spacer, then hold <span class=
+"docEmphRomanAlt">Shift</span> as you click the form's <span class=
+"docEmphRomanAlt">OK</span> and <span class=
+"docEmphRomanAlt">Cancel</span> buttons. Click <span class=
+"docEmphRomanAlt">Form|Lay Out Horizontally</span>.<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>3.</b>
+</div>
+</td>
+<td>
+<div class="docText">Click the background of the form to deselect
+any selected items, then click <span class=
+"docEmphRomanAlt">Form|Lay Out Vertically</span>.<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>4.</b>
+</div>
+</td>
+<td>
+<div class="docText">Click <span class=
+"docEmphRomanAlt">Form|Adjust Size</span> to resize the form to its
+preferred size.<br>
+<br></div>
+</td>
+</tr>
+</table>
+
+<p class="docText"><a name="red lines"></a>The red lines that
+appear on the form show the layouts that have been created, as
+shown in <a class="docLink" href="#ch02fig08">Figure 2.8</a>. They
+don't appear when the form is run.</p>
+<a name="ch02fig08"></a>
+<center>
+<h5 class="docFigureTitle">Figure 2.8. The form with the
+layouts</h5>
+
+<p class="docText"><img border="0" id="" width="250" height="107"
+src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzcGlqZmlzaC9nOHAyZ2MwLjA-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="iddle2790"></a><a name=
+"iddle4421"></a><a name="iddle5337"></a><a name=
+"iddle6116"></a><a name="iddle6123"></a><a name=
+"iddle7911"></a><a name="iddle8265"></a><a name=
+"iddle8269"></a><a name="iddle8278"></a><a name="iddle8362"></a>Now
+click <span class="docEmphRomanAlt">Edit|Edit Tab
+Order</span><a name="every widget"></a>. A number in a blue
+rectangle will appear next to every widget that can accept focus,
+as shown in <a class="docLink" href="#ch02fig09">Figure
+2.9</a><a name="Click each"></a>. Click each widget in turn in the
+order you want them to accept focus, then click <span class=
+"docEmphRomanAlt">Edit|Edit Widgets</span><a name="tab order"></a>
+to leave tab order mode.</p>
+<a name="ch02fig09"></a>
+<center>
+<h5 class="docFigureTitle"><a name="Setting the"></a>Figure 2.9.
+Setting the form's tab order</h5>
+
+<p class="docText"><img border="0" id="" width="250" height="107"
+src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzcGlqZmlzaC9nOXAyZ2MwLjA-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText">To preview the dialog, click the <span class=
+"docEmphRomanAlt">Form|Preview</span> menu option. Check the tab
+order by pressing <span class="docEmphRomanAlt">Tab</span><a name=
+"title bar"></a> repeatedly. Close the dialog using the close
+button in the title bar.</p>
+
+<p class="docText">Save the dialog as <tt>gotocelldialog.ui</tt> in
+a directory called <tt>gotocell</tt>, and create a
+<tt>main.cpp</tt><a name="using a"></a> file in the same directory
+using a plain text editor:</p>
+
+<div class="docText">
+<pre>
+#include &lt;QApplication&gt;
+#include &lt;QDialog&gt;
+
+#include "ui_gotocelldialog.h"
+
+int main(int argc, char *argv[])
+{
+    QApplication app(argc, argv);
+
+    Ui::GoToCellDialog ui;
+    QDialog *dialog = new QDialog;
+    ui.setupUi(dialog);
+    dialog-&gt;show();
+
+    return app.exec();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">Now run <tt>qmake</tt> to create a <tt>.pro</tt>
+file and a makefile (<tt>qmake -project</tt>; <tt>qmake
+gotocell.pro</tt>). The <tt>qmake</tt><a name="file"></a> tool is
+smart enough to detect the user interface file
+<tt>gotocelldialog.ui</tt><a name="rules to"></a> and to generate
+the appropriate makefile rules to invoke <tt>uic</tt>, Qt's user
+interface compiler. The <tt>uic</tt> tool converts
+<tt>gotocelldialog.ui</tt> into C++ and puts the result in
+<tt>ui_gotocelldialog.h</tt>.</p>
+
+<p class="docText">The generated <tt>ui_gotocelldialog.h</tt> file
+contains the definition of the <tt>Ui::GoToCellDialog</tt> class,
+which is a C++ equivalent of the <tt>gotocelldialog.ui</tt><a name=
+"child widgets"></a> file. The class declares member variables that
+store the form's child widgets and layouts, and a
+<tt>setupUi()</tt><a name="that initializes"></a> function that
+initializes the form. The generated class looks like this:</p>
+
+<div class="docText">
+<pre>
+class Ui::GoToCellDialog
+{
+public:
+    QLabel *label;
+    QLineEdit *lineEdit;
+    QSpacerItem *spacerItem;
+    QPushButton *okButton;
+    QPushButton *cancelButton;
+    ...
+
+    void setupUi(QWidget *widget) {
+        ...
+    }
+};
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle2933"></a><a name=
+"iddle3944"></a><a name="iddle4924"></a><a name=
+"iddle4926"></a><a name="iddle7408"></a><a name=
+"iddle7833"></a><a name="iddle7875"></a><a name="form in"></a>The
+generated class doesn't have any base class. When we use the form
+in <tt>main.cpp</tt><a name="we create"></a>, we create a
+<tt>QDialog</tt><a name="it to"></a> and pass it to
+<tt>setupUi()</tt>.</p>
+
+<p class="docText"><a name="you run"></a>If you run the program
+now, the dialog will work, but it doesn't function exactly as we
+want:</p>
+
+<ul>
+<li>
+<p class="docList">The <span class="docEmphRomanAlt">OK</span>
+button is always disabled.</p>
+</li>
+
+<li>
+<p class="docList">The <span class="docEmphRomanAlt">Cancel</span>
+button does nothing.</p>
+</li>
+
+<li>
+<p class="docList"><a name="valid cell"></a>The line editor accepts
+any text, instead of accepting only valid cell locations.</p>
+</li>
+</ul>
+
+<p class="docText"><a name="function properly"></a>We can make the
+dialog function properly by writing some code. The cleanest
+approach is to create a new class that is derived from both
+<tt>QDialog</tt> and <tt>Ui::GoToCellDialog</tt><a name=
+"that any"></a> and that implements the missing functionality (thus
+proving the adage that any software problem can be solved simply by
+adding another layer of indirection). Our naming convention is to
+give this new class the same name as the <tt>uic</tt>-generated
+class but without the <tt>Ui::</tt> prefix.</p>
+
+<p class="docText"><a name="called"></a>Using a text editor, create
+a file called <tt>gotocelldialog.h</tt> that contains the following
+code:</p>
+
+<div class="docText">
+<pre>
+#ifndef GOTOCELLDIALOG_H
+#define GOTOCELLDIALOG_H
+
+#include &lt;QDialog&gt;
+
+#include "ui_gotocelldialog.h"
+
+class GoToCellDialog : public QDialog, public Ui::GoToCellDialog
+{
+    Q_OBJECT
+
+public:
+    GoToCellDialog(QWidget *parent = 0);
+
+private slots:
+    void on_lineEdit_textChanged();
+};
+
+#endif
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="to access"></a>Here, we have used
+public inheritance because we want to access the dialog's widgets
+from outside the dialog. The implementation belongs in the
+<tt>gotocelldialog.cpp</tt> file:</p>
+
+<div class="docText">
+<pre>
+#include &lt;QtGui&gt;
+
+#include "gotocelldialog.h"
+
+GoToCellDialog::GoToCellDialog(QWidget *parent)
+    : QDialog(parent)
+{
+    setupUi(this);
+
+    QRegExp regExp("[A-Za-z][1-9][0-9]{0,2}");
+    lineEdit-&gt;setValidator(new QRegExpValidator(regExp, this));
+
+    connect(okButton, SIGNAL(clicked()), this, SLOT(accept()));
+    connect(cancelButton, SIGNAL(clicked()), this, SLOT(reject()));
+}
+
+void GoToCellDialog::on_lineEdit_textChanged()
+{
+    okButton-&gt;setEnabled(lineEdit-&gt;hasAcceptableInput());
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1142"></a><a name=
+"iddle1261"></a><a name="iddle1552"></a><a name=
+"iddle2081"></a><a name="iddle2325"></a><a name=
+"iddle2941"></a><a name="iddle2942"></a><a name=
+"iddle2981"></a><a name="iddle3010"></a><a name=
+"iddle3783"></a><a name="iddle3945"></a><a name=
+"iddle3990"></a><a name="iddle3991"></a><a name=
+"iddle4101"></a><a name="iddle4132"></a><a name=
+"iddle4133"></a><a name="iddle4257"></a><a name=
+"iddle4262"></a><a name="iddle4977"></a><a name=
+"iddle5219"></a><a name="iddle5268"></a><a name=
+"iddle5272"></a><a name="iddle5673"></a><a name=
+"iddle5677"></a><a name="iddle6445"></a><a name=
+"iddle6828"></a><a name="iddle7446"></a><a name=
+"iddle7521"></a><a name="iddle8007"></a><a name=
+"iddle8382"></a><a name="iddle8574"></a><a name=
+"page_28"></a><a name="the constructor"></a>In the constructor, we
+call <tt>setupUi()</tt> to initialize the form. Thanks to multiple
+inheritance, we can access <tt>Ui::GoToCellDialog</tt>'s members
+directly. After creating the user interface,
+<tt>setupUi()</tt><a name="convention"></a> will also automatically
+connect any slots that follow the naming convention
+<tt>on_</tt><span class=
+"docEmphasis"><tt>objectName</tt></span><tt>_</tt><span class=
+"docEmphasis"><tt>signalName</tt></span><tt>()</tt><a name=
+"to the"></a> to the corresponding <span class=
+"docEmphasis"><tt>objectName</tt></span>'s <span class=
+"docEmphasis"><tt>signalName</tt></span><tt>()</tt><a name=
+"this means"></a> signal. In our example, this means that
+<tt>setupUi()</tt><a name="establish the"></a> will establish the
+following signal–slot connection:</p>
+
+<div class="docText">
+<pre>
+connect(lineEdit, SIGNAL(textChanged(const QString &amp;)),
+        this, SLOT(on_lineEdit_textChanged()));
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="restrict the"></a>Also in the
+constructor, we set up a validator to restrict the range of the
+input. Qt provides three built-in validator classes:
+<tt>QIntValidator</tt>, <tt>QDoubleValidator</tt>, and
+<tt>QRegExpValidator</tt>. Here we use a
+<tt>QRegExpValidator</tt><a name="Allow one"></a> with the regular
+expression "[A-Za-z][1-9][0-9]{0,2}", which means: Allow one
+uppercase or lowercase letter, followed by one digit in the range 1
+to 9, followed by zero, one, or two digits each in the range 0 to
+9. (For an introduction to regular expressions, see the
+<tt>QRegExp</tt> class documentation.)</p>
+
+<p class="docText">By passing <tt>this</tt> to the
+<tt>QRegExpValidator</tt> constructor, we make it a child of the
+<tt>GoToCellDialog</tt> object. By doing so, we don't have to worry
+about deleting the <tt>QRegExpValidator</tt> later; it will be
+deleted automatically when its parent is deleted.</p>
+
+<p class="docText">Qt's parent–child mechanism is implemented in
+<tt>QObject</tt><a name="a parent"></a>. When we create an object
+(a widget, validator, or any other kind) with a parent, the parent
+adds the object to the list of its children. When the parent is
+deleted, it walks through its list of children and deletes each
+child. The children themselves then delete all of their children,
+and so on recursively until none remain. The parent–child mechanism
+greatly simplifies memory management, reducing the risk of memory
+leaks. The only objects we must call <tt>delete</tt><a name=
+"with"></a> on are the objects we create with <tt>new</tt><a name=
+"a child"></a> and that have no parent. And if we delete a child
+object before its parent, Qt will automatically remove that object
+from the parent's list of children.</p>
+
+<p class="docText"><a name="iddle1052"></a><a name=
+"iddle1063"></a><a name="iddle1434"></a><a name=
+"iddle2139"></a><a name="iddle4259"></a><a name=
+"iddle4930"></a><a name="iddle4932"></a><a name=
+"iddle4934"></a><a name="iddle4940"></a><a name=
+"iddle4944"></a><a name="iddle6834"></a><a name=
+"iddle6837"></a><a name="the parent"></a>For widgets, the parent
+has an additional meaning: Child widgets are shown within the
+parent's area. When we delete the parent widget, not only does the
+child vanish from memory, it also vanishes from the screen.</p>
+
+<p class="docText">At the end of the constructor, we connect the
+<span class="docEmphRomanAlt">OK</span> button to
+<tt>QDialog</tt>'s <tt>accept()</tt> slot and the <span class=
+"docEmphRomanAlt">Cancel</span> button to the <tt>reject()</tt>
+slot. Both slots close the dialog, but <tt>accept()</tt> sets the
+dialog's result value to <tt>QDialog::Accepted</tt> (which equals
+1), and <tt>reject()</tt> sets the result to
+<tt>QDialog::Rejected</tt><a name="to see"></a> (which equals 0).
+When we use this dialog, we can use the result to see if the user
+clicked <span class="docEmphRomanAlt">OK</span><a name=
+"and act"></a> and act accordingly.</p>
+
+<p class="docText">The <tt>on_lineEdit_textChanged()</tt><a name=
+"or disables"></a> slot enables or disables the <span class=
+"docEmphRomanAlt">OK</span><a name="to whether"></a> button,
+according to whether the line editor contains a valid cell
+location. <tt>QLineEdit::hasAcceptableInput()</tt> uses the
+validator we set in the constructor.</p>
+
+<p class="docText">This completes the dialog. We can now rewrite
+<tt>main.cpp</tt> to use it:</p>
+
+<div class="docText">
+<pre>
+#include &lt;QApplication&gt;
+
+#include "gotocelldialog.h"
+
+int main(int argc, char *argv[])
+{
+    QApplication app(argc, argv);
+    GoToCellDialog *dialog = new GoToCellDialog;
+    dialog-&gt;show();
+    return app.exec();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">Regenerate <tt>gotocell.pro</tt> using <tt>qmake
+-project</tt> (since we have added source files to the project),
+run <tt>qmake gotocell.pro</tt><a name="Type"></a> to update the
+makefile, then build and run the application again. Type "A12" in
+the line editor, and notice that the <span class=
+"docEmphRomanAlt">OK</span><a name="random text"></a> button
+becomes enabled. Try typing some random text to see how the
+validator does its job. Click <span class=
+"docEmphRomanAlt">Cancel</span> to close the dialog.</p>
+
+<p class="docText"><a name="buttons are"></a>The dialog works
+correctly, but for Mac OS X users, the buttons are the wrong way
+round. We chose to add each button individually, to show how it was
+done, but really we should have used a
+<tt>QDialogButtonBox</tt><a name="we specify"></a>, a widget that
+contains the buttons we specify and that presents them in the
+correct way for the window system on which the application is being
+run, as shown in <a class="docLink" href="#ch02fig10">Figure
+2.10</a>.</p>
+<a name="ch02fig10"></a>
+<center>
+<h5 class="docFigureTitle"><a name="Vista and"></a>Figure 2.10. The
+Go to Cell dialog on Windows Vista and Mac OS X</h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzZ3BpYWZpc2gvLjB0bDJnYzBfMXBq.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="116" src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzcGlqZmlzaC9nMHAyZ2MwLjE-.jpg"
+alt="">
+</center>
+<br>
+
+<p class="docText"><a name="make the"></a>To make the dialog use a
+<tt>QDialogButtonBox</tt>, we must change both the design and the
+code. In <span class="docEmphasis">Qt Designer</span>, there are
+just four steps to take:</p>
+<a name="ch02pro04"></a>
+<table border="0" class="docText">
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>1.</b>
+</div>
+</td>
+<td>
+<div class="docText">Click the form (not any of the widgets or
+layouts) and then click <span class="docEmphRomanAlt">Form|Break
+Layout</span>.<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>2.</b>
+</div>
+</td>
+<td>
+<div class="docText">Click and delete the <span class=
+"docEmphRomanAlt">OK</span> button, the <tt>Cancel</tt> button, the
+horizontal spacer, and the (now empty) horizontal layout.<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>3.</b>
+</div>
+</td>
+<td>
+<div class="docText">Drag a "Button Box" onto the form, below the
+cell location label and line editor.<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>4.</b>
+</div>
+</td>
+<td>
+<div class="docText">Click the form and then click <span class=
+"docEmphRomanAlt">Form|Lay Out Vertically</span>.<br>
+<br></div>
+</td>
+</tr>
+</table>
+
+<p class="docText"><a name="iddle1061"></a><a name=
+"iddle1065"></a><a name="iddle1470"></a><a name=
+"iddle4126"></a><a name="iddle6836"></a><a name=
+"iddle6839"></a><a name="the dialog"></a>If we had just been doing
+design changes, such as changing the dialog's layouts and widget
+properties, we would be able to simply rebuild the application. But
+here we have removed some widgets and added a new widget, and in
+these cases we must usually change the code too.</p>
+
+<p class="docText"><a name="The changes"></a>The changes we must
+make are all in the file <tt>gotocelldialog.cpp</tt><a name=
+"the new"></a>. Here is the new version of the constructor:</p>
+
+<div class="docText">
+<pre>
+GoToCellDialog::GoToCellDialog(QWidget *parent)
+    : QDialog(parent)
+{
+    setupUi(this);
+    buttonBox-&gt;button(QDialogButtonBox::Ok)-&gt;setEnabled(false);
+
+    QRegExp regExp("[A-Za-z][1-9][0-9]{0,2}");
+    lineEdit-&gt;setValidator(new QRegExpValidator(regExp, this));
+
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="the previous"></a>In the previous
+version, we initially disabled the <span class=
+"docEmphRomanAlt">OK</span> button in <span class="docEmphasis">Qt
+Designer</span>. We cannot do that with a
+<tt>QDialogButtonBox</tt>, so we do so in code, immediately after
+the <tt>setupUi()</tt> call. The <tt>QDialogButtonBox</tt><a name=
+"use this"></a> class has an enum of standard buttons, and we can
+use this to access particular buttons, in this case the
+<span class="docEmphRomanAlt">OK</span> button.</p>
+
+<p class="docText">Very conveniently, <span class="docEmphasis">Qt
+Designer</span>'s default name for a <tt>QDialogButtonBox</tt> is
+<tt>buttonBox</tt><a name="the button"></a>. Both connections are
+made from the button box rather than from the buttons themselves.
+The <tt>accepted()</tt> signal is emitted when a button with the
+<tt>AcceptRole</tt> is clicked, and similarly the
+<tt>rejected()</tt> signal is emitted by a button with the
+<tt>RejectRole</tt>. By default, the standard
+<tt>QDialogButtonBox::Ok</tt> button has the <tt>AcceptRole</tt>,
+and the <tt>QDialogButtonBox::Cancel</tt> button has the
+<tt>RejectRole</tt>.</p>
+
+<p class="docText">Only one more change is required, in the
+<tt>on_lineEdit_textChanged()</tt> slot:</p>
+
+<div class="docText">
+<pre>
+void GoToCellDialog::on_lineEdit_textChanged()
+{
+    buttonBox-&gt;button(QDialogButtonBox::Ok)-&gt;setEnabled(
+            lineEdit-&gt;hasAcceptableInput());
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="of referring"></a>The only thing
+different from before is that instead of referring to a particular
+button stored as a member variable, we access the button box's
+<span class="docEmphRomanAlt">OK</span> button.</p>
+
+<p class="docText"><a name="iddle1439"></a><a name=
+"iddle1543"></a><a name="iddle2617"></a><a name=
+"iddle2691"></a><a name="iddle7415"></a><a name=
+"iddle7564"></a><a name="iddle7570"></a><a name=
+"iddle8134"></a><a name="iddle8709"></a>One of the beauties of
+using <span class="docEmphasis">Qt Designer</span><a name=
+"freedom to"></a> is that it allows programmers great freedom to
+modify their form designs without being forced to change their
+source code. When you develop a form purely by writing C++ code,
+changes to the design can be quite time-consuming. With
+<span class="docEmphasis">Qt Designer</span>, no time is lost since
+<tt>uic</tt><a name="that have"></a> simply regenerates the source
+code for any forms that have changed. The dialog's user interface
+is saved in a <tt>.ui</tt><a name="file format"></a> file (an
+XML-based file format), while custom functionality is implemented
+by subclassing the <tt>uic</tt>-generated class.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch02lev1sec2.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch02lev1sec4.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

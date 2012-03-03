@@ -1,0 +1,416 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch22lev1sec2.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch22lev1sec2.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch22lev1sec2.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch22lev1sec2.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch22lev1sec1.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch22lev1sec3.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch22lev1sec2"></a>
+<h3 class="docSection1Title" id="-100000">Extending Qt Applications
+with Scripts</h3>
+
+<p class="docText"><a name="Using the"></a>Using the <span class=
+"docEmphasis">QtScript</span><a name="write C"></a> module, we can
+write C++ applications that can execute ECMAScript. Scripts can be
+used to extend application functionality without requiring the
+application itself to be rebuilt and redeployed. We can limit the
+scripts to a hard-coded set of ECMAScript files that are provided
+as part of the application and that can be replaced with new
+versions independently of new releases of the application, or we
+can make the application able to use arbitrary ECMAScript
+files.</p>
+
+<p class="docText"><a name="a script"></a>Executing a script from a
+C++ application typically involves the following steps:</p>
+<a name="ch22pro01"></a>
+<table border="0" class="docText">
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>1.</b>
+</div>
+</td>
+<td>
+<div class="docText">Load the script into a <tt>QString</tt>.<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td>
+</td>
+<td>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>2.</b>
+</div>
+</td>
+<td>
+<div class="docText"><a name="iddle1464"></a><a name=
+"iddle1465"></a><a name="iddle1902"></a><a name=
+"iddle2571"></a><a name="iddle5693"></a>Create a
+<tt>QScriptEngine</tt> object and set it up to expose
+application-specific functionality.<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>3.</b>
+</div>
+</td>
+<td>
+<div class="docText">Execute the script.<br>
+<br></div>
+</td>
+</tr>
+</table>
+
+<p class="docText"><a name="in"></a>To illustrate this, we will
+study the Calculator application shown in <a class="docLink" href=
+"#ch22fig02">Figure 22.2</a><a name="user provide"></a>. The
+Calculator application lets the user provide custom buttons by
+implementing their functionality in scripts. When the application
+starts up, it traverses the <tt>scripts</tt><a name=
+"these scripts"></a> subdirectory, looking for script files, and
+creates calculator buttons associated with these scripts. By
+default, Calculator includes the following scripts:</p>
+
+<ul>
+<li>
+<p class="docList"><tt>cube.js</tt> computes the cube of the
+current value (<span class="docEmphasis">x</span><sup>3</sup>).</p>
+</li>
+
+<li>
+<p class="docList"><tt>factorial.js</tt> computes the factorial of
+the current value (<span class="docEmphasis">x</span>!).</p>
+</li>
+
+<li>
+<p class="docList"><tt>pi.js</tt><a name="of"></a> overwrites the
+current value with an approximation of π.</p>
+</li>
+</ul>
+<a name="ch22fig02"></a>
+<center>
+<h5 class="docFigureTitle">Figure 22.2. The Calculator
+application</h5>
+
+<p class="docText"><img border="0" id="" width="299" height="357"
+src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83Z3B0YWhwbG8uL3JzY2ljY3VqbGE-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="code that"></a>Most of the Calculator
+application's code is the same kind of C++/Qt code that we have
+seen throughout the book. Here, we will review only those parts of
+the code that are relevant to scripting, starting with the
+<tt>createCustomButtons()</tt><a name="called from"></a> private
+function, which is called from the <tt>Calculator</tt>
+constructor:</p>
+
+<div class="docText">
+<pre>
+void Calculator::createCustomButtons()
+{
+    QDir scriptsDir = directoryOf("scripts");
+    QStringList fileNames = scriptsDir.entryList(QStringList("*.js"),
+                                                 QDir::Files);
+    foreach (QString fileName, fileNames) {
+        QString text = fileName;
+        text.chop(3);
+        QToolButton *button = createButton(text,
+                                           SLOT(customButtonClicked()));
+        button-&gt;setStyleSheet("color: rgb(31, 63, 127)");
+        button-&gt;setProperty("scriptFileName",
+                            scriptsDir.absoluteFilePath(fileName));
+        customButtons.append(button);
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1975"></a><a name=
+"iddle5025"></a><a name="iddle5469"></a><a name=
+"iddle5471"></a><a name="iddle5694"></a><a name=
+"iddle7101"></a><a name="iddle7291"></a>The
+<tt>createCustomButtons()</tt><a name="a"></a> function uses a
+<tt>QDir</tt><a name="object to"></a> object to traverse the
+application's <tt>scripts</tt><a name="files with"></a>
+subdirectory, looking for files with a <tt>.js</tt><a name=
+"uses the"></a> extension. It uses the same <tt>directoryOf()</tt>
+function we used in <a class="docLink" href=
+"ch17.html#ch17">Chapter 17</a> (p. <a class="docLink" href=
+"ch17lev1sec2.html#page_410">410</a>).</p>
+
+<p class="docText">For each <tt>.js</tt> file, we create a
+<tt>QToolButton</tt> by calling the private <tt>createButton()</tt>
+function. This function also connects the new button's
+<tt>clicked()</tt> signal to the
+<tt>customButtonClicked()</tt><a name="foreground text"></a> slot.
+Then we set the button's style sheet to make the foreground text
+blue, to distinguish the custom buttons from the built-in
+buttons.</p>
+
+<p class="docText">The call to <tt>QObject::setProperty()</tt>
+dynamically creates a new <tt>scriptFileName</tt> property for each
+<tt>QToolButton</tt><a name="the"></a>. We use this property in the
+<tt>customButtonClicked()</tt> slot to determine which script
+should be executed.</p>
+
+<p class="docText">Finally, we add the new button to the
+<tt>customButtons</tt> list. The <tt>Calculator</tt><a name=
+"to the"></a> constructor uses this list to add the custom buttons
+to the window's grid layout.</p>
+
+<p class="docText"><a name="the"></a>For this application, we have
+chosen to traverse the <tt>scripts</tt><a name="a"></a> directory
+just once, at application startup. An alternative would be to use a
+<tt>QFileSystemWatcher</tt> to monitor the <tt>scripts</tt><a name=
+"calculator whenever"></a> directory, and update the calculator
+whenever the directory's content changes, allowing the user to add
+new scripts and remove existing scripts without having to restart
+the application.</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+void Calculator::customButtonClicked()
+{
+    QToolButton *clickedButton = qobject_cast&lt;QToolButton *&gt;(sender());
+    QFile file(clickedButton-&gt;property("scriptFileName").toString());
+    if (!file.open(QIODevice::ReadOnly)) {
+        abortOperation();
+        return;
+    }
+
+    QTextStream in(&amp;file);
+    in.setCodec("UTF-8");
+    QString script = in.readAll();
+    file.close();
+
+    QScriptEngine interpreter;
+    QScriptValue operand(&amp;interpreter, display-&gt;text().toDouble());
+    interpreter.globalObject().setProperty("x", operand);
+    QScriptValue result = interpreter.evaluate(script);
+    if (!result.isNumber()) {
+        abortOperation();
+        return;
+    }
+
+    setDisplayValue(result.toNumber());
+    waitingForOperand = true;
+}
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText">In the <tt>customButtonClicked()</tt><a name=
+"call"></a> slot, we first call <tt>QObject::sender()</tt><a name=
+"to determine"></a> to determine which button was clicked. Then we
+extract the <tt>scriptFileName</tt> property to <a name=
+"iddle2477"></a><a name="iddle2925"></a><a name=
+"iddle3276"></a><a name="iddle3402"></a><a name=
+"iddle4486"></a><a name="iddle5697"></a><a name=
+"iddle5710"></a><a name="iddle6018"></a><a name=
+"iddle6449"></a><a name="iddle6935"></a><a name=
+"iddle8298"></a><a name="iddle8413"></a><a name=
+"name of"></a>retrieve the name of the <tt>.js</tt><a name=
+"associated with"></a> file associated with the button. Next, we
+load the file's contents into a string called <tt>script</tt>.</p>
+
+<p class="docText"><a name="does not"></a>The ECMAScript standard
+requires that interpreters support Unicode, but it does not mandate
+any particular encoding to use for storing scripts on disk. We have
+chosen to assume that our <tt>.js</tt><a name="plain ASCII"></a>
+files use UTF-8, a superset of plain ASCII.</p>
+
+<p class="docText">Once we have the script in a <tt>QString</tt>,
+we create a <tt>QScriptEngine</tt> to execute it. A
+<tt>QScriptEngine</tt><a name="We can"></a> instance represents an
+ECMAScript interpreter and holds a current state. We can have any
+number of <tt>QScriptEngine</tt><a name="each with"></a>s at the
+same time for different purposes, each with its own state.</p>
+
+<p class="docText"><a name="for the"></a>Before we can run the
+script, we must make it possible for the script to retrieve the
+current value displayed by the calculator. The approach we have
+chosen here is to create an ECMAScript global variable called
+<tt>x</tt><a name="added a"></a>—or, more precisely, we have added
+a dynamic property called <tt>x</tt><a name="global object"></a> to
+the interpreter's global object. From script code, this property is
+available directly as <tt>x</tt>.</p>
+
+<p class="docText"><a name="The value"></a>The value we set for
+<tt>x</tt><a name="of type"></a> must be of type
+<tt>QScriptValue</tt>. Conceptually, a
+<tt>QScriptValue</tt><a name="similar to"></a> is similar to
+<tt>QVariant</tt><a name="it is"></a> in that it can store many
+data types, except that it is tailored to store ECMAScript data
+types.</p>
+
+<p class="docText">Finally, we run the script using
+<tt>QScriptEngine::evaluate()</tt><a name="returned by"></a>. The
+result is the value returned by the script, or an exception object
+if an error occurred. (In the next section, we will see how to
+report errors to the user in a message box.) A script's return
+value is the value explicitly returned by a <tt>return</tt> call;
+if <tt>return</tt><a name="last expression"></a> is omitted, the
+return value is the result of the last expression evaluated in the
+script. Once we have the return value, we check whether it is a
+number, and if it is, we display it.</p>
+
+<p class="docText"><a name="time the"></a>For this example, we
+evaluate a script every time the user presses its corresponding
+button. Since this step involves loading and parsing the entire
+script, it is often preferable to use a different approach, where
+the script doesn't directly perform an operation, but rather
+returns a function or an object that can be used later on. We will
+use this alternative approach in the next section.</p>
+
+<p class="docText">To link against the <span class=
+"docEmphasis">QtScript</span> library, we must add this line to the
+application's <tt>.pro</tt> file:</p>
+
+<div class="docText">
+<pre>
+QT += script
+</pre>
+</div>
+<br>
+
+<p class="docText">The example scripts are quite simple. Here's the
+one-line <tt>pi.js</tt>:</p>
+
+<div class="docText">
+<pre>
+return 3.14159265358979323846;
+</pre>
+</div>
+<br>
+
+<p class="docText">Notice that we ignore the calculator's
+<tt>x</tt> value. The <tt>cube.js</tt><a name="the"></a> script is
+also a one-liner, but it does make use of the <tt>x</tt> value:</p>
+
+<div class="docText">
+<pre>
+return x * x * x;
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>factorial.js</tt><a name=
+"function and"></a> script defines a function and calls it:</p>
+
+<div class="docText">
+<pre>
+function factorial(n)
+{
+    if (n &lt;= 1) {
+        return 1;
+    } else {
+        return n * factorial(n - 1);
+    }
+}
+
+return factorial(Math.floor(x));
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle2594"></a><a name=
+"iddle3083"></a><a name="iddle6010"></a><a name=
+"iddle6127"></a><a name="iddle8274"></a><a name=
+"factorial function"></a>The standard factorial function only
+operates on integers, so we have used the
+<tt>Math.floor()</tt><a name="function to"></a> function to convert
+<tt>x</tt> to an integer.</p>
+
+<p class="docText"><a name="now seen"></a>We have now seen the
+fundamentals of the <span class="docEmphasis">QtScript</span>
+module: the <tt>QScriptEngine</tt><a name="represents an"></a>,
+which represents an interpreter with its current state, and
+<tt>QScriptValue</tt>, which stores an ECMAScript value.</p>
+
+<p class="docText"><a name="the scripts"></a>In the Calculator
+example, there was very little interaction between the scripts and
+the application: The scripts take only one parameter from the
+application and return a single value. In the following sections,
+we will see more advanced integration strategies and show how to
+report exceptions to the user.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch22lev1sec1.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch22lev1sec3.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

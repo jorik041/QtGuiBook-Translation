@@ -1,0 +1,190 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch03lev1sec6.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch03lev1sec6.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch03lev1sec6.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch03lev1sec6.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch03lev1sec5.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch03lev1sec7.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch03lev1sec6"></a>
+<h3 class="docSection1Title" id="-100000">Storing Settings</h3>
+
+<p class="docText"><a name="In the"></a>In the <tt>MainWindow</tt>
+constructor, we called <tt>readSettings()</tt><a name=
+"the application"></a> to load the application's stored settings.
+Similarly, in <tt>closeEvent()</tt><a name="called"></a>, we called
+<tt>writeSettings()</tt> to save the settings. These two functions
+are the last <tt>MainWindow</tt> member functions that need to be
+implemented.</p>
+
+<div class="docText">
+<pre>
+void MainWindow::writeSettings()
+{
+    QSettings settings("Software Inc.", "Spreadsheet");
+
+    settings.setValue("geometry", saveGeometry());
+    settings.setValue("recentFiles", recentFiles);
+    settings.setValue("showGrid", showGridAction-&gt;isChecked());
+    settings.setValue("autoRecalc", autoRecalcAction-&gt;isChecked());
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>writeSettings()</tt><a name=
+"recently opened"></a> function saves the main window's geometry
+(position and size), the list of recently opened files, and the
+<span class="docEmphRomanAlt">Show Grid</span> and <span class=
+"docEmphRomanAlt">Auto-Recalculate</span> options.</p>
+
+<p class="docText">By default, <tt>QSettings</tt><a name=
+"it uses"></a> stores the application's settings in
+platform-specific locations. On Windows, it uses the system
+registry; on Unix, it stores the data in text files; on Mac OS X,
+it uses the Core Foundation Preferences API.</p>
+
+<p class="docText"><a name="iddle1012"></a><a name=
+"iddle1307"></a><a name="iddle2399"></a><a name=
+"iddle3718"></a><a name="iddle5746"></a><a name=
+"iddle5748"></a><a name="iddle5749"></a><a name=
+"iddle5751"></a><a name="iddle6782"></a><a name=
+"iddle7517"></a><a name="iddle8388"></a><a name=
+"information is"></a>The constructor arguments specify the
+organization's name and the application's name. This information is
+used in a platform-specific way to find a location for the
+settings.</p>
+
+<p class="docText"><tt>QSettings</tt> stores settings as
+<span class="docEmphasis">key</span>–<span class=
+"docEmphasis">value</span> pairs. The <span class=
+"docEmphasis">key</span><a name="Subkeys can"></a> is similar to a
+file system path. Subkeys can be specified using a path-like syntax
+(e.g., <tt>findDialog/matchCase</tt>) or using
+<tt>beginGroup()</tt> and <tt>endGroup()</tt>:</p>
+
+<div class="docText">
+<pre>
+settings.beginGroup("findDialog");
+settings.setValue("matchCase", caseCheckBox-&gt;isChecked());
+settings.setValue("searchBackward", backwardCheckBox-&gt;isChecked());
+settings.endGroup();
+</pre>
+</div>
+<br>
+
+<p class="docText">The <span class="docEmphasis">value</span> can
+be an <tt>int</tt>, a <tt>bool</tt>, a <tt>double</tt>, a
+<tt>QString</tt>, a <tt>QStringList</tt>, or any other type
+supported by <tt>QVariant</tt>, including registered custom
+types.</p>
+
+<div class="docText">
+<pre>
+void MainWindow::readSettings()
+{
+    QSettings settings("Software Inc.", "Spreadsheet");
+
+    restoreGeometry(settings.value("geometry").toByteArray());
+
+    recentFiles = settings.value("recentFiles").toStringList();
+    updateRecentFileActions();
+
+    bool showGrid = settings.value("showGrid", true).toBool();
+    showGridAction-&gt;setChecked(showGrid);
+
+    bool autoRecalc = settings.value("autoRecalc", true).toBool();
+    autoRecalcAction-&gt;setChecked(autoRecalc);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>readSettings()</tt> function loads the
+settings that were saved by <tt>writeSettings()</tt>. The second
+argument to the <tt>value()</tt><a name="no settings"></a> function
+specifies a default value, in case there are no settings available.
+The default values are used the first time the application is run.
+Since no second argument is given for geometry or for the recent
+files list, the window will have an arbitrary but reasonable size
+and position, and the recent files list will be an empty list on
+the first run.</p>
+
+<p class="docText"><a name="arrangement we"></a>The arrangement we
+opted for in <tt>MainWindow</tt>, with all the
+<tt>QSettings</tt>-related code in <tt>readSettings()</tt> and
+<tt>writeSettings()</tt>, is just one of many possible approaches.
+A <tt>QSettings</tt><a name="at any"></a> object can be created to
+query or modify some setting at any time during the execution of
+the application and from anywhere in the code.</p>
+
+<p class="docText"><a name="We have"></a>We have now completed the
+Spreadsheet's <tt>MainWindow</tt><a name="following sections"></a>
+implementation. In the following sections, we will discuss how the
+Spreadsheet application can be modified to handle multiple
+documents and how to implement a splash screen. We will complete
+its functionality, including handling formulas and sorting, in the
+next chapter.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch03lev1sec5.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch03lev1sec7.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

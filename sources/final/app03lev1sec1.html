@@ -1,0 +1,663 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>app03lev1sec1.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/app03lev1sec1.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fapp03lev1sec1.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fapp03lev1sec1.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href="app03.html"><img src=
+"images/prev.gif" width="20" height="20" border="0" align=
+"absmiddle" alt="Previous Page"></a> <a href=
+"app03lev1sec2.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="app03"></a>
+<h2 id="title-ID0EPRPM" class="docAppendixTitle">C. Introduction to
+Qt Jambi</h2>
+
+<ul>
+<li>
+<p class="docList"><a name="iddle1264"></a><a name=
+"iddle3386"></a><a name="iddle3388"></a><a name=
+"iddle3396"></a><a name="iddle6140"></a><a name=
+"iddle7895"></a><a name="iddle7898"></a><span class=
+"docEmphasis"><a class="docLink" href=
+"app03lev1sec1.html#app03lev1sec1">Getting Started with Qt
+Jambi</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="app03lev1sec2.html#app03lev1sec2">Using Qt Jambi in the
+Eclipse IDE</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="app03lev1sec3.html#app03lev1sec3">Integrating C++ Components
+with Qt Jambi</a></span>
+</p>
+</li>
+</ul>
+
+<p class="docText"><a name="Qt Jambi"></a>Qt Jambi is the Java
+edition of the Qt application development framework. At the heart
+of Qt Jambi are the C++ libraries that form Qt, made available to
+Java programmers through the Java Native Interface (JNI). Although
+considerable effort has gone into making Qt Jambi integrate
+smoothly with Java and to make its API natural to use for Java
+programmers, C++/Qt programmers will still find the API familiar
+and predictable. All the classes are documented using Javadoc at
+<tt>http://doc.trolltech.com/qtjambi/</tt>.</p>
+
+<p class="docText"><a name="GUI programmers"></a>Until now, Java
+GUI programmers have had to make do with AWT, Swing, SWT, and
+similar GUI class libraries, none of which are as convenient to use
+or as powerful as Qt. For example, in the traditional Java GUI
+libraries, connecting a user action, such as clicking a button, to
+a corresponding method involves writing an event listener class; in
+Qt Jambi, only one line of code is required to achieve the same
+thing. And Qt's layout managers are much easier to use than Swing's
+<tt>BoxLayout</tt> and <tt>GridBagLayout</tt><a name=
+"they produce"></a>, and they produce better-looking results.</p>
+
+<p class="docText"><a name="dock windows"></a>Qt Jambi applications
+can have main windows with menu bars, toolbars, dock windows, and a
+status bar, just like Qt applications written in C++. They also
+have the native look and feel of the platform they are running on,
+and they respect the user's preferences regarding themes, colors,
+fonts, and so on. With the full power of Qt under the hood, Qt
+Jambi applications can take advantage of Qt's powerful 2D graphics
+architecture (notably the graphics view framework) and of
+extensions such as OpenGL.</p>
+
+<p class="docText"><a name="are not"></a>The benefits of Qt Jambi
+are not limited to Java programmers. In particular, C++ programmers
+can make their custom Qt components available to Java programmers
+using the same generator tool that Trolltech uses to make the Qt
+API available in Qt Jambi.</p>
+
+<p class="docText"><a name="start using"></a>In this appendix, we
+will show how Java programmers can start using Qt Jambi to create
+GUI applications. Then we will show how to make use of Qt Jambi in
+Eclipse, which integrates <span class="docEmphasis">Qt
+Designer</span><a name="make custom"></a>, and finally we will show
+how to make custom C++ components available to Qt Jambi
+programmers. This appendix <a name="iddle1983"></a><a name=
+"iddle2143"></a><a name="iddle2601"></a><a name=
+"iddle2753"></a><a name="iddle2765"></a><a name=
+"iddle3189"></a><a name="iddle3280"></a><a name=
+"iddle3376"></a><a name="iddle3809"></a><a name=
+"iddle3862"></a><a name="iddle4096"></a><a name=
+"iddle4117"></a><a name="iddle4929"></a><a name=
+"iddle7445"></a><a name="iddle7466"></a><a name=
+"iddle7468"></a><a name="iddle7836"></a><a name=
+"Jambi requires"></a>assumes that you are familiar with C++/Qt
+programming and with Java. Qt Jambi requires Java 1.5 or later.</p>
+<a name="app03lev1sec1"></a>
+<h3 class="docSection1Title" id="-100000">Getting Started with Qt
+Jambi</h3>
+
+<p class="docText"><a name="will develop"></a>In this section, we
+will develop a small Java application that presents the window
+shown in <a class="docLink" href="#app03fig01">Figure
+C.1</a><a name="its window"></a>. Apart from its window title, the
+Jambi Find dialog has the same appearance and behavior as the Find
+dialog we created back in <a class="docLink" href=
+"ch02.html#ch02">Chapter 2</a><a name="By reusing"></a>. By reusing
+the same example, we can more easily see the differences and
+similarities between C++/Qt and Qt Jambi programming. While
+reviewing the code, we will discuss the conceptual differences
+between C++ and Java as they arise.</p>
+<a name="app03fig01"></a>
+<center>
+<h5 class="docFigureTitle"><a name="Jambi Find"></a>Figure C.1. The
+Jambi Find dialog</h5>
+
+<p class="docText"><img border="0" id="" width="329" height="126"
+src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83cG5haGdtZGouL3NqaWNiaXBmaQ--.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="implementation of"></a>The
+implementation of the Jambi Find application is done in a single
+file called <tt>FindDialog.java</tt><a name="by piece"></a>. We
+will review the contents of this file piece by piece, starting with
+the <tt>import</tt> declarations.</p>
+
+<div class="docText">
+<pre>
+import com.trolltech.qt.core.*;
+import com.trolltech.qt.gui.*;
+</pre>
+</div>
+<br>
+
+<p class="docText">Between them, these two <tt>import</tt><a name=
+"and GUI"></a> declarations make all of Qt's core and GUI classes
+available to Java. Additional sets of classes can be made available
+with similar <tt>import</tt> declarations (e.g., <tt>import
+com.trolltech.qt.opengl.*</tt>).</p>
+
+<div class="docText">
+<pre>
+public class FindDialog extends QDialog {
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>FindDialog</tt> class is a subclass of
+<tt>QDialog</tt><a name="signals in"></a>, like in the C++ version
+of the example. In C++, we declare signals in the header file,
+relying on the <tt>moc</tt><a name="introspection facilities"></a>
+tool to generate the supporting code. In Qt Jambi, Java's
+introspection facilities are used to implement the signals and
+slots mechanism. But we still need some means of declaring signals,
+and this is done using the <tt>Signal</tt><span class=
+"docEmphasis"><tt>N</tt></span> classes:</p>
+
+<div class="docText">
+<pre>
+    public Signal2&lt;String, Qt.CaseSensitivity&gt; findNext =
+            new Signal2&lt;String, Qt.CaseSensitivity&gt;();
+
+    public Signal2&lt;String, Qt.CaseSensitivity&gt; findPrevious =
+            new Signal2&lt;String, Qt.CaseSensitivity&gt;();
+</pre>
+</div>
+<br>
+
+<p class="docText">There are ten <tt>Signal</tt><span class=
+"docEmphasis"><tt>N</tt></span> classes—<tt>Signal0</tt>,
+<tt>Signal1&lt;T1&gt;</tt>, ..., <tt>Signal9&lt;T1,</tt>
+...,<tt>T9&gt;</tt><a name="and the"></a>. The numbers in their
+names indicate how many arguments they take, and the types
+<tt>T1</tt>, ..., <tt>T9</tt><a name="of the"></a> specify the
+types of the arguments. Here, we have declared two signals,
+<a name="iddle1744"></a><a name="iddle2757"></a><a name=
+"iddle5755"></a><a name="iddle5903"></a><a name=
+"iddle7455"></a><a name="iddle7469"></a><a name=
+"iddle7528"></a><a name="iddle7538"></a><a name=
+"iddle7540"></a><a name="iddle7789"></a><a name=
+"two arguments"></a>each taking two arguments. In both cases, the
+first argument is a Java <tt>String</tt><a name="and the"></a>, and
+the second argument is of type <tt>Qt.CaseSensitivity</tt><a name=
+"enum type"></a>, a Java enum type. Wherever a
+<tt>QString</tt><a name="needed in"></a> is needed in the Qt API,
+in Qt Jambi we use a <tt>String</tt> instead.</p>
+
+<p class="docText">Unlike the other <tt>Signal</tt><span class=
+"docEmphasis"><tt>N</tt></span> classes, <tt>Signal0</tt><a name=
+"no arguments"></a> is not a generic class. To create a signal with
+no arguments, we use <tt>Signal0</tt> like this:</p>
+
+<div class="docText">
+<pre>
+    public Signal0 somethingHappened = new Signal0();
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="we are"></a>Having created the signals
+we need, we are now ready to see the implementation of the
+constructor. The method is quite long, so we will look at it in
+three parts.</p>
+
+<div class="docText">
+<pre>
+    public FindDialog(QWidget parent) {
+        super(parent);
+
+        label = new QLabel(tr("Find &amp;what:"));
+        lineEdit = new QLineEdit();
+        label.setBuddy(lineEdit);
+
+        caseCheckBox = new QCheckBox(tr("Match &amp;case"));
+        backwardCheckBox = new QCheckBox(tr("Search &amp;backward"));
+
+        findButton = new QPushButton(tr("&amp;Find"));
+        findButton.setDefault(true);
+        findButton.setEnabled(false);
+
+        closeButton = new QPushButton(tr("Close"));
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="compared to"></a>The only differences
+between creating the widgets in Java compared to C++ are the small
+details of syntax. Note that <tt>tr()</tt> returns a
+<tt>String</tt>, not a <tt>QString</tt>.</p>
+
+<div class="docText">
+<pre>
+        lineEdit.textChanged.connect(this, "enableFindButton(String)");
+        findButton.clicked.connect(this, "findClicked()");
+        closeButton.clicked.connect(this, "reject()");
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="is somewhat"></a>The syntax for
+signal–slot connections in Qt Jambi is somewhat different than in
+C++/Qt, but it is still short and simple. In general, the syntax
+is</p>
+
+<div class="docText">
+<pre>
+<span class="docEmphasis">sender</span>.<span class=
+"docEmphasis">signalName</span>.connect(<span class=
+"docEmphasis">receiver</span>, "<span class=
+"docEmphasis">slotName</span>(<span class=
+"docEmphasis">T1</span>, ..., <span class=
+"docEmphasis">TN</span>)");
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="If a"></a>Unlike in C++/Qt, we don't
+need to specify a signature for the signal. If a signal has more
+parameters than the slots it connects to, the additional parameters
+are ignored. Furthermore, in Qt Jambi, the signal–slot mechanism is
+not limited to <tt>QObject</tt><a name="inherits"></a> subclasses:
+Any class that inherits <tt>QSignalEmitter</tt><a name=
+"and any"></a> can emit signals, and any method of any class can be
+a slot.</p>
+
+<div class="docText">
+<pre>
+        QHBoxLayout topLeftLayout = new QHBoxLayout();
+        topLeftLayout.addWidget(label);
+        topLeftLayout.addWidget(lineEdit);
+
+        QVBoxLayout leftLayout = new QVBoxLayout();
+        leftLayout.addLayout(topLeftLayout);
+        leftLayout.addWidget(caseCheckBox);
+        leftLayout.addWidget(backwardCheckBox);
+        QVBoxLayout rightLayout = new QVBoxLayout();
+        rightLayout.addWidget(findButton);
+        rightLayout.addWidget(closeButton);
+        rightLayout.addStretch();
+
+        QHBoxLayout mainLayout = new QHBoxLayout();
+        mainLayout.addLayout(leftLayout);
+        mainLayout.addLayout(rightLayout);
+        setLayout(mainLayout);
+
+        setWindowTitle(tr("Jambi Find"));
+        setFixedHeight(sizeHint().height());
+    }
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle2371"></a><a name=
+"iddle2751"></a><a name="iddle2760"></a><a name=
+"iddle2879"></a><a name="iddle3393"></a><a name=
+"iddle3405"></a><a name="iddle3500"></a><a name=
+"The layout"></a>The layout code is practically identical to the
+C++ original, with the same layout classes working in exactly the
+same way. Qt Jambi can also use forms created with <span class=
+"docEmphasis">Qt Designer</span>, using <tt>juic</tt><a name=
+"interface compiler"></a> (the Java user interface compiler), as we
+will see in the next section.</p>
+
+<div class="docText">
+<pre>
+    private void findClicked() {
+        String text = lineEdit.text();
+        Qt.CaseSensitivity cs = caseCheckBox.isChecked()
+                ? Qt.CaseSensitivity.CaseSensitive
+                : Qt.CaseSensitivity.CaseInsensitive;
+        if (backwardCheckBox.isChecked()) {
+            findPrevious.emit(text, cs);
+        } else {
+            findNext.emit(text, cs);
+        }
+    }
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="Java syntax"></a>The Java syntax for
+referring to enum values is a bit more verbose than in C++, but it
+is easy to understand. To emit a signal, we call the
+<tt>emit()</tt> method on a <tt>Signal</tt><span class=
+"docEmphasis"><tt>N</tt></span><a name="the program"></a> object,
+passing arguments of the correct types. The type-checking is done
+when the program is compiled.</p>
+
+<div class="docText">
+<pre>
+    private void enableFindButton(String text) {
+        findButton.setEnabled(text.length() == 0);
+    }
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>enableFindButton()</tt><a name=
+"as the"></a> method is essentially the same as the C++
+original.</p>
+
+<div class="docText">
+<pre>
+    private QLabel label;
+    private QLineEdit lineEdit;
+    private QCheckBox caseCheckBox;
+    private QCheckBox backwardCheckBox;
+    private QPushButton findButton;
+    private QPushButton closeButton;
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="the book"></a>In keeping with the code
+in the rest of the book, we have declared all the widgets as
+private fields of the class. This is purely a matter of style;
+nothing is stopping us from declaring in the constructor itself
+those widgets that are referred to only in the constructor. For
+example, we could have declared <tt>label</tt> and
+<tt>closeButton</tt><a name="referred to"></a> in the constructor
+since they are not referred to anywhere else, and they would
+<a name="iddle1265"></a><a name="iddle1554"></a><a name=
+"iddle1595"></a><a name="iddle2426"></a><a name=
+"iddle2453"></a><a name="iddle3190"></a><a name=
+"iddle3329"></a><a name="iddle3330"></a><a name=
+"iddle3382"></a><a name="iddle3785"></a><a name=
+"iddle4102"></a><a name="iddle4263"></a><a name=
+"iddle5010"></a><a name="iddle5184"></a><a name=
+"iddle5197"></a><a name="iddle5588"></a><a name=
+"iddle6086"></a><a name="iddle6905"></a><a name=
+"iddle7058"></a><a name="iddle7479"></a><a name=
+"iddle7896"></a><a name="iddle7899"></a><a name=
+"iddle8500"></a><a name="iddle8575"></a><a name="uses the"></a>not
+be garbage-collected when the constructor finishes. This works
+because Qt Jambi uses the same parent–child ownership mechanism as
+C++/Qt, so once the <tt>label</tt> and <tt>closeButton</tt> are
+laid out, the <tt>FindDialog</tt><a name="of them"></a> form takes
+ownership of them, and behind the scenes it keeps a reference to
+them to keep them alive. Qt Jambi deletes child widgets
+recursively, so if a top-level window is deleted, the window in
+turn deletes all its child widgets and layouts, which delete
+theirs, and so on, until cleanup is complete.</p>
+<a name="app03sb01"></a>
+<table cellspacing="0" width="90%" border="1" cellpadding="5">
+<tr>
+<td>
+<h2 class="docSidebarTitle">Using Java's Resource System</h2>
+
+<p class="docText"><a name="is fully"></a>Qt Jambi is fully aware
+of Java's resource system, unlike many of Java's standard classes.
+Java resources are identified by a <tt>classpath:</tt><a name=
+"Anywhere a"></a> prefix. Anywhere a file name could be used in the
+Qt Jambi API, a Java resource can be specified instead. For
+example:</p>
+
+<div class="docText">
+<pre>
+QIcon icon = new QIcon("classpath:/images/icon.png");
+if (!icon.isNull()) {
+    ...
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="the icon"></a>To find the icon, Qt
+Jambi will look in every <tt>images</tt><a name="of every"></a>
+directory of every directory or <tt>.jar</tt> file specified in the
+<tt>CLASSPATH</tt> environment variable. As soon as an image file
+called <tt>icon.png</tt> is found, the search stops and the file is
+used.</p>
+
+<p class="docText"><a name="above example"></a>No exception is
+raised if the file isn't found. In the above example, if
+<tt>icon.png</tt> is not found, <tt>icon.isNull()</tt> will return
+<tt>true</tt>. Classes like <tt>QImage</tt> and
+<tt>QPixmap</tt><a name="a file"></a>, which have constructors that
+take a file name argument, have an <tt>isNull()</tt><a name=
+"file was"></a> method that can be tested to see if the file was
+read successfully. In the case of <tt>QFile</tt>, we can check
+<tt>QFile.error()</tt> to see if the file was read.</p>
+</td>
+</tr>
+</table>
+<br>
+
+<p class="docText"><a name="unlike AWT"></a>Qt Jambi makes full use
+of Java's garbage-collection functionality, so unlike AWT, Swing,
+and SWT, if the last reference to a top-level window is deleted,
+the window will be scheduled for garbage collection, and no
+explicit call to <tt>dispose()</tt><a name="as in"></a> is
+necessary. This approach is very convenient and works the same as
+in C++/Qt. The main caveat is that for SDI (single document
+interface) applications, we must keep a reference to each top-level
+window that is created, to prevent them from being
+garbage-collected. (In C++/Qt, SDI applications normally use the
+<tt>Qt::WA_DeleteOnClose</tt><a name="memory leaks"></a> attribute
+to prevent memory leaks.)</p>
+
+<div class="docText">
+<pre>
+    public static void main(String[] args) {
+        QApplication.initialize(args);
+        FindDialog dialog = new FindDialog(null);
+        dialog.show();
+        QApplication.exec();
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="have provided"></a>For convenience, we
+have provided the <tt>FindDialog</tt><a name="with a"></a> with a
+<tt>main()</tt><a name="instantiates a"></a> method that
+instantiates a dialog and pops it up. The <tt>import
+com.trolltech.qt.gui.*</tt> declaration <a name=
+"iddle1406"></a><a name="iddle1700"></a><a name=
+"iddle1723"></a><a name="iddle1810"></a><a name=
+"iddle2654"></a><a name="iddle2992"></a><a name=
+"iddle3216"></a><a name="iddle3575"></a><a name=
+"iddle3669"></a><a name="iddle4081"></a><a name=
+"iddle4723"></a><a name="iddle4804"></a><a name=
+"iddle4862"></a><a name="iddle5156"></a><a name=
+"iddle5279"></a><a name="iddle5342"></a><a name=
+"iddle6332"></a><a name="iddle6457"></a><a name=
+"iddle6471"></a><a name="iddle6997"></a><a name=
+"iddle7572"></a><a name="iddle7790"></a><a name=
+"iddle8042"></a><a name="iddle8415"></a><a name=
+"that a"></a>ensures that a static <tt>QApplication</tt><a name=
+"call"></a> object is available. When a Qt Jambi application
+starts, we must call <tt>QApplication.initialize()</tt><a name=
+"allows the"></a> and pass it the command-line arguments. This
+allows the <tt>QApplication</tt> object to handle the arguments it
+recognizes, such as <tt>-font</tt> and <tt>-style</tt>.</p>
+
+<p class="docText">When we create the <tt>FindDialog</tt>, we pass
+<tt>null</tt><a name="Once the"></a> as parent to signify that the
+dialog is a top-level window. Once the <tt>main()</tt><a name=
+"of scope"></a> method is finished, the dialog will go out of scope
+and be garbage-collected. The call to <tt>QApplication.exec()</tt>
+starts off the event loop, and returns control to the
+<tt>main()</tt> method only when the user closes the dialog.</p>
+
+<p class="docText"><a name="there are"></a>The Qt Jambi API is very
+similar to the C++/Qt API, but there are some differences. For
+example, in C++, the <tt>QWidget::mapTo()</tt><a name=
+"the following"></a> member function has the following
+signature:</p>
+
+<div class="docText">
+<pre>
+QPoint mapTo(QWidget *widget, const QPoint &amp;point) const;
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>QWidget</tt><a name="as a"></a> is
+passed as a non-const pointer, whereas the <tt>QPoint</tt><a name=
+"is passed"></a> is passed as a const reference. In Qt Jambi, the
+equivalent method has the signature</p>
+
+<div class="docText">
+<pre>
+public final QPoint mapTo(QWidget widget, QPoint point) { ... }
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="does not"></a>Because Java does not
+have pointers, there is no visual distinction in method signatures
+to indicate whether an object passed to a method can be modified by
+the method. In theory, the <tt>mapTo()</tt><a name=
+"could alter"></a> method could alter either parameter since they
+are both references, but Qt Jambi promises not to alter the
+<tt>QPoint</tt><a name="the context"></a> argument, since in C++ it
+is passed as a constant reference. From the context, it is usually
+clear which parameters are alterable and which are not. In case of
+doubt, we can refer to the documentation to clarify the
+situation.</p>
+
+<p class="docText"><a name="arguments that"></a>In addition to not
+altering arguments that are passed by value or as constant
+references in C++, Qt Jambi also promises that the return value of
+any non-<tt>void</tt><a name="as a"></a> method, which in C++ would
+be returned as a value or as a constant reference, is an
+independent copy, so altering it will not lead to any side
+effects.</p>
+
+<p class="docText"><a name="a"></a>We mentioned earlier that in Qt
+Jambi, wherever a <tt>QString</tt> would be used in C++/Qt, a Java
+<tt>String</tt> is used instead. This kind of correspondence also
+applies to the <tt>QChar</tt> class, which has two Java
+equivalents: <tt>char</tt> and <tt>java.lang.Character</tt>. There
+are similar correspondences regarding some of Qt's container
+classes: <tt>QHash</tt> is replaced by <tt>java.util.HashMap</tt>,
+<tt>QList</tt> and <tt>QVector</tt> by <tt>java.util.List</tt>, and
+<tt>QMap</tt> by <tt>java.util.SortedMap</tt>. In addition,
+<tt>QThread</tt> is replaced by <tt>java.lang.Thread</tt>.</p>
+
+<p class="docText"><a name="of"></a>The Qt model/view architecture
+and the database API make extensive use of
+<tt>QVariant</tt><a name="needed in"></a>. Such a type isn't needed
+in Java because all Java objects have
+<tt>java.lang.Object</tt><a name="so throughout"></a> as an
+ancestor, so throughout Qt Jambi's API, <tt>QVariant</tt><a name=
+"is replaced"></a> is replaced by <tt>java.lang.Object</tt><a name=
+"methods that"></a>. The extra methods that
+<tt>QVariant</tt><a name="are available"></a> provides are
+available as static methods in
+<tt>com.trolltech.qt.QVariant</tt>.</p>
+
+<p class="docText"><a name="and we"></a>We have now finished
+reviewing a small Qt Jambi application, and we discussed many of
+the conceptual differences between Qt Jambi and C++/Qt programming.
+Building and running a Qt Jambi application is no different from
+any other <a name="iddle1596"></a><a name="iddle2332"></a><a name=
+"iddle2427"></a><a name="iddle2939"></a><a name=
+"iddle3137"></a><a name="iddle3251"></a><a name=
+"iddle3277"></a><a name="iddle4360"></a><a name=
+"iddle6109"></a>Java application, except that the
+<tt>CLASSPATH</tt><a name="directory where"></a> environment
+variable must specify the directory where Qt Jambi is installed. We
+must compile the class using a Java compiler and then we can
+execute the class using a Java interpreter. For example:</p>
+
+<div class="docText">
+<pre>
+export CLASSPATH=$CLASSPATH:$HOME/qtjambi/qtjambi.jar:$PWD
+javac FindDialog.java
+java FindDialog
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="the"></a>Here we have used the Bash
+shell to set the <tt>CLASSPATH</tt><a name="We include"></a>
+environment variable; other command-line interpreters may require a
+different syntax. We include the current directory in the
+<tt>CLASSPATH</tt> so that the <tt>FindDialog</tt> class itself can
+be found. On Mac OS X, the command-line option
+<tt>-XstartOnFirstThread</tt> must be supplied to
+<tt>java</tt><a name="execute the"></a> to address a threading
+issue with Apple's Java virtual machine. On Windows, we execute the
+application like this:</p>
+
+<div class="docText">
+<pre>
+set CLASSPATH=%CLASSPATH%;%JAMBIPATH%\qtjambi.jar;%CD%
+javac FindDialog.java
+java FindDialog
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="also be"></a>Qt Jambi can also be used
+within an IDE. In the next section, we will look at how to edit,
+build, and test a Qt Jambi application using the popular Eclipse
+IDE.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href="app03.html"><img src=
+"images/prev.gif" width="20" height="20" border="0" align=
+"absmiddle" alt="Previous Page"></a> <a href=
+"app03lev1sec2.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

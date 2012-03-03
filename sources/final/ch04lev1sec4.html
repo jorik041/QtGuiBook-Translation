@@ -1,0 +1,411 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch04lev1sec4.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch04lev1sec4.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch04lev1sec4.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch04lev1sec4.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch04lev1sec3.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch04lev1sec5.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch04lev1sec4"></a>
+<h3 class="docSection1Title" id="-100000">Implementing the Edit
+Menu</h3>
+
+<p class="docText"><a name="We are"></a>We are now ready to
+implement the slots that correspond to the application's
+<span class="docEmphRomanAlt">Edit</span><a name="is shown"></a>
+menu. The menu is shown in <a class="docLink" href=
+"#ch04fig04">Figure 4.4</a>.</p>
+<a name="ch04fig04"></a>
+<center>
+<h5 class="docFigureTitle"><a name="The Spreadsheet"></a>Figure
+4.4. The Spreadsheet application's <span class=
+"docEmphRomanAlt">Edit</span> menu</h5>
+
+<p class="docText"><img border="0" id="" width="315" height="214"
+src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzcGl1aXRzL2hwamUuZGMtZW5tZw--.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<div class="docText">
+<pre>
+void Spreadsheet::cut()
+{
+    copy();
+    del();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>cut()</tt> slot corresponds to
+<span class="docEmphRomanAlt">Edit</span>|<span class=
+"docEmphRomanAlt">Cut</span>. The implementation is simple since
+<span class="docEmphRomanAlt">Cut</span> is the same as
+<span class="docEmphRomanAlt">Copy</span> followed by <span class=
+"docEmphRomanAlt">Delete</span>.</p>
+
+<div class="docText">
+<pre>
+void Spreadsheet::copy()
+{
+    QTableWidgetSelectionRange range = selectedRange();
+    QString str;
+
+    for (int i = 0; i &lt; range.rowCount(); ++i) {
+        if (i &gt; 0)
+            str += "\n";
+        for (int j = 0; j &lt; range.columnCount(); ++j) {
+            if (j &gt; 0)
+                str += "\t";
+            str += formula(range.topRow() + i, range.leftColumn() + j);
+        }
+    }
+    QApplication::clipboard()-&gt;setText(str);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1621"></a><a name=
+"iddle1850"></a><a name="iddle4280"></a><a name=
+"iddle4652"></a><a name="iddle4716"></a><a name=
+"iddle4818"></a><a name="iddle6203"></a><a name=
+"iddle7083"></a><a name="iddle7084"></a><a name=
+"iddle7647"></a><a name="iddle7652"></a><a name=
+"iddle7927"></a><a name="iddle7980"></a>The <tt>copy()</tt> slot
+corresponds to <span class=
+"docEmphRomanAlt">Edit</span>|<span class=
+"docEmphRomanAlt">Copy</span><a name="current cell"></a>. It
+iterates over the current selection (which is simply the current
+cell if there is no explicit selection). Each selected cell's
+formula is added to a <tt>QString</tt><a name=
+"characters and"></a>, with rows separated by newline characters
+and columns separated by tab characters. This is illustrated in
+<a class="docLink" href="#ch04fig05">Figure 4.5</a>.</p>
+<a name="ch04fig05"></a>
+<center>
+<h5 class="docFigureTitle">Figure 4.5. Copying a selection onto the
+clipboard</h5>
+
+<p class="docText"><img border="0" id="" width="357" height="139"
+src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzaXBpZXJnZXNoLy10c2VwYWNzaGRscGoucGMx.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText">The system clipboard is available in Qt through
+the <tt>QApplication::clipboard()</tt> static function. By calling
+<tt>QClipboard::setText()</tt><a name="this application"></a>, we
+make the text available on the clipboard, both to this application
+and to other applications that support plain text. Our format with
+tab and newline characters as separators is understood by a variety
+of applications, including Microsoft Excel.</p>
+
+<p class="docText">The
+<tt>QTableWidget::selectedRanges()</tt><a name="We know"></a>
+function returns a list of selection ranges. We know there cannot
+be more than one because we set the selection mode to
+<tt>QAbstractItemView::ContiguousSelection</tt> in the constructor.
+For our convenience, we define a <tt>selectedRange()</tt> function
+that returns the selection range:</p>
+
+<div class="docText">
+<pre>
+QTableWidgetSelectionRange Spreadsheet::selectedRange() const
+{
+    QList&lt;QTableWidgetSelectionRange&gt; ranges = selectedRanges();
+    if (ranges.isEmpty())
+        return QTableWidgetSelectionRange();
+    return ranges.first();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="return the"></a>If there is a selection
+at all, we simply return the first (and only) one. There should
+always be a selection since the
+<tt>ContiguousSelection</tt><a name="treats the"></a> mode treats
+the current cell as being selected. But to protect against the
+possibility of a bug in our program that makes no cell current, we
+handle this case.</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+void Spreadsheet::paste()
+{
+    QTableWidgetSelectionRange range = selectedRange();
+    QString str = QApplication::clipboard()-&gt;text();
+    QStringList rows = str.split('\n');
+    int numRows = rows.count();
+    int numColumns = rows.first().count('\t') + 1;
+
+    if (range.rowCount() * range.columnCount() != 1
+            &amp;&amp; (range.rowCount() != numRows
+                || range.columnCount() != numColumns)) {
+
+        QMessageBox::information(this, tr("Spreadsheet"),
+                tr("The information cannot be pasted because the copy "
+                   "and paste areas aren't the same size."));
+        return;
+    }
+
+    for (int i = 0; i &lt; numRows; ++i) {
+        QStringList columns = rows[i].split('\t');
+        for (int j = 0; j &lt; numColumns; ++j) {
+            int row = range.topRow() + i;
+            int column = range.leftColumn() + j;
+            if (row &lt; RowCount &amp;&amp; column &lt; ColumnCount)
+                setFormula(row, column, columns[j]);
+        }
+    }
+    somethingChanged();
+}
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle2074"></a><a name=
+"iddle5936"></a><a name="iddle7618"></a><a name="iddle7641"></a>The
+<tt>paste()</tt> slot corresponds to <span class=
+"docEmphRomanAlt">Edit|Paste</span><a name="static function"></a>.
+We fetch the text on the clipboard and call the static function
+<tt>QString::split()</tt><a name="to break"></a> to break the
+string into a <tt>QStringList</tt><a name="becomes one"></a>. Each
+row becomes one string in the list.</p>
+
+<p class="docText"><a name="determine the"></a>Next, we determine
+the dimensions of the copy area. The number of rows is the number
+of strings in the <tt>QStringList</tt><a name="characters in"></a>;
+the number of columns is the number of tab characters in the first
+row, plus 1. If only one cell is selected, we use that cell as the
+top-left corner of the paste area; otherwise, we use the current
+selection as the paste area.</p>
+
+<p class="docText"><a name="over the"></a>To perform the paste, we
+iterate over the rows and split each of them into cells by using
+<tt>QString::split()</tt> again, but this time using tab as the
+separator. <a class="docLink" href="#ch04fig06">Figure 4.6</a>
+illustrates the steps.</p>
+<a name="ch04fig06"></a>
+<center>
+<h5 class="docFigureTitle">Figure 4.6. Pasting clipboard text into
+the spreadsheet</h5>
+
+<p class="docText"><img border="0" id="" width="376" height="231"
+src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzaXBpZXJnZXNoLy10c2VwYWNzaGRscGoucGMy.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<div class="docText">
+<pre>
+void Spreadsheet::del()
+{
+    QList&lt;QTableWidgetItem *&gt; items = selectedItems();
+    if (!items.isEmpty()) {
+        foreach (QTableWidgetItem *item, items)
+            delete item;
+        somethingChanged();
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1072"></a><a name=
+"iddle1299"></a><a name="iddle1842"></a><a name=
+"iddle2084"></a><a name="iddle2769"></a><a name=
+"iddle4661"></a><a name="iddle4715"></a><a name=
+"iddle5911"></a><a name="iddle6201"></a><a name=
+"iddle6202"></a><a name="iddle6495"></a><a name=
+"iddle7070"></a><a name="iddle7071"></a><a name=
+"iddle7072"></a><a name="iddle7073"></a><a name=
+"iddle7074"></a><a name="iddle7642"></a><a name=
+"iddle7650"></a><a name="iddle7651"></a>The <tt>del()</tt> slot
+corresponds to <span class=
+"docEmphRomanAlt">Edit</span>|<span class=
+"docEmphRomanAlt">Delete</span><a name="calls"></a>. If there are
+selected items, the function deletes them and calls
+<tt>somethingChanged()</tt>. It is sufficient to use
+<tt>delete</tt> on each <tt>Cell</tt><a name="the cells"></a>
+object in the selection to clear the cells. The
+<tt>QTableWidget</tt> notices when its
+<tt>QTableWidgetItem</tt><a name="any of"></a>s are deleted and
+automatically repaints itself if any of the items were visible. If
+we call <tt>cell()</tt><a name="the location"></a> with the
+location of a deleted cell, it will return a null pointer.</p>
+
+<div class="docText">
+<pre>
+void Spreadsheet::selectCurrentRow()
+{
+    selectRow(currentRow());
+}
+
+void Spreadsheet::selectCurrentColumn()
+{
+    selectColumn(currentColumn());
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>selectCurrentRow()</tt> and
+<tt>selectCurrentColumn()</tt> functions correspond to the
+<span class="docEmphRomanAlt">Edit|Select|Row</span> and
+<span class="docEmphRomanAlt">Edit|Select|Column</span> menu
+options. The implementations rely on <tt>QTableWidget</tt>'s
+<tt>selectRow()</tt> and <tt>selectColumn()</tt> functions. We do
+not need to implement the functionality behind <span class=
+"docEmphRomanAlt">Edit|Select|All</span>, since that is provided by
+<tt>QTableWidget</tt>'s inherited function
+<tt>QAbstractItemView::selectAll()</tt>.</p>
+
+<div class="docText">
+<pre>
+void Spreadsheet::findNext(const QString &amp;str, Qt::CaseSensitivity cs)
+{
+    int row = currentRow();
+    int column = currentColumn() + 1;
+
+    while (row &lt; RowCount) {
+        while (column &lt; ColumnCount) {
+            if (text(row, column).contains(str, cs)) {
+                clearSelection();
+                setCurrentCell(row, column);
+                activateWindow();
+                return;
+            }
+            ++column;
+        }
+        column = 0;
+        ++row;
+    }
+    QApplication::beep();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>findNext()</tt><a name="the right"></a>
+slot iterates through the cells starting from the cell to the right
+of the cursor and moving right until the last column is reached,
+then continues from the first column in the row below, and so on
+until the text is found or until the very last cell is reached. For
+example, if the current cell is cell C24, we search D24, E24, ...,
+Z24, then A25, B25, C25, ..., Z25, and so on until Z999.</p>
+
+<p class="docText"><a name="iddle2771"></a><a name=
+"iddle6800"></a><a name="iddle7643"></a><a name=
+"iddle7649"></a><a name="If we"></a>If we find a match, we clear
+the current selection, move the cell cursor to the cell that
+matched, and make the window that contains the
+<tt>Spreadsheet</tt><a name="match is"></a> active. If no match is
+found, we make the application beep to indicate that the search
+finished unsuccessfully.</p>
+
+<div class="docText">
+<pre>
+void Spreadsheet::findPrevious(const QString &amp;str,
+                               Qt::CaseSensitivity cs)
+{
+    int row = currentRow();
+    int column = currentColumn() - 1;
+
+    while (row &gt;= 0) {
+        while (column &gt;= 0) {
+            if (text(row, column).contains(str, cs)) {
+                clearSelection();
+                setCurrentCell(row, column);
+                activateWindow();
+                return;
+            }
+            --column;
+        }
+        column = ColumnCount - 1;
+        --row;
+    }
+    QApplication::beep();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>findPrevious()</tt><a name=
+"is similar"></a> slot is similar to <tt>findNext()</tt>, except
+that it iterates backward and stops at cell A1.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch04lev1sec3.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch04lev1sec5.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

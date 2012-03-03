@@ -1,0 +1,567 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch13lev1sec4.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch13lev1sec4.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch13lev1sec4.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch13lev1sec4.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch13lev1sec3.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch14.html"><img src="images/next.gif" width="20" height="20"
+border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch13lev1sec4"></a>
+<h3 class="docSection1Title" id="-100000">Presenting Data in
+Tabular Forms</h3>
+
+<p class="docText"><a name="In many"></a>In many cases, it is
+simplest to present users with a tabular view of a data set. In
+this section, we will present the Staff Manager application's main
+form, which consists of two <tt>QTableView</tt><a name=
+"a master"></a>s in a master–detail relationship. (The form is
+shown in <a class="docLink" href="#ch13fig04">Figure
+13.4</a><a name="master view"></a>.) The master view is a list of
+departments. The detail view is a list of employees in the current
+department. Both views use
+<tt>QSqlRelationalTableModel</tt><a name="have foreign"></a>s,
+since both of the database tables they are presenting have foreign
+key fields. The relevant <tt>CREATE TABLE</tt> statements are shown
+on page <a class="docLink" href=
+"ch13lev1sec3.html#ch13lev1sec3">324</a>.</p>
+
+<p class="docText">
+</p>
+<a name="ch13fig04"></a>
+<center>
+<h5 class="docFigureTitle">Figure 13.4. The Staff Manager
+application</h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzLmxhYWlhcGNlaGFmc3QvbWZnc3JuanB0Z18-.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="369" src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzcGphYWlwY2VoYWZzdC9tZnNncm5nLg--.jpg"
+alt="">
+</center>
+<br>
+
+<p class="docText"><a name="iddle3672"></a><a name="to give"></a>As
+usual, we use an enum to give meaningful names to the column
+indexes:</p>
+
+<div class="docText">
+<pre>
+enum {
+    Department_Id = 0,
+    Department_Name = 1,
+    Department_LocationId = 2
+};
+</pre>
+</div>
+<br>
+
+<p class="docText">We will begin by looking at the
+<tt>MainForm</tt> class definition in the header file:</p>
+
+<div class="docText">
+<pre>
+class MainForm : public QWidget
+{
+    Q_OBJECT
+
+public:
+    MainForm();
+
+private slots:
+    void updateEmployeeView();
+    void addDepartment();
+    void deleteDepartment();
+    void editEmployees();
+
+private:
+    void createDepartmentPanel();
+    void createEmployeePanel();
+
+    QSqlRelationalTableModel *departmentModel;
+    QSqlRelationalTableModel *employeeModel;
+
+    QWidget *departmentPanel;
+    ...
+    QDialogButtonBox *buttonBox;
+};
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1903"></a><a name=
+"iddle3673"></a><a name="iddle3675"></a><a name="when the"></a>To
+set up a master–detail relationship, we must make sure that when
+the user navigates to a different record (row), we update the
+detail table to show only the relevant records. This is achieved by
+the private <tt>updateEmployeeView()</tt><a name=
+"names indicate"></a> slot. The other three slots do what their
+names indicate, and the two private functions are helpers for the
+constructor.</p>
+
+<p class="docText"><a name="creating the"></a>Most of the
+constructor's code is concerned with creating the user interface,
+and setting up suitable signal–slot connections. We will focus on
+those parts that are relevant to database programming.</p>
+
+<div class="docText">
+<pre>
+MainForm::MainForm()
+{
+    createDepartmentPanel();
+    createEmployeePanel();
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="begins by"></a>The constructor begins
+by calling two helper functions. The first creates and sets up the
+department model and view, and the second does the same for the
+employee model and view. We will look at the relevant parts of
+these functions after we have finished looking at the
+constructor.</p>
+
+<p class="docText"><a name="splitter that"></a>The next part of the
+constructor sets up a splitter that contains the two table views,
+and also sets up the form's buttons. We will skip all this.</p>
+
+<div class="docText">
+<pre>
+    ...
+    connect(addButton, SIGNAL(clicked()), this, SLOT(addDepartment()));
+    connect(deleteButton, SIGNAL(clicked()),
+            this, SLOT(deleteDepartment()));
+    connect(editButton, SIGNAL(clicked()), this, SLOT(editEmployees()));
+    connect(quitButton, SIGNAL(clicked()), this, SLOT(close()));
+    ...
+    departmentView-&gt;setCurrentIndex(departmentModel-&gt;index(0, 0));
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="We connect"></a>We connect the buttons
+to slots in the dialog, and we make sure that the first department
+is the current item.</p>
+
+<p class="docText"><a name="we have"></a>Now that we have seen the
+constructor, we will look at the code in the
+<tt>createDepartmentPanel()</tt><a name="function that"></a> helper
+function that sets up the department model and view:</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+void MainForm::createDepartmentPanel()
+{
+    departmentPanel = new QWidget;
+
+    departmentModel = new QSqlRelationalTableModel(this);
+    departmentModel-&gt;setTable("department");
+    departmentModel-&gt;setRelation(Department_LocationId,
+            QSqlRelation("location", "id", "name"));
+    departmentModel-&gt;setSort(Department_Name, Qt::AscendingOrder);
+    departmentModel-&gt;setHeaderData(Department_Name, Qt::Horizontal,
+                                   tr("Dept."));
+    departmentModel-&gt;setHeaderData(Department_LocationId,
+                                   Qt::Horizontal, tr("Location"));
+    departmentModel-&gt;select();
+
+    departmentView = new QTableView;
+    departmentView-&gt;setModel(departmentModel);
+    departmentView-&gt;setItemDelegate(new QSqlRelationalDelegate(this));
+    departmentView-&gt;setSelectionMode(
+            QAbstractItemView::SingleSelection);
+    departmentView-&gt;setSelectionBehavior(QAbstractItemView::SelectRows);
+    departmentView-&gt;setColumnHidden(Department_Id, true);
+    departmentView-&gt;resizeColumnsToContents();
+    departmentView-&gt;horizontalHeader()-&gt;setStretchLastSection(true);
+
+    departmentLabel = new QLabel(tr("Depar&amp;tments"));
+    departmentLabel-&gt;setBuddy(departmentView);
+
+    connect(departmentView-&gt;selectionModel(),
+            SIGNAL(currentRowChanged(const QModelIndex &amp;,
+                                     const QModelIndex &amp;)),
+            this, SLOT(updateEmployeeView()));
+    ...
+}
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1906"></a><a name=
+"iddle1951"></a><a name="iddle2833"></a><a name=
+"iddle3676"></a><a name="iddle4657"></a><a name=
+"iddle4658"></a><a name="iddle5245"></a><a name=
+"iddle5845"></a><a name="iddle6842"></a><a name=
+"iddle7075"></a><a name="iddle7480"></a><a name="we saw"></a>The
+code begins in a similar way to what we saw in the previous section
+when we set up a model for the <tt>employee</tt> table. The view is
+a standard <tt>QTableView</tt><a name="foreign key"></a>, but
+because we have a foreign key, we must use a
+<tt>QSqlRelationalDelegate</tt><a name="and can"></a> so that the
+foreign key's text appears in the view and can be changed by a
+combobox, instead of the raw ID.</p>
+
+<p class="docText"><a name="field since"></a>We have chosen to hide
+the department's ID field since this is not meaningful to the user.
+We also stretch the last visible field, the department's address,
+to fill the horizontal space available.</p>
+
+<p class="docText"><a name="set to"></a>The department view has its
+selection mode set to
+<tt>QAbstractItemView::SingleSelection</tt><a name=
+"selection behavior"></a>, and its selection behavior set to
+<tt>QAbstractItemView::SelectRows</tt><a name=
+"individual cells"></a>. The mode setting means that users can
+navigate to individual cells in the table, and the behavior setting
+means that as the user navigates, entire rows are highlighted.</p>
+
+<p class="docText"><a name="We connect"></a>We connect the
+<tt>currentRowChanged()</tt><a name="the view"></a> signal from the
+view's selection model to the <tt>updateEmployeeView()</tt><a name=
+"connection is"></a> slot. This connection is what makes the
+master–detail relationship work, and ensures that the employee view
+always shows the employees for the highlighted department in the
+department view.</p>
+
+<p class="docText">The code inside the
+<tt>createEmployeePanel()</tt> helper function is similar, but with
+some important differences:</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+void MainForm::createEmployeePanel()
+{
+    employeePanel = new QWidget;
+    employeeModel = new QSqlRelationalTableModel(this);
+    employeeModel-&gt;setTable("employee");
+    employeeModel-&gt;setRelation(Employee_DepartmentId,
+            QSqlRelation("department", "id", "name"));
+    employeeModel-&gt;setSort(Employee_Name, Qt::AscendingOrder);
+    employeeModel-&gt;setHeaderData(Employee_Name, Qt::Horizontal,
+                                 tr("Name"));
+    employeeModel-&gt;setHeaderData(Employee_Extension, Qt::Horizontal,
+                                 tr("Ext."));
+    employeeModel-&gt;setHeaderData(Employee_Email, Qt::Horizontal,
+                                 tr("Email"));
+
+    employeeView = new QTableView;
+    employeeView-&gt;setModel(employeeModel);
+    employeeView-&gt;setSelectionMode(QAbstractItemView::SingleSelection);
+    employeeView-&gt;setSelectionBehavior(QAbstractItemView::SelectRows);
+    employeeView-&gt;setEditTriggers(QAbstractItemView::NoEditTriggers);
+    employeeView-&gt;horizontalHeader()-&gt;setStretchLastSection(true);
+    employeeView-&gt;setColumnHidden(Employee_Id, true);
+    employeeView-&gt;setColumnHidden(Employee_DepartmentId, true);
+    employeeView-&gt;setColumnHidden(Employee_StartDate, true);
+
+    employeeLabel = new QLabel(tr("E&amp;mployees"));
+    employeeLabel-&gt;setBuddy(employeeView);
+    ...
+}
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle2743"></a><a name=
+"iddle3679"></a><a name="iddle4047"></a><a name=
+"iddle4656"></a><a name="iddle5868"></a><a name=
+"iddle5872"></a><a name="iddle6187"></a><a name=
+"iddle7068"></a><a name="iddle7154"></a><a name=
+"iddle7215"></a><a name="iddle8337"></a>The employee view's edit
+triggers are set to
+<tt>QAbstractItemView::NoEditTriggers</tt><a name=
+"and delete"></a>, effectively making the view read-only. In this
+application, the user can add, edit, and delete employee records by
+clicking <span class="docEmphRomanAlt">Edit Employees</span>, which
+invokes the <tt>EmployeeForm</tt> developed in the previous
+section.</p>
+
+<p class="docText"><a name="just one"></a>This time, we hide three
+columns, not just one. We hide the <tt>id</tt><a name=
+"also hide"></a> column, because again that is not meaningful to
+the user. We also hide the <tt>departmentid</tt><a name=
+"any one"></a> column because the only employees shown at any one
+time are those that are in the currently selected department.
+Finally, we hide the <tt>startdate</tt><a name="can be"></a> column
+because it is rarely relevant and can be accessed by clicking
+<span class="docEmphRomanAlt">Edit Employees</span>.</p>
+
+<div class="docText">
+<pre>
+void MainForm::updateEmployeeView()
+{
+    QModelIndex index = departmentView-&gt;currentIndex();
+    if (index.isValid()) {
+        QSqlRecord record = departmentModel-&gt;record(index.row());
+        int id = record.value("id").toInt();
+        employeeModel-&gt;setFilter(QString("departmentid = %1").arg(id));
+        employeeLabel-&gt;setText(tr("E&amp;mployees in the %1 Department")
+                                  .arg(record.value("name").toString()));
+    } else {
+        employeeModel-&gt;setFilter("departmentid = -1");
+        employeeLabel-&gt;setText(tr("E&amp;mployees"));
+    }
+    employeeModel-&gt;select();
+    employeeView-&gt;horizontalHeader()-&gt;setVisible(
+            employeeModel-&gt;rowCount() &gt; 0);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1091"></a><a name=
+"iddle1300"></a><a name="iddle1301"></a><a name=
+"iddle1302"></a><a name="iddle2090"></a><a name=
+"iddle2701"></a><a name="iddle3237"></a><a name=
+"iddle3450"></a><a name="iddle3674"></a><a name=
+"iddle3677"></a><a name="iddle5819"></a><a name=
+"iddle5851"></a><a name="iddle5852"></a><a name=
+"iddle5858"></a><a name="iddle5859"></a><a name=
+"iddle5860"></a><a name="iddle7183"></a><a name=
+"iddle8178"></a><a name="iddle8539"></a><a name=
+"current department"></a>Whenever the current department changes
+(including at startup), this slot is called. If there is a valid
+current department, the function retrieves the department's ID and
+sets a filter on the employee model. This constrains the employees
+shown to those with a matching department ID foreign key. (A filter
+is just a <tt>WHERE</tt> clause without the <tt>WHERE</tt><a name=
+"the"></a> keyword.) We also update the label that is shown above
+the <tt>employee</tt><a name="table to"></a> table to show the name
+of the department the employees are in.</p>
+
+<p class="docText"><a name="is no"></a>If there is no valid
+department (e.g., if the database is empty), we set the filter to
+match a non-existent department ID to ensure that no records
+match.</p>
+
+<p class="docText"><a name="then call"></a>We then call
+<tt>select()</tt><a name="will emit"></a> on the model to apply the
+filter. This in turn will emit signals that the view will respond
+to by updating itself. Finally, we show or hide the
+<tt>employee</tt><a name="or not"></a> table's column headers
+depending on whether or not any employees are shown.</p>
+
+<div class="docText">
+<pre>
+void MainForm::addDepartment()
+{
+    int row = departmentModel-&gt;rowCount();
+    departmentModel-&gt;insertRow(row);
+    QModelIndex index = departmentModel-&gt;index(row, Department_Name);
+    departmentView-&gt;setCurrentIndex(index);
+    departmentView-&gt;edit(index);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">If the user clicks the <span class=
+"docEmphRomanAlt">Add Dept.</span><a name="the"></a> button, we
+insert a new row at the end of the <tt>department</tt><a name=
+"editing of"></a> table, make this row the current row, and
+initiate editing of the department name column as though the user
+had pressed <span class="docEmphRomanAlt">F2</span><a name=
+"default values"></a> or double-clicked it. If we needed to provide
+some default values, we would do so by calling
+<tt>setData()</tt><a name="the"></a> immediately after the
+<tt>insertRow()</tt> call.</p>
+
+<p class="docText"><a name="unique keys"></a>We have not had to
+concern ourselves with creating unique keys for new records because
+we have used an auto-incrementing column to handle this for us. If
+this approach is not possible or not suitable, we can connect to
+the model's <tt>beforeInsert()</tt><a name="This is"></a> signal.
+This is emitted after the user's edits, just before the insertion
+takes place in the database. This is the ideal time to put in IDs
+or to process the user's data. There are similar
+<tt>beforeDelete()</tt> and <tt>beforeUpdate()</tt><a name=
+"useful for"></a> signals; these are useful for creating audit
+trails.</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+void MainForm::deleteDepartment()
+{
+    QModelIndex index = departmentView-&gt;currentIndex();
+    if (!index.isValid())
+        return;
+
+    QSqlDatabase::database().transaction();
+    QSqlRecord record = departmentModel-&gt;record(index.row());
+    int id = record.value(Department_Id).toInt();
+    int numEmployees = 0;
+
+    QSqlQuery query(QString("SELECT COUNT(*) FROM employee "
+                            "WHERE departmentid = %1").arg(id));
+    if (query.next())
+        numEmployees = query.value(0).toInt();
+    if (numEmployees &gt; 0) {
+        int r = QMessageBox::warning(this, tr("Delete Department"),
+                    tr("Delete %1 and all its employees?")
+                    .arg(record.value(Department_Name).toString()),
+                    QMessageBox::Yes | QMessageBox::No);
+        if (r == QMessageBox::No) {
+            QSqlDatabase::database().rollback();
+            return;
+        }
+
+        query.exec(QString("DELETE FROM employee "
+                           "WHERE departmentid = %1").arg(id));
+    }
+
+    departmentModel-&gt;removeRow(index.row());
+    departmentModel-&gt;submitAll();
+    QSqlDatabase::database().commit();
+
+    updateEmployeeView();
+    departmentView-&gt;setFocus();
+}
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1711"></a><a name=
+"iddle2335"></a><a name="iddle3678"></a><a name=
+"iddle5808"></a><a name="iddle5813"></a><a name=
+"iddle5878"></a><a name="iddle6962"></a><a name=
+"iddle8190"></a><a name="the user"></a>If the user wants to delete
+a department, we let them do so without formality if the department
+has no employees. But if it has employees, we ask the user to
+confirm the deletion, and if they confirm, we do a cascading delete
+to ensure that the database's relational integrity is maintained.
+To achieve this, at least for databases such as SQLite 3 which
+don't enforce relational integrity for us, we must use a
+transaction.</p>
+
+<p class="docText"><a name="to find"></a>Once the transaction has
+been initiated, we execute a query to find out how many employees
+are in the department. If there is at least one, we pop up a
+message box asking for confirmation. If the user says no, we roll
+back the transaction and return. Otherwise, we delete all the
+department's employees as well as the department itself, and we
+commit the transaction.</p>
+
+<div class="docText">
+<pre>
+void MainForm::editEmployees()
+{
+    int employeeId = -1;
+    QModelIndex index = employeeView-&gt;currentIndex();
+    if (index.isValid()) {
+        QSqlRecord record = employeeModel-&gt;record(index.row());
+        employeeId = record.value(Employee_Id).toInt();
+    }
+
+    EmployeeForm form(employeeId, this);
+    form.exec();
+    updateEmployeeView();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>editEmployees()</tt><a name=
+"user clicks"></a> slot is invoked whenever the user clicks the
+<span class="docEmphRomanAlt">Edit Employees</span><a name=
+"overwrite this"></a> button. We begin by assigning an invalid
+employee ID. Then we overwrite this with the current employee's ID
+if possible. Then we construct the <tt>EmployeeForm</tt> and show
+it modally. Finally, we call the <tt>updateEmployeeView()</tt> slot
+to make the <a name="iddle2292"></a><a name=
+"iddle3767"></a><a name="changes to"></a>main form's detail table
+view refresh itself since changes to employees may have
+occurred.</p>
+
+<p class="docText"><a name="and editing"></a>This chapter showed
+that Qt's model/view classes make viewing and editing data in SQL
+databases as easy as possible. In situations where we want to
+present records using a form view, we can use
+<tt>QDataWidgetMapper</tt><a name="widgets in"></a> to map widgets
+in the user interface to the fields in a record in the database.
+Setting up master–detail relationships is quite easy, requiring
+just one signal–slot connection and the implementation of one
+simple slot. Drill-down is also straightforward, just requiring us
+to navigate to the selected record in the drilled-down form's
+constructor, or to go to the first record if no record is
+selected.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch13lev1sec3.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch14.html"><img src="images/next.gif" width="20" height="20"
+border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

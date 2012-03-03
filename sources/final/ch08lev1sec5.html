@@ -1,0 +1,699 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch08lev1sec5.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch08lev1sec5.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch08lev1sec5.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch08lev1sec5.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch08lev1sec4.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch09.html"><img src="images/next.gif" width="20" height="20"
+border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch08lev1sec5"></a>
+<h3 class="docSection1Title" id="-100000">Printing</h3>
+
+<p class="docText"><a name="Printing in"></a>Printing in Qt is
+similar to drawing on a <tt>QWidget</tt>, <tt>QPixmap</tt>, or
+<tt>QImage</tt><a name="of the"></a>. It consists of the following
+steps:</p>
+<a name="ch08pro01"></a>
+<table border="0" class="docText">
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>1.</b>
+</div>
+</td>
+<td>
+<div class="docText">Create a <tt>QPrinter</tt> to serve as the
+paint device.<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>2.</b>
+</div>
+</td>
+<td>
+<div class="docText">Pop up a <tt>QPrintDialog</tt>, allowing the
+user to choose a printer and to set a few options.<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>3.</b>
+</div>
+</td>
+<td>
+<div class="docText">Create a <tt>QPainter</tt> to operate on the
+<tt>QPrinter</tt>.<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>4.</b>
+</div>
+</td>
+<td>
+<div class="docText"><a name="ch08pro01st4"></a>Draw a page using
+the <tt>QPainter</tt>.<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td>
+</td>
+<td>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>5.</b>
+</div>
+</td>
+<td>
+<div class="docText"><a name="iddle2300"></a><a name=
+"iddle3182"></a><a name="iddle4006"></a><a name=
+"iddle4291"></a><a name="iddle4397"></a><a name=
+"iddle4437"></a><a name="iddle4440"></a><a name=
+"iddle4447"></a><a name="iddle4450"></a><a name=
+"iddle5194"></a><a name="iddle5608"></a><a name=
+"iddle5610"></a><a name="iddle5614"></a><a name=
+"iddle7289"></a><a name="ch08pro01st5"></a>Call
+<tt>QPrinter::newPage()</tt> to advance to the next page.<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>6.</b>
+</div>
+</td>
+<td>
+<div class="docText">Repeat steps <a class="docLink" href=
+"#ch08pro01st4">4</a> and <a class="docLink" href=
+"#ch08pro01st5">5</a> until all the pages are printed.<br>
+<br></div>
+</td>
+</tr>
+</table>
+
+<p class="docText"><a name="Windows and"></a>On Windows and Mac OS
+X, <tt>QPrinter</tt><a name="it to"></a> uses the system's printer
+drivers. On Unix, it generates PostScript and sends it to
+<tt>lp</tt> or <tt>lpr</tt> (or to the program set using
+<tt>QPrinter::setPrintProgram()</tt>). <tt>QPrinter</tt><a name=
+"generate PDF"></a> can also be used to generate PDF files by
+calling <tt>setOutputFormat(QPrinter::PdfFormat)</tt>.<sup class=
+"docFootnote"><a class="docLink" href="#ch08fn02">[*]</a></sup></p>
+
+<blockquote>
+<p class="docFootnote"><sup><a name="ch08fn02">[*]</a></sup> Qt 4.4
+is expected to introduce classes for showing print previews.</p>
+</blockquote>
+
+<p class="docText"><a name="single page"></a>Let's start with some
+simple examples that print on a single page. The first example,
+illustrated in <a class="docLink" href="#ch08fig18">Figure
+8.18</a>, prints a <tt>QImage</tt>:</p>
+
+<div class="docText">
+<pre>
+void PrintWindow::printImage(const QImage &amp;image)
+{
+    QPrintDialog printDialog(&amp;printer, this);
+    if (printDialog.exec()) {
+        QPainter painter(&amp;printer);
+        QRect rect = painter.viewport();
+        QSize size = image.size();
+        size.scale(rect.size(), Qt::KeepAspectRatio);
+        painter.setViewport(rect.x(), rect.y(),
+                            size.width(), size.height());
+        painter.setWindow(image.rect());
+        painter.drawImage(0, 0, image);
+    }
+}
+</pre>
+</div>
+<br>
+<a name="ch08fig18"></a>
+<center>
+<h5 class="docFigureTitle">Figure 8.18. Printing a
+<tt>QImage</tt></h5>
+
+<p class="docText"><img border="0" id="" width="482" height="662"
+src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZmlqcGNnaDhnMDgvaTFwcy4-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="iddle3075"></a><a name=
+"iddle4007"></a><a name="iddle4434"></a><a name=
+"iddle4444"></a><a name="iddle5139"></a><a name=
+"iddle5146"></a><a name="iddle5611"></a><a name=
+"iddle6280"></a><a name="iddle6865"></a><a name=
+"iddle6866"></a><a name="iddle6902"></a><a name=
+"iddle6949"></a><a name="iddle8018"></a>We assume that the
+<tt>PrintWindow</tt> class has a member variable called
+<tt>printer</tt> of type <tt>QPrinter</tt>. We could simply have
+created the <tt>QPrinter</tt> on the stack in
+<tt>printImage()</tt><a name="settings from"></a>, but then it
+would not remember the user's settings from one print run to
+another.</p>
+
+<p class="docText">We create a <tt>QPrintDialog</tt> and call
+<tt>exec()</tt> to show it. It returns <tt>true</tt> if the user
+clicked the <span class="docEmphRomanAlt">OK</span> button;
+otherwise, it returns <tt>false</tt>. After the call to
+<tt>exec()</tt>, the <tt>QPrinter</tt><a name="to print"></a>
+object is ready to use. (It is also possible to print without using
+a <tt>QPrintDialog</tt><a name="calling"></a>, by directly calling
+<tt>QPrinter</tt> member functions to set things up.)</p>
+
+<p class="docText">Next, we create a <tt>QPainter</tt> to draw on
+the <tt>QPrinter</tt><a name="viewport to"></a>. We set the window
+to the image's rectangle and the viewport to a rectangle with the
+same aspect ratio, and we draw the image at position (0, 0).</p>
+
+<p class="docText"><a name="By default"></a>By default,
+<tt>QPainter</tt><a name="initialized so"></a>'s window is
+initialized so that the printer appears to have a similar
+resolution as the screen (usually somewhere between 72 and 100 dots
+per inch), making it easy to reuse widget painting code for
+printing. Here, it doesn't matter, because we set our own
+window.</p>
+
+<p class="docText"><a name="the example"></a>In the example, we
+chose to print an image, but printing graphics view scenes is also
+very simple. To print the entire scene, we can call either
+<tt>QGraphicsScene::render()</tt> or
+<tt>QGraphicsView::render()</tt>, passing a
+<tt>QPrinter</tt><a name="part of"></a> as the first parameter. If
+we want to print just part of the scene, we can use the
+<tt>render()</tt><a name="target rectangle"></a> functions'
+optional arguments to specify the target rectangle to paint on
+(where on the page the scene should be painted) and the source
+rectangle (what part of the scene should be painted).</p>
+
+<p class="docText"><a name="single page"></a>Printing items that
+take up no more than a single page is simple, but many applications
+need to print multiple pages. For those, we need to paint one page
+at a time and call <tt>newPage()</tt><a name="the problem"></a> to
+advance to the next page. This raises the problem of determining
+how much information we can print on each page. There are two main
+approaches to handling multi-page documents with Qt:</p>
+
+<ul>
+<li>
+<p class="docList"><a name="and render"></a>We can convert our data
+to HTML and render it using <tt>QTextDocument</tt>, Qt's rich text
+engine.</p>
+</li>
+
+<li>
+<p class="docList"><a name="perform the"></a>We can perform the
+drawing and the page breaking by hand.</p>
+</li>
+</ul>
+
+<p class="docText"><a name="will print"></a>We will review both
+approaches in turn. As an example, we will print a flower guide: a
+list of flower names, each with a textual description. Each entry
+in the guide is stored as a string of the format "<span class=
+"docEmphasis">name</span>: <span class=
+"docEmphasis">description</span><a name="for example"></a>", for
+example:</p>
+
+<div class="docText">
+<pre>
+Miltonopsis santanae: A most dangerous orchid species.
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="data is"></a>Since each flower's data
+is represented by a single string, we can represent all the flowers
+in the guide using one <tt>QStringList</tt><a name=
+"function that"></a>. Here's the function that prints a flower
+guide using Qt's rich text engine:</p>
+
+<div class="docText">
+<pre>
+void PrintWindow::printFlowerGuide(const QStringList &amp;entries)
+{
+    QString html;
+
+    foreach (QString entry, entries) {
+        QStringList fields = entry.split(": ");
+        QString title = Qt::escape(fields[0]);
+        QString body = Qt::escape(fields[1]);
+        html += "&lt;table width=\"100%\" border=1 cellspacing=0&gt;\n"
+                "&lt;tr&gt;&lt;td bgcolor=\"lightgray\"&gt;&lt;font size=\"+1\"&gt;"
+                "&lt;b&gt;&lt;i&gt;" + title + "&lt;/i&gt;&lt;/b&gt;&lt;/font&gt;\n&lt;tr&gt;&lt;td&gt;" + body
+                + "\n&lt;/table&gt;\n&lt;br&gt;\n";
+    }
+    printHtml(html);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1004"></a><a name=
+"iddle1150"></a><a name="iddle2417"></a><a name=
+"iddle2465"></a><a name="iddle4430"></a><a name=
+"iddle4435"></a><a name="iddle4436"></a><a name=
+"iddle4445"></a><a name="iddle4446"></a><a name=
+"iddle6045"></a><a name="iddle6284"></a><a name=
+"iddle6285"></a><a name="iddle7242"></a>The first step is to
+convert the <tt>QStringList</tt><a name="We use"></a> into HTML.
+Each flower becomes an HTML table with two cells. We use
+<tt>Qt::escape()</tt><a name="and"></a> to replace the special
+characters '&amp;', '&lt;', and '&gt;' with the corresponding HTML
+entities ("&amp;amp;", "&amp;lt;", and "&amp;gt;"). Then we call
+<tt>printHtml()</tt> to print the text.</p>
+
+<div class="docText">
+<pre>
+void PrintWindow::printHtml(const QString &amp;html)
+{
+    QPrintDialog printDialog(&amp;printer, this);
+    if (printDialog.exec()) {
+        QTextDocument textDocument;
+        textDocument.setHtml(html);
+        textDocument.print(&amp;printer);
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>printHtml()</tt> function pops up a
+<tt>QPrintDialog</tt><a name="be reused"></a> and takes care of
+printing an HTML document. It can be reused "as is" in any Qt
+application to print arbitrary HTML pages. The resulting pages are
+shown in <a class="docLink" href="#ch08fig19">Figure 8.19</a>.</p>
+<a name="ch08fig19"></a>
+<center>
+<h5 class="docFigureTitle">Figure 8.19. Printing a flower guide
+using <tt>QTextDocument</tt></h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZmlmYWlwY3RoOWcwOC9pMXNsLl9n.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="324" src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZmlncGNmaDlnMDgvaTFpcy4-.jpg"
+alt="">
+</center>
+<br>
+
+<p class="docText">Converting a document to HTML and using
+<tt>QTextDocument</tt><a name="most convenient"></a> to print it is
+by far the most convenient alternative for printing reports and
+other complex documents. In cases where we need more control, we
+can do the page layout and the drawing by hand. Let's now see how
+we can use this approach to print a flower guide. Here's the new
+<tt>printFlowerGuide()</tt> function:</p>
+
+<div class="docText">
+<pre>
+void PrintWindow::printFlowerGuide(const QStringList &amp;entries)
+{
+    QPrintDialog printDialog(&amp;printer, this);
+    if (printDialog.exec()) {
+        QPainter painter(&amp;printer);
+        QList&lt;QStringList&gt; pages;
+
+        paginate(&amp;painter, &amp;pages, entries);
+        printPages(&amp;painter, pages);
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="the painter"></a>After setting up the
+printer and constructing the painter, we call the
+<tt>paginate()</tt><a name="to determine"></a> helper function to
+determine which entry should appear on which page. The result of
+this is a list of <tt>QStringList</tt>s, with each
+<tt>QStringList</tt><a name="result to"></a> holding the entries
+for one page. We pass on that result to <tt>printPages()</tt>.</p>
+
+<p class="docText"><a name="iddle4210"></a><a name=
+"iddle4442"></a><a name="For example"></a>For example, let's
+suppose that the flower guide contains six entries, which we will
+refer to as <span class="docEmphasis">A</span>, <span class=
+"docEmphasis">B</span>, <span class="docEmphasis">C</span>,
+<span class="docEmphasis">D</span>, <span class=
+"docEmphasis">E</span>, and <span class=
+"docEmphasis">F</span><a name="that there"></a> . Now let's suppose
+that there is room for <span class="docEmphasis">A</span> and
+<span class="docEmphasis">B</span><a name="the first"></a> on the
+first page; <span class="docEmphasis">C</span>, <span class=
+"docEmphasis">D</span>, and <span class="docEmphasis">E</span> on
+the second page; and <span class="docEmphasis">F</span> on the
+third page. The <tt>pages</tt> list would then have the list
+[<span class="docEmphasis">A</span>, <span class=
+"docEmphasis">B</span>] at index position 0, the list [<span class=
+"docEmphasis">C</span>, <span class="docEmphasis">D</span>,
+<span class="docEmphasis">E</span>] at index position 1, and the
+list [<span class="docEmphasis">F</span> ] at index position 2.</p>
+
+<div class="docText">
+<pre>
+void PrintWindow::paginate(QPainter *painter, QList&lt;QStringList&gt; *pages,
+                           const QStringList &amp;entries)
+{
+    QStringList currentPage;
+    int pageHeight = painter-&gt;window().height() - 2 * LargeGap;
+    int y = 0;
+
+    foreach (QString entry, entries) {
+        int height = entryHeight(painter, entry);
+        if (y + height &gt; pageHeight &amp;&amp; !currentPage.empty()) {
+            pages-&gt;append(currentPage);
+            currentPage.clear();
+            y = 0;
+        }
+        currentPage.append(entry);
+        y += height + MediumGap;
+    }
+    if (!currentPage.empty())
+        pages-&gt;append(currentPage);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>paginate()</tt><a name="on the"></a>
+function distributes the flower guide entries into pages. It relies
+on the <tt>entryHeight()</tt><a name="one entry"></a> function,
+which computes the height of one entry. It also takes into account
+the vertical gaps at the top and bottom of the page, of size
+<tt>LargeGap</tt>.</p>
+
+<p class="docText"><a name="iddle1372"></a><a name=
+"iddle2421"></a><a name="iddle4439"></a><a name=
+"iddle4441"></a><a name="iddle4449"></a><a name=
+"iddle5509"></a><a name="the current"></a>We iterate through the
+entries and append them to the current page until we come to an
+entry that doesn't fit; then we append the current page to the
+<tt>pages</tt> list and start a new page.</p>
+
+<div class="docText">
+<pre>
+int PrintWindow::entryHeight(QPainter *painter, const QString &amp;entry)
+{
+    QStringList fields = entry.split(": ");
+    QString title = fields[0];
+    QString body = fields[1];
+
+    int textWidth = painter-&gt;window().width() - 2 * SmallGap;
+    int maxHeight = painter-&gt;window().height();
+
+    painter-&gt;setFont(titleFont);
+    QRect titleRect = painter-&gt;boundingRect(0, 0, textWidth, maxHeight,
+                                            Qt::TextWordWrap, title);
+    painter-&gt;setFont(bodyFont);
+    QRect bodyRect = painter-&gt;boundingRect(0, 0, textWidth, maxHeight,
+                                           Qt::TextWordWrap, body);
+    return titleRect.height() + bodyRect.height() + 4 * SmallGap;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>entryHeight()</tt> function uses
+<tt>QPainter::boundingRect()</tt><a name="one entry"></a> to
+compute the vertical space needed by one entry. <a class="docLink"
+href="#ch08fig20">Figure 8.20</a><a name="and the"></a> shows the
+layout of a flower entry and the meaning of the <tt>SmallGap</tt>
+and <tt>MediumGap</tt> constants.</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+void PrintWindow::printPages(QPainter *painter,
+                             const QList&lt;QStringList&gt; &amp;pages)
+{
+    int firstPage = printer.fromPage() - 1;
+    if (firstPage &gt;= pages.size())
+        return;
+    if (firstPage == -1)
+        firstPage = 0;
+
+    int lastPage = printer.toPage() - 1;
+    if (lastPage == -1 || lastPage &gt;= pages.size())
+        lastPage = pages.size() - 1;
+
+    int numPages = lastPage - firstPage + 1;
+    for (int i = 0; i &lt; printer.numCopies(); ++i) {
+        for (int j = 0; j &lt; numPages; ++j) {
+            if (i != 0 || j != 0)
+                printer.newPage();
+
+            int index;
+            if (printer.pageOrder() == QPrinter::FirstPageFirst) {
+                index = firstPage + j;
+            } else {
+                index = lastPage - j;
+            }
+            printPage(painter, pages[index], index + 1);
+        }
+    }
+}
+
+                                          
+</pre>
+</div>
+<br>
+<a name="ch08fig20"></a>
+<center>
+<h5 class="docFigureTitle"><a name="flower entry"></a>Figure 8.20.
+A flower entry's layout</h5>
+
+<p class="docText"><img border="0" id="" width="500" height="235"
+src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZmlncGNmaDBnMDgvaTJpcy4-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="iddle2856"></a><a name=
+"iddle4070"></a><a name="iddle5603"></a><a name=
+"iddle5609"></a><a name="iddle5613"></a><a name=
+"iddle5615"></a><a name="iddle7209"></a><a name="iddle8123"></a>The
+<tt>printPages()</tt> function's role is to print each page using
+<tt>printPage()</tt><a name="The result"></a> in the correct order
+and the correct number of times. The result it produces is shown in
+<a class="docLink" href="#ch08fig21">Figure 8.21</a><a name=
+"Using the"></a>. Using the <tt>QPrintDialog</tt><a name=
+"might request"></a>, the user might request several copies,
+specify a print range, or request the pages in reverse order. It is
+our responsibility to honor these options—or to disable them using
+<tt>QPrintDialog::setEnabledOptions()</tt>.</p>
+<a name="ch08fig21"></a>
+<center>
+<h5 class="docFigureTitle"><a name="Printing a"></a>Figure 8.21.
+Printing a flower guide using <tt>QPainter</tt></h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZmlmYWlwY3RoMWcwOC9pMnNsLl9n.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="323" src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZmlncGNmaDFnMDgvaTJpcy4-.jpg"
+alt="">
+</center>
+<br>
+
+<p class="docText">We start by determining the range to print.
+<tt>QPrinter</tt>'s <tt>fromPage()</tt> and
+<tt>toPage()</tt><a name="if no"></a> functions return the page
+numbers selected by the user, or 0 if no range was chosen. We
+subtract 1 because our <tt>pages</tt><a name="set"></a> list is
+indexed from 0, and set <tt>firstPage</tt> and
+<tt>lastPage</tt><a name="any range"></a> to cover the full range
+if the user didn't set any range.</p>
+
+<p class="docText">Then we print each page. The outer
+<tt>for</tt><a name="to produce"></a> loop iterates as many times
+as necessary to produce the number of copies requested by the user.
+Most printer drivers support multiple copies, so for those,
+<tt>QPrinter::numCopies()</tt> always returns 1. If <a name=
+"iddle4008"></a><a name="iddle4431"></a><a name=
+"iddle4438"></a><a name="iddle4443"></a><a name=
+"iddle4448"></a><a name="iddle5612"></a>the printer driver can't
+handle multiple copies, <tt>numCopies()</tt><a name="the user"></a>
+returns the number of copies requested by the user, and the
+application is responsible for printing that number of copies. (In
+the <tt>QImage</tt><a name="in this"></a> example earlier in this
+section, we ignored <tt>numCopies()</tt> for the sake of
+simplicity.)</p>
+
+<p class="docText">The inner <tt>for</tt><a name="we call"></a>
+loop iterates through the pages. If the page isn't the first page,
+we call <tt>newPage()</tt><a name="to flush"></a> to flush the old
+page and start painting on a fresh page. We call
+<tt>printPage()</tt><a name="each page"></a> to paint each
+page.</p>
+
+<div class="docText">
+<pre>
+void PrintWindow::printPage(QPainter *painter,
+                            const QStringList &amp;entries, int pageNumber)
+{
+    painter-&gt;save();
+    painter-&gt;translate(0, LargeGap);
+    foreach (QString entry, entries) {
+        QStringList fields = entry.split(": ");
+        QString title = fields[0];
+        QString body = fields[1];
+        printBox(painter, title, titleFont, Qt::lightGray);
+        printBox(painter, body, bodyFont, Qt::white);
+        painter-&gt;translate(0, MediumGap);
+    }
+    painter-&gt;restore();
+
+    painter-&gt;setFont(footerFont);
+    painter-&gt;drawText(painter-&gt;window(),
+                      Qt::AlignHCenter | Qt::AlignBottom,
+                      QString::number(pageNumber));
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>printPage()</tt><a name=
+"iterates through"></a> function iterates through all the flower
+guide entries and prints them using two calls to
+<tt>printBox()</tt><a name="It also"></a>: one for the title (the
+flower's name) and one for the body (its description). It also
+draws the page number centered at the bottom of the page. The page
+layout is shown schematically in <a class="docLink" href=
+"#ch08fig22">Figure 8.22</a>.</p>
+
+<div class="docText">
+<pre>
+void PrintWindow::printBox(QPainter *painter, const QString &amp;str,
+                           const QFont &amp;font, const QBrush &amp;brush)
+{
+    painter-&gt;setFont(font);
+
+    int boxWidth = painter-&gt;window().width();
+    int textWidth = boxWidth - 2 * SmallGap;
+    int maxHeight = painter-&gt;window().height();
+
+    QRect textRect = painter-&gt;boundingRect(SmallGap, SmallGap,
+                                           textWidth, maxHeight,
+                                           Qt::TextWordWrap, str);
+    int boxHeight = textRect.height() + 2 * SmallGap;
+
+    painter-&gt;setPen(QPen(Qt::black, 2.0, Qt::SolidLine));
+    painter-&gt;setBrush(brush);
+    painter-&gt;drawRect(0, 0, boxWidth, boxHeight);
+    painter-&gt;drawText(textRect, Qt::TextWordWrap, str);
+    painter-&gt;translate(0, boxHeight);
+}
+</pre>
+</div>
+<br>
+<a name="ch08fig22"></a>
+<center>
+<h5 class="docFigureTitle">Figure 8.22. The flower guide's page
+layout</h5>
+
+<p class="docText"><img border="0" id="" width="410" height="284"
+src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZmlncGNmaDJnMDgvaTJpcy4-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText">The <tt>printBox()</tt><a name="a box"></a>
+function draws the outline of a box, then draws the text inside the
+box.</p>
+
+<p class="docText"><a name="cover"></a>This completes our review of
+2D graphics and printing. We will cover 3D graphics later, in
+<a class="docLink" href="ch20.html#ch20">Chapter 20</a>.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch08lev1sec4.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch09.html"><img src="images/next.gif" width="20" height="20"
+border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

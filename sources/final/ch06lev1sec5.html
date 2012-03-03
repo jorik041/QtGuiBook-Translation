@@ -1,0 +1,268 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch06lev1sec5.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch06lev1sec5.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch06lev1sec5.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch06lev1sec5.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch06lev1sec4.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch06lev1sec6.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch06lev1sec5"></a>
+<h3 class="docSection1Title" id="-100000">Dock Windows and
+Toolbars</h3>
+
+<p class="docText"><a name="Dock windows"></a>Dock windows are
+windows that can be docked inside a <tt>QMainWindow</tt><a name=
+"as independent"></a> or floated as independent windows.
+<tt>QMainWindow</tt><a name="four dock"></a> provides four dock
+window areas: one above, one below, one to the left, and one to the
+right of the central widget. Applications such as Microsoft Visual
+Studio and <span class="docEmphasis">Qt Linguist</span><a name=
+"very flexible"></a> make extensive use of dock windows to provide
+a very flexible user interface. In Qt, dock windows are instances
+of <tt>QDockWidget</tt>. <a class="docLink" href=
+"#ch06fig13">Figure 6.13</a><a name="toolbars and"></a> shows a Qt
+application with toolbars and a dock window.</p>
+<a name="ch06fig13"></a>
+<center>
+<h5 class="docFigureTitle">Figure 6.13. A <tt>QMainWindow</tt> with
+a dock window</h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzdHBpZWNrcy9oX2RzdG93Y2RnaWwucGdhag--.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="392" src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzZ3BpZWNrc2gvLmRzdG93Y2RnaXBq.jpg"
+alt="">
+</center>
+<br>
+
+<p class="docText"><a name="it is"></a>Every dock window has its
+own title bar, even when it is docked. Users can move dock windows
+from one dock area to another by dragging the title bar. They can
+also detach a dock window from an area and let the dock window
+float as an independent window by dragging the dock window outside
+of any dock area. Free-floating dock windows are always "on top" of
+their main window. Users can close a <tt>QDockWidget</tt><a name=
+"the window"></a> by clicking the close button in the window's
+title bar. Any combination of these features can be disabled by
+calling <tt>QDockWidget::setFeatures()</tt>.</p>
+
+<p class="docText"><a name="dock windows"></a>In earlier versions
+of Qt, toolbars were treated like dock windows and shared the same
+dock areas. Starting with Qt 4, toolbars occupy their own areas
+around the central widget (as shown in <a class="docLink" href=
+"#ch06fig14">Figure 6.14</a><a name="be undocked"></a>) and can't
+be undocked. If a floating toolbar is required, we can simply put
+it inside a <tt>QDockWidget</tt>.</p>
+<a name="ch06fig14"></a>
+<center>
+<h5 class="docFigureTitle">Figure 6.14. <tt>QMainWindow</tt>'s dock
+and toolbar areas</h5>
+
+<p class="docText"><img border="0" id="" width="345" height="365"
+src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzcGlnZmlzaC9mNGk2Z2MwLjE-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="of their"></a>The corners indicated
+with dotted lines can belong to either of their two adjoining dock
+areas. For example, we could make the top-left corner belong to the
+left dock area by calling
+<tt>QMainWindow::setCorner(Qt::TopLeftCorner,
+Qt::LeftDockWidgetArea)</tt>.</p>
+
+<p class="docText"><a name="The following"></a>The following code
+snippet shows how to wrap an existing widget (in this case, a
+<tt>QTreeWidget</tt>) in a <tt>QDockWidget</tt><a name=
+"it into"></a> and insert it into the right dock area:</p>
+
+<div class="docText">
+<pre>
+    QDockWidget *shapesDockWidget = new QDockWidget(tr("Shapes"));
+    shapesDockWidget-&gt;setObjectName("shapesDockWidget");
+    shapesDockWidget-&gt;setWidget(treeWidget);
+    shapesDockWidget-&gt;setAllowedAreas(Qt::LeftDockWidgetArea
+                                         | Qt::RightDockWidgetArea);
+    addDockWidget(Qt::RightDockWidgetArea, shapesDockWidget);
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle4098"></a><a name=
+"iddle5327"></a><a name="iddle5329"></a><a name=
+"iddle6923"></a><a name="iddle7016"></a><a name=
+"iddle7124"></a><a name="iddle8568"></a>The
+<tt>setAllowedAreas()</tt><a name="specifies constraints"></a> call
+specifies constraints on which dock areas can accept the dock
+window. Here, we only allow the user to drag the dock window into
+the left and right dock areas, where there is enough vertical space
+for it to be displayed sensibly. If no allowed areas are explicitly
+set, the user can drag the dock window to any of the four
+areas.</p>
+
+<p class="docText">Every <tt>QObject</tt><a name=
+"when debugging"></a> can be given an "object name". This name can
+be useful when debugging and is used by some test tools. Normally
+we do not bother to give widgets object names, but when we create
+dock windows and toolbars, doing so is necessary if we want to use
+<tt>QMainWindow::saveState()</tt> and
+<tt>QMainWindow::restoreState()</tt><a name="dock window"></a> to
+save and restore the dock window and toolbar geometries and
+states.</p>
+
+<p class="docText">Here's how to create a toolbar containing a
+<tt>QComboBox</tt>, a <tt>QSpinBox</tt>, and a few
+<tt>QToolButton</tt>s from a <tt>QMainWindow</tt> subclass's
+constructor:</p>
+
+<div class="docText">
+<pre>
+    QToolBar *fontToolBar = new QToolBar(tr("Font"));
+    fontToolBar-&gt;setObjectName("fontToolBar");
+    fontToolBar-&gt;addWidget(familyComboBox);
+    fontToolBar-&gt;addWidget(sizeSpinBox);
+    fontToolBar-&gt;addAction(boldAction);
+    fontToolBar-&gt;addAction(italicAction);
+    fontToolBar-&gt;addAction(underlineAction);
+    fontToolBar-&gt;setAllowedAreas(Qt::TopToolBarArea
+                                 | Qt::BottomToolBarArea);
+    addToolBar(fontToolBar);
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1191"></a><a name=
+"iddle3719"></a><a name="iddle3733"></a><a name=
+"iddle4407"></a><a name="iddle5328"></a><a name=
+"iddle5330"></a><a name="iddle5743"></a><a name=
+"iddle6783"></a><a name="iddle6924"></a><a name=
+"iddle7017"></a><a name="iddle7400"></a><a name=
+"iddle8677"></a><a name="the dock"></a>If we want to save the
+position of all the dock windows and toolbars so that we can
+restore them the next time the application is run, we can write
+code that is similar to the code we used to save a
+<tt>QSplitter</tt>'s state, using <tt>QMainWindow</tt>'s
+<tt>saveState()</tt> and <tt>restoreState()</tt> functions:</p>
+
+<div class="docText">
+<pre>
+void MainWindow::writeSettings()
+{
+    QSettings settings("Software Inc.", "Icon Editor");
+
+    settings.beginGroup("mainWindow");
+    settings.setValue("geometry", saveGeometry());
+    settings.setValue("state", saveState());
+    settings.endGroup();
+}
+
+void MainWindow::readSettings()
+{
+    QSettings settings("Software Inc.", "Icon Editor");
+
+    settings.beginGroup("mainWindow");
+    restoreGeometry(settings.value("geometry").toByteArray());
+    restoreState(settings.value("state").toByteArray());
+    settings.endGroup();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1515"></a><a name=
+"iddle1558"></a><a name="iddle1848"></a><a name=
+"iddle2606"></a><a name="iddle3686"></a><a name=
+"iddle3776"></a><a name="iddle3777"></a><a name=
+"iddle3793"></a><a name="iddle3942"></a><a name=
+"iddle4134"></a><a name="iddle5320"></a><a name=
+"iddle5349"></a><a name="iddle6359"></a><a name=
+"iddle6363"></a><a name="iddle7481"></a><a name=
+"iddle7482"></a><a name="iddle8090"></a><a name=
+"iddle8618"></a><a name="iddle8632"></a>Finally,
+<tt>QMainWindow</tt><a name="all the"></a> provides a context menu
+that lists all the dock windows and toolbars. This menu is shown in
+<a class="docLink" href="#ch06fig15">Figure 6.15</a><a name=
+"and hide"></a>. The user can close and restore dock windows and
+hide and restore toolbars using this menu.</p>
+<a name="ch06fig15"></a>
+<center>
+<h5 class="docFigureTitle"><a name="A"></a>Figure 6.15. A
+<tt>QMainWindow</tt> context menu</h5>
+
+<p class="docText"><img border="0" id="" width="88" height="104"
+src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzcGkuY2tzaC9nbnBqb21jZHVl.jpg"
+alt="">
+</p>
+</center>
+<br>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch06lev1sec4.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch06lev1sec6.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

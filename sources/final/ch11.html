@@ -1,0 +1,962 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch11.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch11.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch11.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch11.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch10lev1sec4.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch11lev1sec1.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch11"></a>
+<h2 id="title-ID0E1KOM" class="docChapterTitle">11. Container
+Classes</h2>
+
+<p class="docText"><img border="0" id="" width="170" height="100"
+src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzcmduZV9laXBjX2hwaDExL2FjcnNvdGouZXBw.jpg"
+alt="">
+</p>
+
+<ul>
+<li>
+<p class="docList"><a name="iddle1128"></a><a name=
+"iddle1455"></a><a name="iddle1820"></a><a name=
+"iddle2894"></a><a name="iddle4880"></a><a name=
+"iddle7577"></a><a name="iddle7692"></a><a name=
+"iddle7704"></a><a name="iddle7765"></a><span class=
+"docEmphasis"><a class="docLink" href=
+"ch11lev1sec1.html#ch11lev1sec1">Sequential Containers</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch11lev1sec2.html#ch11lev1sec2">Associative
+Containers</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch11lev1sec3.html#ch11lev1sec3">Generic Algorithms</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch11lev1sec4.html#ch11lev1sec4">Strings, Byte Arrays, and
+Variants</a></span>
+</p>
+</li>
+</ul>
+
+<p class="docText"><a name="Container classes"></a>Container
+classes are general-purpose template classes that store items of a
+given type in memory. C++ already offers many containers as part of
+the Standard Template Library (STL), which is included in the
+Standard C++ library.</p>
+
+<p class="docText"><a name="its own"></a>Qt provides its own
+container classes, so for Qt programs we can use both the Qt and
+the STL containers. The main advantages of the Qt containers are
+that they behave the same on all platforms and that they are
+implicitly shared. Implicit sharing, or "copy on write", is an
+optimization that makes it possible to pass entire containers as
+values without any significant performance cost. The Qt containers
+also feature easy-to-use iterator classes inspired by Java, they
+can be streamed using <tt>QDataStream</tt><a name=
+"they usually"></a>, and they usually result in less code in the
+executable than the corresponding STL containers. Finally, on some
+hardware platforms supported by Qt/Embedded Linux, the Qt
+containers are the only ones available.</p>
+
+<p class="docText">Qt offers both sequential containers such as
+<tt>QVector&lt;T&gt;</tt>, <tt>QLinkedList&lt;T&gt;</tt>, and
+<tt>QList&lt;T&gt;</tt>, and associative containers such as
+<tt>QMap&lt;K, T&gt;</tt> and <tt>QHash&lt;K, T&gt;</tt><a name=
+"associative containers"></a>. Conceptually, the sequential
+containers store items one after another, whereas the associative
+containers store key–value pairs.</p>
+
+<p class="docText"><a name="that perform"></a>Qt also provides
+generic algorithms that perform operations on arbitrary containers.
+For example, the <tt>qSort()</tt> algorithm sorts a sequential
+container, and <tt>qBinaryFind()</tt><a name="algorithms are"></a>
+performs a binary search on a sorted sequential container. These
+algorithms are similar to those offered by the STL.</p>
+
+<p class="docText"><a name="STL containers"></a>If you are already
+familiar with the STL containers and have STL available on your
+target platforms, you might want to use them instead of, or in
+addition to, the Qt containers. For more information about the STL
+classes and functions, a good place to start is SGI's STL web site:
+<a class="docLink" target="_blank" href=
+"http://www.sgi.com/tech/stl/">http://www.sgi.com/tech/stl/</a>.</p>
+
+<p class="docText">In this chapter, we will also look at
+<tt>QString</tt>, <tt>QByteArray</tt>, and
+<tt>QVariant</tt><a name="with containers"></a>, since they have a
+lot in common with containers. <tt>QString</tt><a name=
+"Unicode string"></a> is a 16-bit Unicode string used throughout
+Qt's API. <tt>QByteArray</tt> is an array of 8-bit <tt>char</tt>s
+useful for storing raw binary data. <tt>QVariant</tt><a name=
+"value types"></a> is a type that can store most C++ and Qt value
+types.</p>
+<a name="ch11lev1sec1"></a>
+<h3 class="docSection1Title" id="-100000">Sequential
+Containers</h3>
+
+<p class="docText"><a name="iddle1022"></a><a name=
+"iddle1184"></a><a name="iddle1218"></a><a name=
+"iddle1786"></a><a name="iddle1815"></a><a name=
+"iddle1835"></a><a name="iddle1886"></a><a name=
+"iddle2057"></a><a name="iddle3569"></a><a name=
+"iddle4171"></a><a name="iddle4180"></a><a name=
+"iddle5276"></a><a name="iddle6469"></a><a name=
+"iddle7108"></a><a name="iddle8418"></a><a name="A"></a>A
+<tt>QVector&lt;T&gt;</tt><a name="data structure"></a> is an
+array-like data structure that stores its items at adjacent
+positions in memory, as <a class="docLink" href="#ch11fig01">Figure
+11.1</a><a name="distinguishes a"></a> illustrates. What
+distinguishes a vector from a plain C++ array is that a vector
+knows its own size and can be resized. Appending extra items to the
+end of a vector is fairly efficient, whereas inserting items at the
+front or in the middle of a vector can be expensive.</p>
+<a name="ch11fig01"></a>
+<center>
+<h5 class="docFigureTitle">Figure 11.1. A vector of
+<tt>double</tt>s</h5>
+
+<p class="docText"><img border="0" id="" width="282" height="41"
+src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZmlncGNmaDFnMTEvaTBpcy4-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="are going"></a>If we know in advance
+how many items we are going to need, we can give the vector an
+initial size when we define it and use the <tt>[]</tt><a name=
+"to the"></a> operator to assign a value to the items; otherwise,
+we must either resize the vector later on or append items. Here's
+an example where we specify the initial size:</p>
+
+<div class="docText">
+<pre>
+QVector&lt;double&gt; vect(3);
+vect[0] = 1.0;
+vect[1] = 0.540302;
+vect[2] = -0.416147;
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="and using"></a>Here's the same example,
+this time starting with an empty vector and using the
+<tt>append()</tt> function to append items at the end:</p>
+
+<div class="docText">
+<pre>
+QVector&lt;double&gt; vect;
+vect.append(1.0);
+vect.append(0.540302);
+vect.append(-0.416147);
+</pre>
+</div>
+<br>
+
+<p class="docText">We can also use the <tt>&lt;&lt;</tt> operator
+instead of <tt>append()</tt>:</p>
+
+<div class="docText">
+<pre>
+vect &lt;&lt; 1.0 &lt;&lt; 0.540302 &lt;&lt; -0.416147;
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="is to"></a>One way to iterate over the
+vector's items is to use <tt>[]</tt> and <tt>count()</tt>:</p>
+
+<div class="docText">
+<pre>
+double sum = 0.0;
+for (int i = 0; i &lt; vect.count(); ++i)
+    sum += vect[i];
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="assigned an"></a>Vector entries that
+are created without being assigned an explicit value are
+initialized using the item class's default constructor. Basic types
+and pointer types are initialized to zero.</p>
+
+<p class="docText"><a name="at the"></a>Inserting items at the
+beginning or in the middle of a <tt>QVector&lt;T&gt;</tt><a name=
+"large vectors"></a>, or removing items from these positions, can
+be inefficient for large vectors. For this reason, Qt also offers
+<tt>QLinkedList&lt;T&gt;</tt><a name="a data"></a>, a data
+structure that stores its items at non-adjacent locations in
+memory, as illustrated by <a class="docLink" href=
+"#ch11fig02">Figure 11.2</a><a name="lists don"></a>. Unlike
+vectors, linked lists don't support random access, but they provide
+"constant time" insertions and removals.</p>
+
+<p class="docText">
+</p>
+<a name="ch11fig02"></a>
+<center>
+<h5 class="docFigureTitle"><a name="A linked"></a>Figure 11.2. A
+linked list of <tt>double</tt>s</h5>
+
+<p class="docText"><img border="0" id="" width="433" height="47"
+src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZmlncGNmaDJnMTEvaTBpcy4-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="iddle1030"></a><a name=
+"iddle1152"></a><a name="iddle1181"></a><a name=
+"iddle1219"></a><a name="iddle1232"></a><a name=
+"iddle1781"></a><a name="iddle1816"></a><a name=
+"iddle1818"></a><a name="iddle1823"></a><a name=
+"iddle1825"></a><a name="iddle1878"></a><a name=
+"iddle2098"></a><a name="iddle2411"></a><a name=
+"iddle2997"></a><a name="iddle3229"></a><a name=
+"iddle3369"></a><a name="iddle3592"></a><a name=
+"iddle4386"></a><a name="iddle4569"></a><a name=
+"iddle5278"></a><a name="iddle5440"></a><a name=
+"iddle5652"></a><a name="iddle5883"></a><a name=
+"iddle5960"></a><a name="iddle6428"></a><a name=
+"iddle7690"></a><a name="iddle8149"></a><a name=
+"iddle8400"></a>Linked lists do not provide the <tt>[]</tt><a name=
+"are also"></a> operator, so iterators must be used to traverse
+their items. Iterators are also used to specify the position of
+items. For example, the following code inserts the string "Tote
+Hosen" between "Clash" and "Ramones":</p>
+
+<div class="docText">
+<pre>
+QLinkedList&lt;QString&gt; list;
+list.append("Clash");
+list.append("Ramones");
+
+QLinkedList&lt;QString&gt;::iterator i = list.find("Ramones");
+list.insert(i, "Tote Hosen");
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="detailed look"></a>We will take a more
+detailed look at iterators later in this section.</p>
+
+<p class="docText">The <tt>QList&lt;T&gt;</tt><a name=
+"benefits of"></a> sequential container is an "array-list" that
+combines the most important benefits of <tt>QVector&lt;T&gt;</tt>
+and <tt>QLinkedList&lt;T&gt;</tt><a name="its interface"></a> in a
+single class. It supports random access, and its interface is
+index-based like <tt>QVector</tt><a name="end of"></a>'s. Inserting
+or removing an item at either end of a
+<tt>QList&lt;T&gt;</tt><a name="and inserting"></a> is very fast,
+and inserting in the middle is fast for lists with up to about one
+thousand items. Unless we want to perform insertions in the middle
+of huge lists or need the list's items to occupy consecutive
+addresses in memory, <tt>QList&lt;T&gt;</tt> is usually the most
+appropriate general-purpose container class to use.</p>
+
+<p class="docText">The <tt>QStringList</tt> class is a subclass of
+<tt>QList&lt;QString&gt;</tt><a name="functions it"></a> that is
+widely used in Qt's API. In addition to the functions it inherits
+from its base class, it provides some extra functions that make the
+class more versatile for string handling. We discuss
+<tt>QStringList</tt><a name="in the"></a> in the last section of
+this chapter (p. <a class="docLink" href=
+"ch11lev1sec4.html#page_290">290</a>).</p>
+
+<p class="docText"><tt>QStack&lt;T&gt;</tt> and
+<tt>QQueue&lt;T&gt;</tt><a name="more examples"></a> are two more
+examples of convenience subclasses.
+<tt>QStack&lt;T&gt;</tt><a name="a vector"></a> is a vector that
+provides <tt>push()</tt>, <tt>pop()</tt>, and <tt>top()</tt>.
+<tt>QQueue&lt;T&gt;</tt> is a list that provides
+<tt>enqueue()</tt>, <tt>dequeue()</tt>, and <tt>head()</tt>.</p>
+
+<p class="docText"><a name="type"></a>For all the container classes
+seen so far, the value type <tt>T</tt><a name="like"></a> can be a
+basic type like <tt>int</tt> or <tt>double</tt><a name=
+"constructor"></a>, a pointer type, or a class that has a default
+constructor (a constructor that takes no arguments), a copy
+constructor, and an assignment operator. Classes that qualify
+include <tt>QByteArray</tt>, <tt>QDateTime</tt>, <tt>QRegExp</tt>,
+<tt>QString</tt>, and <tt>QVariant</tt>. Qt classes that are
+derived from <tt>QObject</tt><a name="constructor and"></a> do not
+qualify, because they lack a copy constructor and an assignment
+operator. This is no problem in practice, since we can simply store
+pointers to <tt>QObject</tt> types rather than the objects
+themselves.</p>
+
+<p class="docText">The value type <tt>T</tt><a name="we must"></a>
+can also be a container, in which case we must remember to separate
+consecutive angle brackets with spaces; otherwise, the compiler
+will choke on what it thinks is a <tt>&gt;&gt;</tt> operator. For
+example:</p>
+
+<div class="docText">
+<pre>
+QList&lt;QVector&lt;double&gt; &gt; list;
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1233"></a><a name=
+"iddle1782"></a><a name="iddle1813"></a><a name=
+"iddle1879"></a><a name="iddle3363"></a><a name=
+"iddle3365"></a><a name="iddle3391"></a><a name=
+"iddle3926"></a><a name="iddle3953"></a><a name=
+"iddle4052"></a><a name="iddle5277"></a><a name=
+"iddle5280"></a><a name="iddle5422"></a><a name=
+"iddle6474"></a><a name="iddle6785"></a><a name="to the"></a>In
+addition to the types just mentioned, a container's value type can
+be any custom class that meets the criteria described earlier. Here
+is an example of such a class:</p>
+
+<div class="docText">
+<pre>
+class Movie
+{
+public:
+    Movie(const QString &amp;title = "", int duration = 0);
+
+    void setTitle(const QString &amp;title) { myTitle = title; }
+    QString title() const { return myTitle; }
+    void setDuration(int duration) { myDuration = duration; }
+    QString duration() const { return myDuration; }
+
+private:
+    QString myTitle;
+    int myDuration;
+};
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="it can"></a>The class has a constructor
+that requires no arguments (although it can take up to two). It
+also has a copy constructor and an assignment operator, both
+implicitly provided by C++. For this class, a member-by-member copy
+is sufficient, so there is no need to implement our own copy
+constructor and assignment operator.</p>
+
+<p class="docText"><a name="Qt provides"></a>Qt provides two
+categories of iterators for traversing the items stored in a
+container: Java-style iterators and STL-style iterators. The
+Java-style iterators are easier to use, whereas the STL-style
+iterators can be combined with Qt's and STL's generic algorithms
+and are more powerful.</p>
+
+<p class="docText"><a name="container class"></a>For each container
+class, there are two Java-style iterator types: a read-only
+iterator and a read-write iterator. Their valid positions are shown
+in <a class="docLink" href="#ch11fig03">Figure 11.3</a><a name=
+"iterator classes"></a>. The read-only iterator classes are
+<tt>QVectorIterator&lt;T&gt;</tt>,
+<tt>QLinkedListIterator&lt;T&gt;</tt>, and
+<tt>QListIterator&lt;T&gt;</tt>. The corresponding read-write
+iterators have <tt>Mutable</tt> in their name (e.g.,
+<tt>QMutableVectorIterator&lt;T&gt;</tt>). In this discussion, we
+will concentrate on <tt>QList</tt><a name="same API"></a>'s
+iterators; the iterators for linked lists and vectors have the same
+API.</p>
+<a name="ch11fig03"></a>
+<center>
+<h5 class="docFigureTitle">Figure 11.3. Valid positions for
+Java-style iterators</h5>
+
+<p class="docText"><img border="0" id="" width="260" height="47"
+src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZmlncGNmaDNnMTEvaTBpcy4-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="in mind"></a>The first thing to keep in
+mind when using Java-style iterators is that they don't point
+directly at items. Instead, they can be located before the first
+item, after the last item, or between two items. A typical
+iteration loop looks like this:</p>
+
+<div class="docText">
+<pre>
+QList&lt;double&gt; list;
+...
+QListIterator&lt;double&gt; i(list);
+while (i.hasNext()) {
+    do_something(i.next());
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle2985"></a><a name=
+"iddle2990"></a><a name="iddle3954"></a><a name=
+"iddle4016"></a><a name="iddle4053"></a><a name=
+"iddle4423"></a><a name="iddle5419"></a><a name=
+"iddle6786"></a><a name="iddle6854"></a><a name=
+"iddle8103"></a><a name="this point"></a>The iterator is
+initialized with the container to traverse. At this point, the
+iterator is located just before the first item. The call to
+<tt>hasNext()</tt> returns <tt>true</tt><a name="right of"></a> if
+there is an item to the right of the iterator. The
+<tt>next()</tt><a name="of the"></a> function returns the item to
+the right of the iterator and advances the iterator to the next
+valid position.</p>
+
+<p class="docText"><a name="is similar"></a>Iterating backward is
+similar, except that we must first call <tt>toBack()</tt> to
+position the iterator after the last item:</p>
+
+<div class="docText">
+<pre>
+QListIterator&lt;double&gt; i(list);
+i.toBack();
+while (i.hasPrevious()) {
+    do_something(i.previous());
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>hasPrevious()</tt> function returns
+<tt>true</tt><a name="the iterator"></a> if there is an item to the
+left of the iterator; <tt>previous()</tt><a name="returns the"></a>
+returns the item to the left of the iterator and moves the iterator
+back by one position. Another way to think about the
+<tt>next()</tt> and <tt>previous()</tt><a name="that they"></a>
+iterators is that they return the item that the iterator has just
+jumped over, as <a class="docLink" href="#ch11fig04">Figure
+11.4</a> illustrates.</p>
+<a name="ch11fig04"></a>
+<center>
+<h5 class="docFigureTitle"><a name="Effect of"></a>Figure 11.4.
+Effect of <tt>previous()</tt> and <tt>next()</tt> on a Java-style
+iterator</h5>
+
+<p class="docText"><img border="0" id="" width="267" height="61"
+src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZmlncGNmaDRnMTEvaTBpcy4-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="The following"></a>Mutable iterators
+provide functions to insert, modify, and remove items while
+iterating. The following loop removes all the negative numbers from
+a list:</p>
+
+<div class="docText">
+<pre>
+QMutableListIterator&lt;double&gt; i(list);
+while (i.hasNext()) {
+    if (i.next() &lt; 0.0)
+        i.remove();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>remove()</tt><a name="last item"></a>
+function always operates on the last item that was jumped over. It
+also works when iterating backward:</p>
+
+<div class="docText">
+<pre>
+QMutableListIterator&lt;double&gt; i(list);
+i.toBack();
+while (i.hasPrevious()) {
+    if (i.previous() &lt; 0.0)
+        i.remove();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">Similarly, the mutable Java-style iterators
+provide a <tt>setValue()</tt><a name="how we"></a> function that
+modifies the last item that was jumped over. Here's how we would
+replace negative numbers with their absolute value:</p>
+
+<div class="docText">
+<pre>
+QMutableListIterator&lt;double&gt; i(list);
+while (i.hasNext()) {
+    int val = i.next();
+    if (val &lt; 0.0)
+        i.setValue(-val);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1304"></a><a name=
+"iddle1772"></a><a name="iddle1797"></a><a name=
+"iddle1826"></a><a name="iddle2392"></a><a name=
+"iddle3228"></a><a name="iddle3321"></a><a name=
+"iddle3366"></a><a name="iddle3370"></a><a name=
+"iddle4056"></a><a name="iddle4165"></a><a name=
+"iddle4167"></a><a name="iddle4169"></a><a name=
+"iddle4614"></a><a name="iddle5803"></a><a name=
+"iddle6470"></a><a name="iddle6776"></a><a name=
+"iddle7361"></a><a name="iddle7513"></a><a name=
+"iddle7768"></a><a name="item at"></a>It is also possible to insert
+an item at the current iterator position by calling
+<tt>insert()</tt><a name="between the"></a>. The iterator is then
+advanced to point between the new item and the following item.</p>
+
+<p class="docText"><a name="to the"></a>In addition to the
+Java-style iterators, every sequential container class
+<tt>C&lt;T&gt;</tt> has two STL-style iterator types:
+<tt>C&lt;T&gt;::iterator</tt> and
+<tt>C&lt;T&gt;::const_iterator</tt>. The difference between the two
+is that <tt>const_iterator</tt> doesn't let us modify the data.</p>
+
+<p class="docText">A container's <tt>begin()</tt><a name=
+"item in"></a> function returns an STL-style iterator that refers
+to the first item in the container (e.g., <tt>list[0]</tt><a name=
+"whereas"></a>), whereas <tt>end()</tt><a name="iterator to"></a>
+returns an iterator to the "one past the last" item (e.g.,
+<tt>list[5]</tt><a name="a list"></a> for a list of size 5).
+<a class="docLink" href="#ch11fig05">Figure 11.5</a> shows the
+valid positions for STL-style iterators. If a container is empty,
+<tt>begin()</tt> equals <tt>end()</tt><a name="has any"></a>. This
+can be used to see whether the container has any items, although it
+is usually more convenient to call <tt>isEmpty()</tt> for this
+purpose.</p>
+<a name="ch11fig05"></a>
+<center>
+<h5 class="docFigureTitle">Figure 11.5. Valid positions for
+STL-style iterators</h5>
+
+<p class="docText"><img border="0" id="" width="304" height="63"
+src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZmlncGNmaDVnMTEvaTBpcy4-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="after that"></a>The STL-style iterator
+syntax is modeled after that of C++ pointers into an array. We can
+use the <tt>++</tt> and <tt>--</tt><a name="the unary"></a>
+operators to move to the next or previous item, and the unary
+<tt>*</tt> operator to retrieve the current item. For
+<tt>QVector&lt;T&gt;</tt>, the <tt>iterator</tt> and
+<tt>const_iterator</tt> types are merely typedefs for <tt>T *</tt>
+and <tt>const T *</tt>. (This is possible because
+<tt>QVector&lt;T&gt;</tt> stores its items in consecutive memory
+locations.)</p>
+
+<p class="docText"><a name="a"></a>The following example replaces
+each value in a <tt>QList&lt;double&gt;</tt> with its absolute
+value:</p>
+
+<div class="docText">
+<pre>
+QList&lt;double&gt;::iterator i = list.begin();
+while (i != list.end()) {
+    *i = qAbs(*i);
+    ++i;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="we want"></a>A few Qt functions return
+a container. If we want to iterate over the return value of a
+function using an STL-style iterator, we must take a copy of the
+container and iterate over the copy. For example, the following
+code is the correct way to iterate over the
+<tt>QList&lt;int&gt;</tt> returned by
+<tt>QSplitter::sizes()</tt>:</p>
+
+<div class="docText">
+<pre>
+QList&lt;int&gt; list = splitter-&gt;sizes();
+QList&lt;int&gt;::const_iterator i = list.begin();
+while (i != list.end()) {
+    do_something(*i);
+    ++i;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1773"></a><a name=
+"iddle1798"></a><a name="iddle1805"></a><a name=
+"iddle1821"></a><a name="iddle1884"></a><a name=
+"iddle3184"></a><a name="iddle3367"></a><a name=
+"iddle4057"></a><a name="iddle6777"></a><a name=
+"iddle7410"></a><a name="iddle7416"></a><a name="code is"></a>The
+following code is wrong:</p>
+
+<div class="docText">
+<pre>
+// WRONG
+QList&lt;int&gt;::const_iterator i = splitter-&gt;sizes().begin();
+while (i != splitter-&gt;sizes().end()) {
+    do_something(*i);
+    ++i;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">This is because <tt>QSplitter::sizes()</tt>
+returns a new <tt>QList&lt;int&gt;</tt><a name="the return"></a> by
+value every time it is called. If we don't store the return value,
+C++ automatically destroys it before we have even started
+iterating, leaving us with a dangling iterator. To make matters
+worse, each time the loop is run,
+<tt>QSplitter::sizes()</tt><a name="must generate"></a> must
+generate a new copy of the list because of the
+<tt>splitter-&gt;sizes().end()</tt><a name="using STL"></a> call.
+In summary: When using STL-style iterators, always iterate on a
+copy of a container returned by value.</p>
+
+<p class="docText"><a name="we don"></a>With read-only Java-style
+iterators, we don't need to take a copy. The iterator takes a copy
+for us behind the scenes, ensuring that we always iterate over the
+data that the function first returned. For example:</p>
+
+<div class="docText">
+<pre>
+QListIterator&lt;int&gt; i(splitter-&gt;sizes());
+while (i.hasNext()) {
+    do_something(i.next());
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="to an"></a>Copying a container like
+this sounds expensive, but it isn't, thanks to an optimization
+called <span class="docEmphasis">implicit sharing</span><a name=
+"Qt container"></a>. This means that copying a Qt container is
+about as fast as copying a single pointer. Only if one of the
+copies is changed is data actually copied—and this is all handled
+automatically behind the scenes. For this reason, implicit sharing
+is sometimes called "copy on write".</p>
+
+<p class="docText"><a name="an optimization"></a>The beauty of
+implicit sharing is that it is an optimization that we don't need
+to think about; it simply works, without requiring any programmer
+intervention. At the same time, implicit sharing encourages a clean
+programming style where objects are returned by value. Consider the
+following function:</p>
+
+<div class="docText">
+<pre>
+QVector&lt;double&gt; sineTable()
+{
+    QVector&lt;double&gt; vect(360);
+    for (int i = 0; i &lt; 360; ++i)
+        vect[i] = std::sin(i / (2 * M_PI));
+    return vect;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The call to the function looks like this:</p>
+
+<div class="docText">
+<pre>
+QVector&lt;double&gt; table = sineTable();
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1245"></a><a name=
+"iddle1305"></a><a name="iddle1768"></a><a name=
+"iddle1771"></a><a name="iddle1774"></a><a name=
+"iddle1803"></a><a name="iddle2050"></a><a name=
+"iddle2393"></a><a name="iddle2822"></a><a name=
+"iddle3368"></a><a name="iddle3955"></a><a name=
+"iddle4054"></a><a name="iddle4058"></a><a name=
+"iddle4178"></a><a name="iddle6778"></a><a name=
+"iddle6787"></a><a name="iddle7705"></a><a name=
+"iddle7766"></a><a name="as a"></a>STL, in comparison, encourages
+us to pass the vector as a non-const reference to avoid the copy
+that takes place when the function's return value is stored in a
+variable:</p>
+
+<div class="docText">
+<pre>
+void sineTable(std::vector&lt;double&gt; &amp;vect)
+{
+    vect.resize(360);
+    for (int i = 0; i &lt; 360; ++i)
+        vect[i] = std::sin(i / (2 * M_PI));
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="write and"></a>The call then becomes
+more tedious to write and less clear to read:</p>
+
+<div class="docText">
+<pre>
+std::vector&lt;double&gt; table;
+sineTable(table);
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="implicit sharing"></a>Qt uses implicit
+sharing for all of its containers and for many other classes,
+including <tt>QByteArray</tt>, <tt>QBrush</tt>, <tt>QFont</tt>,
+<tt>QImage</tt>, <tt>QPixmap</tt>, and <tt>QString</tt><a name=
+"both as"></a>. This makes these classes very efficient to pass by
+value, both as function parameters and as return values.</p>
+
+<p class="docText"><a name="Implicit sharing"></a>Implicit sharing
+is a guarantee from Qt that the data won't be copied if we don't
+modify it. To get the best out of implicit sharing, we can adopt a
+couple of new programming habits. One habit is to use the
+<tt>at()</tt><a name="than the"></a> function rather than the
+<tt>[]</tt><a name="for read"></a> operator for read-only access on
+a (non-const) vector or list. Since Qt's containers cannot tell
+whether <tt>[]</tt><a name="it assumes"></a> appears on the left
+side of an assignment or not, it assumes the worst and forces a
+deep copy to occur—whereas <tt>at()</tt><a name="of an"></a> isn't
+allowed on the left side of an assignment.</p>
+
+<p class="docText"><a name="container with"></a>A similar issue
+arises when we iterate over a container with STL-style iterators.
+Whenever we call <tt>begin()</tt> or <tt>end()</tt><a name=
+"to occur"></a> on a non-const container, Qt forces a deep copy to
+occur if the data is shared. To prevent this inefficiency, the
+solution is to use <tt>const_iterator</tt>, <tt>constBegin()</tt>,
+and <tt>constEnd()</tt> whenever possible.</p>
+
+<p class="docText"><a name="over items"></a>Qt provides one last
+method for iterating over items in a sequential container: the
+<tt>foreach</tt><a name="like this"></a> loop. It looks like
+this:</p>
+
+<div class="docText">
+<pre>
+QLinkedList&lt;Movie&gt; list;
+...
+foreach (Movie movie, list) {
+    if (movie.title() == "Citizen Kane") {
+        std::cout &lt;&lt; "Found Citizen Kane" &lt;&lt; std::endl;
+        break;
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>foreach</tt> pseudo-keyword is
+implemented in terms of the standard <tt>for</tt> loop. At each
+iteration of the loop, the iteration variable
+(<tt>movie</tt><a name="item in"></a>) is set to a new item,
+starting at the first item in the container and progressing
+forward. The <tt>foreach</tt><a name="loop automatically"></a> loop
+automatically takes a copy of the container when the loop is
+entered, and for this reason the loop is not affected if the
+container is modified during iteration.</p>
+
+<p class="docText">
+</p>
+<a name="ch11sb01"></a>
+<table cellspacing="0" width="90%" border="1" cellpadding="5">
+<tr>
+<td>
+<h2 class="docSidebarTitle"><a name="Sharing Works"></a>How
+Implicit Sharing Works</h2>
+
+<p class="docText"><a name="iddle1229"></a><a name=
+"iddle1247"></a><a name="iddle1806"></a><a name=
+"iddle2051"></a><a name="iddle3185"></a><a name=
+"iddle5752"></a><a name="iddle5753"></a><a name=
+"iddle5897"></a><a name="iddle5957"></a><a name=
+"iddle6813"></a><a name="iddle7417"></a><a name=
+"iddle8243"></a><a name="sharing works"></a>Implicit sharing works
+automatically behind the scenes, so we don't have to do anything in
+our code to make this optimization happen. But since it's nice to
+know how things work, we will study an example and see what happens
+under the hood. The example uses <tt>QString</tt>, one of Qt's many
+implicitly shared classes.</p>
+
+<div class="docText">
+<pre>
+QString str1 = "Humpty";
+QString str2 = str1;
+</pre>
+</div>
+<br>
+
+<p class="docText">We set <tt>str1</tt> to "Humpty" and
+<tt>str2</tt> to be equal to <tt>str1</tt>. At this point, both
+<tt>QString</tt><a name="Along with"></a> objects point to the same
+internal data structure in memory. Along with the character data,
+the data structure holds a reference count that indicates how many
+<tt>QString</tt><a name="data structure"></a>s point to the same
+data structure. Since both <tt>str1</tt> and <tt>str2</tt> point to
+the same data, the reference count is 2.</p>
+
+<div class="docText">
+<pre>
+str2[0] = 'D';
+</pre>
+</div>
+<br>
+
+<p class="docText">When we modify <tt>str2</tt><a name=
+"ensure that"></a>, it first makes a deep copy of the data, to
+ensure that <tt>str1</tt> and <tt>str2</tt><a name=
+"applies the"></a> point to different data structures, and it then
+applies the change to its own copy of the data. The reference count
+of <tt>str1</tt>'s data ("Humpty") becomes 1, and the reference
+count of <tt>str2</tt><a name="of"></a>'s data ("Dumpty") is set to
+1. A reference count of 1 means that the data isn't shared.</p>
+
+<div class="docText">
+<pre>
+str2.truncate(4);
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="modify"></a>If we modify <tt>str2</tt>
+again, no copying takes place because the reference count of
+<tt>str2</tt>'s data is 1. The <tt>truncate()</tt> function
+operates directly on <tt>str2</tt>'s data, resulting in the string
+"Dump". The reference count stays at 1.</p>
+
+<div class="docText">
+<pre>
+str1 = str2;
+</pre>
+</div>
+<br>
+
+<p class="docText">When we assign <tt>str2</tt> to <tt>str1</tt>,
+the reference count for <tt>str1</tt>'s data goes down to 0, which
+means that no <tt>QString</tt><a name="from memory"></a> is using
+the "Humpty" data anymore. The data is then freed from memory. Both
+<tt>QString</tt><a name="s point"></a>s point to "Dump", which now
+has a reference count of 2.</p>
+
+<p class="docText"><a name="is often"></a>Data sharing is often
+disregarded as an option in multithreaded programs, because of race
+conditions in the reference counting. With Qt, this is not an
+issue. Internally, the container classes use assembly language
+instructions to perform atomic reference counting. This technology
+is available to Qt users through the <tt>QSharedData</tt> and
+<tt>QSharedDataPointer</tt> classes.</p>
+</td>
+</tr>
+</table>
+<br>
+
+<p class="docText">The <tt>break</tt> and <tt>continue</tt><a name=
+"statements are"></a> loop statements are supported. If the body
+consists of a single statement, the braces are unnecessary. Just
+like a <tt>for</tt> statement, the iteration variable can be
+defined outside the loop, like this:</p>
+
+<div class="docText">
+<pre>
+QLinkedList&lt;Movie&gt; list;
+Movie movie;
+...
+foreach (movie, list) {
+    if (movie.title() == "Citizen Kane") {
+        std::cout &lt;&lt; "Found Citizen Kane" &lt;&lt; std::endl;
+        break;
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1239"></a><a name=
+"iddle1817"></a><a name="iddle3230"></a><a name=
+"iddle3761"></a><a name="iddle4179"></a><a name=
+"iddle4186"></a><a name="iddle5344"></a><a name=
+"iddle5575"></a><a name="iddle7514"></a><a name=
+"iddle8387"></a><a name="only option"></a>Defining the iteration
+variable outside the loop is the only option for containers that
+hold data types that contain a comma (e.g., <tt>QPair&lt;QString,
+int&gt;</tt>).</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch10lev1sec4.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch11lev1sec1.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

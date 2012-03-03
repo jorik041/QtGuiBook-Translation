@@ -1,0 +1,276 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch24lev1sec2.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch24lev1sec2.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch24lev1sec2.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch24lev1sec2.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch24lev1sec1.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch24lev1sec3.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch24lev1sec2"></a>
+<h3 class="docSection1Title" id="-100000">Customizing Qt/Embedded
+Linux</h3>
+
+<p class="docText"><a name="When installing"></a>When installing
+Qt/Embedded Linux, we can specify features we want to leave out to
+reduce its memory footprint. Qt/Embedded Linux includes more than
+one hundred configurable features, each of which is associated with
+a preprocessor symbol. For example, <tt>QT_NO_FILEDIALOG</tt>
+excludes <tt>QFileDialog</tt> from the <span class=
+"docEmphasis">QtGui</span> library, and <tt>QT_NO_I18N</tt><a name=
+"all support"></a> leaves out all support for internationalization.
+The features are listed in
+<tt>src/corelib/global/qfeatures.txt</tt>.</p>
+
+<p class="docText"><a name="provides five"></a>Qt/Embedded Linux
+provides five example configurations (<tt>minimum</tt>,
+<tt>small</tt>, <tt>medium</tt>, <tt>large</tt>, and <tt>dist</tt>)
+that are stored in <tt>src/corelib/global/qconfig-</tt><span class=
+"docEmphasis"><tt>xxx</tt></span><tt>.h</tt> files. These
+configurations can be specified using the <tt>configure</tt>
+script's <tt>-qconfig</tt> <span class=
+"docEmphasis"><tt>xxx</tt></span> option, for example:</p>
+
+<div class="docText">
+<pre>
+./configure -qconfig small
+</pre>
+</div>
+<br>
+
+<p class="docText">To create custom configurations, we can manually
+provide a <tt>qconfig-</tt><span class=
+"docEmphasis"><tt>xxx</tt></span><tt>.h</tt><a name=
+"standard configuration"></a> file and use it as though it were a
+standard configuration. Alternatively, we can use the
+<tt>qconfig</tt> graphical tool, located in Qt's <tt>tools</tt>
+subdirectory.</p>
+
+<p class="docText"><a name="for interfacing"></a>Qt/Embedded Linux
+provides the following classes for interfacing with input and
+output devices and for customizing the look and feel of the window
+system:</p>
+
+<table cellspacing="0" class="allBorders" border="1">
+<colgroup align="left" span="2">
+<col width="200">
+<col width="250">
+</colgroup>
+
+<thead>
+<tr>
+<th scope="col" class="docTableCell thead" align="left" valign=
+"top" style="background-color:#E6E6E6">Class</th>
+<th scope="col" class="docTableCell thead" align="left" valign=
+"top" style="background-color:#E6E6E6">Base Class for</th>
+</tr>
+</thead>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>QScreen</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Screen drivers</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>QScreenDriverPlugin</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Screen driver plugins</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>QWSMouseHandler</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Mouse drivers</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>QMouseDriverPlugin</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Mouse driver plugins</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>QWSKeyboardHandler</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Keyboard drivers</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>QKbdDriverPlugin</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Keyboard driver plugins</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>QWSInputMethod</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Input methods</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>QDecoration</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Window decoration styles</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>QDecorationPlugin</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Window decoration style plugins</span>
+</td>
+</tr>
+</table>
+<br>
+
+<p class="docText"><a name="decoration styles"></a>To obtain the
+list of predefined drivers, input methods, and window decoration
+styles, run the <tt>configure</tt> script with the <tt>-help</tt>
+option.</p>
+
+<p class="docText"><a name="the"></a>The screen driver can be
+specified using the <tt>-display</tt><a name="or by"></a>
+command-line option when starting the Qt/Embedded Linux server, as
+seen in the previous section, or by setting the
+<tt>QWS_DISPLAY</tt><a name="driver and"></a> environment variable.
+The mouse driver and the associated <a name=
+"iddle1297"></a><a name="iddle1703"></a><a name=
+"iddle2443"></a><a name="iddle2445"></a><a name=
+"iddle2818"></a><a name="iddle3246"></a><a name=
+"iddle3750"></a><a name="iddle4398"></a><a name=
+"iddle4420"></a><a name="iddle4729"></a><a name=
+"iddle5582"></a><a name="iddle5973"></a><a name=
+"iddle6375"></a><a name="iddle6384"></a><a name=
+"iddle6675"></a><a name="iddle6679"></a><a name=
+"iddle6683"></a><a name="iddle6684"></a><a name=
+"iddle7020"></a><a name="iddle7174"></a><a name=
+"iddle8242"></a><a name="iddle8248"></a><a name=
+"iddle8254"></a><a name="be specified"></a>device can be specified
+using the <tt>QWS_MOUSE_PROTO</tt><a name=
+"environment variable"></a> environment variable, whose value must
+have the syntax <span class=
+"docEmphasis"><tt>type</tt></span><tt>:</tt><span class=
+"docEmphasis"><tt>device</tt></span>, where <span class=
+"docEmphasis"><tt>type</tt></span><a name="of the"></a> is one of
+the supported drivers and <span class=
+"docEmphasis"><tt>device</tt></span><a name="the path"></a> is the
+path to the device (e.g.,
+<tt>QWS_MOUSE_PROTO=IntelliMouse:/dev/mouse</tt>). Keyboards are
+handled similarly through the <tt>QWS_KEYBOARD</tt><a name=
+"in the"></a> environment variable. Input methods and window
+decorations are set programmatically in the server using
+<tt>QWSServer::setCurrentInputMethod()</tt> and
+<tt>QApplication::qwsSetDecoration()</tt>.</p>
+
+<p class="docText"><a name="set independently"></a>Window
+decoration styles can be set independently of the widget style,
+which is encapsulated by a <tt>QStyle</tt><a name="the window"></a>
+subclass. For example, it is entirely possible to set Windows as
+the window decoration style and Plastique as the widget style. If
+desired, decorations can be set on a per-window basis.</p>
+
+<p class="docText">The <tt>QWSServer</tt><a name=
+"window system"></a> class provides various functions for
+customizing the window system. Applications that run as Qt/Embedded
+Linux servers can access the unique <tt>QWSServer</tt> instance
+through the <tt>QWSServer::instance()</tt> static function.</p>
+
+<p class="docText"><a name="Format"></a>Qt/Embedded Linux supports
+the following font formats: TrueType (TTF), PostScript Type 1,
+Bitmap Distribution Format (BDF), and Qt Pre-rendered Fonts
+(QPF).</p>
+
+<p class="docText"><a name="a raster"></a>Because QPF is a raster
+format, it is designed to be faster and more compact than vector
+formats such as TTF and Type 1 if we need it only at one or two
+different sizes. The <tt>makeqpf</tt><a name="be used"></a> tool
+can be used to pre-render a TTF or a Type 1 file and save the
+result in QPF format. An alternative is to run our applications
+with the <tt>-savefonts</tt> command-line option.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch24lev1sec1.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch24lev1sec3.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

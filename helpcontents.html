@@ -1,0 +1,216 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD><meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+  <TITLE>C++ GUI Programming with Qt4 2nd Edition</TITLE>
+ <STYLE type="text/css">
+.t0i { font-family: Tahoma, Verdana; font-size: 11px; color: #000000; text-decoration: none } 
+.t0im { border: 0px; width: 16px; height: 16px; }
+</STYLE>
+<!-- image preload (by chm2web)-->
+<script type="text/JavaScript">
+ function PreloadImages()
+ { if (document.images) { var imgFiles = PreloadImages.arguments; var preloadArray = new Array();
+ for (var i=0; i<imgFiles.length; i++) { preloadArray[i] = new Image; preloadArray[i].src = "files/" + imgFiles[i] + ".gif"; } } } PreloadImages(0,1,11,17,2,21,27);
+</script>
+</HEAD>
+ <BODY bgcolor="#F2F2F2" 
+   style="scrollbar-3dlight-color: #9ECBA6; 
+          scrollbar-arrow-color: #9ECBA6; scrollbar-base-color: #9ECBA6; 
+          scrollbar-darkshadow-color: #9ECBA6; scrollbar-face-color: #D1EDD6; 
+	  scrollbar-highlight-color: #D1EDD6; scrollbar-shadow-color: #D1EDD6; 
+          scrollbar-track-color : #F2F2F2; margin-top:0;">
+    <script type="text/JavaScript" src="files/supply.js"></script>
+<script type="text/JavaScript" src="files/tree.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.jstree = new MakeTree(chmtop.c2wtopf.TITEMS, false);
+chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+</script>
+
+<noscript><a href="sources/final/main.html" target="content">C++ GUI Programming with Qt 4, Second Edition - Graphically Rich Book</a><br>
+<a href="sources/final/toc.html" target="content">Table of Contents</a><br>
+<a href="sources/final/copyrightpg.html" target="content">Copyright</a><br>
+<a href="sources/final/pref01.html" target="content"><b>Series Editor's Note</b></a><br>
+<a href="sources/final/pref02.html" target="content"><b>Foreword</b></a><br>
+<a href="sources/final/pref03.html" target="content"><b>Preface</b></a><br>
+<a href="sources/final/pref04.html" target="content"><b>Acknowledgments</b></a><br>
+<a href="sources/final/pref05.html" target="content"><b>A Brief History of Qt</b></a><br>
+<a href="sources/final/part01.html" target="content"><b>Part I: Basic Qt</b></a><br>
+&nbsp;<a href="sources/final/ch01.html" target="content"><b>Chapter 1. Getting Started</b></a><br>
+&nbsp;&nbsp;<a href="sources/final/ch01lev1sec1.html" target="content">Hello Qt</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch01lev1sec2.html" target="content">Making Connections</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch01lev1sec3.html" target="content">Laying Out Widgets</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch01lev1sec4.html" target="content">Using the Reference Documentation</a><br>
+&nbsp;<a href="sources/final/ch02.html" target="content"><b>Chapter 2. Creating Dialogs</b></a><br>
+&nbsp;&nbsp;<a href="sources/final/ch02lev1sec1.html" target="content">Subclassing QDialog</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch02lev1sec2.html" target="content">Signals and Slots in Depth</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch02lev1sec3.html" target="content">Rapid Dialog Design</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch02lev1sec4.html" target="content">Shape-Changing Dialogs</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch02lev1sec5.html" target="content">Dynamic Dialogs</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch02lev1sec6.html" target="content">Built-in Widget and Dialog Classes</a><br>
+&nbsp;<a href="sources/final/ch03.html" target="content"><b>Chapter 3. Creating Main Windows</b></a><br>
+&nbsp;&nbsp;<a href="sources/final/ch03lev1sec1.html" target="content">Subclassing QMainWindow</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch03lev1sec2.html" target="content">Creating Menus and Toolbars</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch03lev1sec3.html" target="content">Setting Up the Status Bar</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch03lev1sec4.html" target="content">Implementing the File Menu</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch03lev1sec5.html" target="content">Using Dialogs</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch03lev1sec6.html" target="content">Storing Settings</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch03lev1sec7.html" target="content">Multiple Documents</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch03lev1sec8.html" target="content">Splash Screens</a><br>
+&nbsp;<a href="sources/final/ch04.html" target="content"><b>Chapter 4. Implementing Application Functionality</b></a><br>
+&nbsp;&nbsp;<a href="sources/final/ch04lev1sec1.html" target="content">The Central Widget</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch04lev1sec2.html" target="content">Subclassing QTableWidget</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch04lev1sec3.html" target="content">Loading and Saving</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch04lev1sec4.html" target="content">Implementing the Edit Menu</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch04lev1sec5.html" target="content">Implementing the Other Menus</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch04lev1sec6.html" target="content">Subclassing QTableWidgetItem</a><br>
+&nbsp;<a href="sources/final/ch05.html" target="content"><b>Chapter 5. Creating Custom Widgets</b></a><br>
+&nbsp;&nbsp;<a href="sources/final/ch05lev1sec1.html" target="content">Customizing Qt Widgets</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch05lev1sec2.html" target="content">Subclassing QWidget</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch05lev1sec3.html" target="content">Integrating Custom Widgets with Qt Designer</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch05lev1sec4.html" target="content">Double Buffering</a><br>
+<a href="sources/final/part02.html" target="content"><b>Part II: Intermediate Qt</b></a><br>
+&nbsp;<a href="sources/final/ch06.html" target="content"><b>Chapter 6. Layout Management</b></a><br>
+&nbsp;&nbsp;<a href="sources/final/ch06lev1sec1.html" target="content">Laying Out Widgets on a Form</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch06lev1sec2.html" target="content">Stacked Layouts</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch06lev1sec3.html" target="content">Splitters</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch06lev1sec4.html" target="content">Scrolling Areas</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch06lev1sec5.html" target="content">Dock Windows and Toolbars</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch06lev1sec6.html" target="content">Multiple Document Interface</a><br>
+&nbsp;<a href="sources/final/ch07.html" target="content"><b>Chapter 7. Event Processing</b></a><br>
+&nbsp;&nbsp;<a href="sources/final/ch07lev1sec1.html" target="content">Reimplementing Event Handlers</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch07lev1sec2.html" target="content">Installing Event Filters</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch07lev1sec3.html" target="content">Staying Responsive during Intensive Processing</a><br>
+&nbsp;<a href="sources/final/ch08.html" target="content"><b>Chapter 8. 2D Graphics</b></a><br>
+&nbsp;&nbsp;<a href="sources/final/ch08lev1sec1.html" target="content">Painting with QPainter</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch08lev1sec2.html" target="content">Coordinate System Transformations</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch08lev1sec3.html" target="content">High-Quality Rendering with QImage</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch08lev1sec4.html" target="content">Item-Based Rendering with Graphics View</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch08lev1sec5.html" target="content">Printing</a><br>
+&nbsp;<a href="sources/final/ch09.html" target="content"><b>Chapter 9. Drag and Drop</b></a><br>
+&nbsp;&nbsp;<a href="sources/final/ch09lev1sec1.html" target="content">Enabling Drag and Drop</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch09lev1sec2.html" target="content">Supporting Custom Drag Types</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch09lev1sec3.html" target="content">Clipboard Handling</a><br>
+&nbsp;<a href="sources/final/ch10.html" target="content"><b>Chapter 10. Item View Classes</b></a><br>
+&nbsp;&nbsp;<a href="sources/final/ch10lev1sec1.html" target="content">Using the Item View Convenience Classes</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch10lev1sec2.html" target="content">Using Predefined Models</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch10lev1sec3.html" target="content">Implementing Custom Models</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch10lev1sec4.html" target="content">Implementing Custom Delegates</a><br>
+&nbsp;<a href="sources/final/ch11.html" target="content"><b>Chapter 11. Container Classes</b></a><br>
+&nbsp;&nbsp;<a href="sources/final/ch11lev1sec1.html" target="content">Sequential Containers</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch11lev1sec2.html" target="content">Associative Containers</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch11lev1sec3.html" target="content">Generic Algorithms</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch11lev1sec4.html" target="content">Strings, Byte Arrays, and Variants</a><br>
+&nbsp;<a href="sources/final/ch12.html" target="content"><b>Chapter 12. Input/Output</b></a><br>
+&nbsp;&nbsp;<a href="sources/final/ch12lev1sec1.html" target="content">Reading and Writing Binary Data</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch12lev1sec2.html" target="content">Reading and Writing Text</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch12lev1sec3.html" target="content">Traversing Directories</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch12lev1sec4.html" target="content">Embedding Resources</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch12lev1sec5.html" target="content">Inter-Process Communication</a><br>
+&nbsp;<a href="sources/final/ch13.html" target="content"><b>Chapter 13. Databases</b></a><br>
+&nbsp;&nbsp;<a href="sources/final/ch13lev1sec1.html" target="content">Connecting and Querying</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch13lev1sec2.html" target="content">Viewing Tables</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch13lev1sec3.html" target="content">Editing Records Using Forms</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch13lev1sec4.html" target="content">Presenting Data in Tabular Forms</a><br>
+&nbsp;<a href="sources/final/ch14.html" target="content"><b>Chapter 14. Multithreading</b></a><br>
+&nbsp;&nbsp;<a href="sources/final/ch14lev1sec1.html" target="content">Creating Threads</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch14lev1sec2.html" target="content">Synchronizing Threads</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch14lev1sec3.html" target="content">Communicating with the Main Thread</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch14lev1sec4.html" target="content">Using Qt's Classes in Secondary Threads</a><br>
+&nbsp;<a href="sources/final/ch15.html" target="content"><b>Chapter 15. Networking</b></a><br>
+&nbsp;&nbsp;<a href="sources/final/ch15lev1sec1.html" target="content">Writing FTP Clients</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch15lev1sec2.html" target="content">Writing HTTP Clients</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch15lev1sec3.html" target="content">Writing TCP Client-Server Applications</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch15lev1sec4.html" target="content">Sending and Receiving UDP Datagrams</a><br>
+&nbsp;<a href="sources/final/ch16.html" target="content"><b>Chapter 16. XML</b></a><br>
+&nbsp;&nbsp;<a href="sources/final/ch16lev1sec1.html" target="content">Reading XML with QXmlStreamReader</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch16lev1sec2.html" target="content">Reading XML with DOM</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch16lev1sec3.html" target="content">Reading XML with SAX</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch16lev1sec4.html" target="content">Writing XML</a><br>
+&nbsp;<a href="sources/final/ch17.html" target="content"><b>Chapter 17. Providing Online Help</b></a><br>
+&nbsp;&nbsp;<a href="sources/final/ch17lev1sec1.html" target="content">Tooltips, Status Tips, and &quot;What's This?&quot; Help</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch17lev1sec2.html" target="content">Using a Web Browser to Provide Online Help</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch17lev1sec3.html" target="content">Using QTextBrowser as a Simple Help Engine</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch17lev1sec4.html" target="content">Using Qt Assistant for Powerful Online Help</a><br>
+<a href="sources/final/part03.html" target="content"><b>Part III: Advanced Qt</b></a><br>
+&nbsp;<a href="sources/final/ch18.html" target="content"><b>Chapter 18. Internationalization</b></a><br>
+&nbsp;&nbsp;<a href="sources/final/ch18lev1sec1.html" target="content">Working with Unicode</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch18lev1sec2.html" target="content">Making Applications Translation-Aware</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch18lev1sec3.html" target="content">Dynamic Language Switching</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch18lev1sec4.html" target="content">Translating Applications</a><br>
+&nbsp;<a href="sources/final/ch19.html" target="content"><b>Chapter 19. Look and Feel Customization</b></a><br>
+&nbsp;&nbsp;<a href="sources/final/ch19lev1sec1.html" target="content">Using Qt Style Sheets</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch19lev1sec2.html" target="content">Subclassing QStyle</a><br>
+&nbsp;<a href="sources/final/ch20.html" target="content"><b>Chapter 20. 3D Graphics</b></a><br>
+&nbsp;&nbsp;<a href="sources/final/ch20lev1sec1.html" target="content">Drawing Using OpenGL</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch20lev1sec2.html" target="content">Combining OpenGL and QPainter</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch20lev1sec3.html" target="content">Doing Overlays Using Framebuffer Objects</a><br>
+&nbsp;<a href="sources/final/ch21.html" target="content"><b>Chapter 21. Creating Plugins</b></a><br>
+&nbsp;&nbsp;<a href="sources/final/ch21lev1sec1.html" target="content">Extending Qt with Plugins</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch21lev1sec2.html" target="content">Making Applications Plugin-Aware</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch21lev1sec3.html" target="content">Writing Application Plugins</a><br>
+&nbsp;<a href="sources/final/ch22.html" target="content"><b>Chapter 22. Application Scripting</b></a><br>
+&nbsp;&nbsp;<a href="sources/final/ch22lev1sec1.html" target="content">Overview of the ECMAScript Language</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch22lev1sec2.html" target="content">Extending Qt Applications with Scripts</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch22lev1sec3.html" target="content">Implementing GUI Extensions Using Scripts</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch22lev1sec4.html" target="content">Automating Tasks through Scripting</a><br>
+&nbsp;<a href="sources/final/ch23.html" target="content"><b>Chapter 23. Platform-Specific Features</b></a><br>
+&nbsp;&nbsp;<a href="sources/final/ch23lev1sec1.html" target="content">Interfacing with Native APIs</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch23lev1sec2.html" target="content">Using ActiveX on Windows</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch23lev1sec3.html" target="content">Handling X11 Session Management</a><br>
+&nbsp;<a href="sources/final/ch24.html" target="content"><b>Chapter 24. Embedded Programming</b></a><br>
+&nbsp;&nbsp;<a href="sources/final/ch24lev1sec1.html" target="content">Getting Started with Qt/Embedded Linux</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch24lev1sec2.html" target="content">Customizing Qt/Embedded Linux</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch24lev1sec3.html" target="content">Integrating Qt Applications with Qtopia</a><br>
+&nbsp;&nbsp;<a href="sources/final/ch24lev1sec4.html" target="content">Using Qtopia APIs</a><br>
+<a href="sources/final/part04.html" target="content"><b>Part IV: Appendixes</b></a><br>
+&nbsp;<a href="sources/final/app01.html" target="content"><b>Appendix A. Obtaining and Installing Qt</b></a><br>
+&nbsp;&nbsp;<a href="sources/final/app01lev1sec1.html" target="content">A Note on Licensing</a><br>
+&nbsp;&nbsp;<a href="sources/final/app01lev1sec2.html" target="content">Installing Qt/Windows</a><br>
+&nbsp;&nbsp;<a href="sources/final/app01lev1sec3.html" target="content">Installing Qt/Mac</a><br>
+&nbsp;&nbsp;<a href="sources/final/app01lev1sec4.html" target="content">Installing Qt/X11</a><br>
+&nbsp;<a href="sources/final/app02.html" target="content"><b>Appendix B. Building Qt Applications</b></a><br>
+&nbsp;&nbsp;<a href="sources/final/app02lev1sec1.html" target="content">Using qmake</a><br>
+&nbsp;&nbsp;<a href="sources/final/app02lev1sec2.html" target="content">Using Third-Party Build Tools</a><br>
+&nbsp;<a href="sources/final/app03.html" target="content"><b>Appendix C. Introduction to Qt Jambi</b></a><br>
+&nbsp;&nbsp;<a href="sources/final/app03lev1sec1.html" target="content">Getting Started with Qt Jambi</a><br>
+&nbsp;&nbsp;<a href="sources/final/app03lev1sec2.html" target="content">Using Qt Jambi in the Eclipse IDE</a><br>
+&nbsp;&nbsp;<a href="sources/final/app03lev1sec3.html" target="content">Integrating C++ Components with Qt Jambi</a><br>
+&nbsp;<a href="sources/final/app04.html" target="content"><b>Appendix D. Introduction to C++ for Java and C# Programmers</b></a><br>
+&nbsp;&nbsp;<a href="sources/final/app04lev1sec1.html" target="content">Getting Started with C++</a><br>
+&nbsp;&nbsp;<a href="sources/final/app04lev1sec2.html" target="content">Main Language Differences</a><br>
+&nbsp;&nbsp;<a href="sources/final/app04lev1sec3.html" target="content">The Standard C++ Library</a><br>
+&nbsp;<a href="sources/final/app05.html" target="content"><b>About the Authors</b></a><br>
+&nbsp;&nbsp;<a href="sources/final/app05lev1sec1.html" target="content">Jasmin Blanchette</a><br>
+&nbsp;&nbsp;<a href="sources/final/app05lev1sec2.html" target="content">Mark Summerfield</a><br>
+&nbsp;<a href="sources/final/app06.html" target="content"><b>Production</b></a><br>
+<a href="sources/final/index.html" target="content"><b>Index</b></a><br>
+&nbsp;<a href="sources/final/SYMBOL.html" target="content">SYMBOL</a><br>
+&nbsp;<a href="sources/final/A.html" target="content">A</a><br>
+&nbsp;<a href="sources/final/B.html" target="content">B</a><br>
+&nbsp;<a href="sources/final/C.html" target="content">C</a><br>
+&nbsp;<a href="sources/final/D.html" target="content">D</a><br>
+&nbsp;<a href="sources/final/E.html" target="content">E</a><br>
+&nbsp;<a href="sources/final/F.html" target="content">F</a><br>
+&nbsp;<a href="sources/final/G.html" target="content">G</a><br>
+&nbsp;<a href="sources/final/H.html" target="content">H</a><br>
+&nbsp;<a href="sources/final/I.html" target="content">I</a><br>
+&nbsp;<a href="sources/final/J.html" target="content">J</a><br>
+&nbsp;<a href="sources/final/K.html" target="content">K</a><br>
+&nbsp;<a href="sources/final/L.html" target="content">L</a><br>
+&nbsp;<a href="sources/final/M.html" target="content">M</a><br>
+&nbsp;<a href="sources/final/N.html" target="content">N</a><br>
+&nbsp;<a href="sources/final/O.html" target="content">O</a><br>
+&nbsp;<a href="sources/final/P.html" target="content">P</a><br>
+&nbsp;<a href="sources/final/Q.html" target="content">Q</a><br>
+&nbsp;<a href="sources/final/R.html" target="content">R</a><br>
+&nbsp;<a href="sources/final/S.html" target="content">S</a><br>
+&nbsp;<a href="sources/final/T.html" target="content">T</a><br>
+&nbsp;<a href="sources/final/U.html" target="content">U</a><br>
+&nbsp;<a href="sources/final/V.html" target="content">V</a><br>
+&nbsp;<a href="sources/final/W.html" target="content">W</a><br>
+&nbsp;<a href="sources/final/X.html" target="content">X</a><br>
+&nbsp;<a href="sources/final/Z.html" target="content">Z</a><br>
+</noscript>
+ </BODY>
+</HTML>

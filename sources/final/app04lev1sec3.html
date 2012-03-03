@@ -1,0 +1,754 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>app04lev1sec3.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/app04lev1sec3.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fapp04lev1sec3.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fapp04lev1sec3.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"app04lev1sec2.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"app05.html"><img src="images/next.gif" width="20" height="20"
+border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="app04lev1sec3"></a>
+<h3 class="docSection1Title" id="-100000">The Standard C++
+Library</h3>
+
+<p class="docText"><a name="In this"></a>In this section, we will
+briefly review the Standard C++ library. <a class="docLink" href=
+"#app04fig03">Figure D.3</a><a name="core C"></a> lists the core
+C++ header files. The <tt>&lt;exception&gt;</tt>,
+<tt>&lt;limits&gt;</tt>, <tt>&lt;new&gt;</tt>, and
+<tt>&lt;typeinfo&gt;</tt><a name="support the"></a> headers support
+the C++ language; for example, <tt>&lt;limits&gt;</tt><a name=
+"arithmetic support"></a> allows us to test properties of the
+compiler's integer and floating-point arithmetic support, and
+<tt>&lt;typeinfo&gt;</tt><a name="provide generally"></a> offers
+basic introspection. The other headers provide generally useful
+classes, including a string class and a complex numeric type. The
+functionality offered by <tt>&lt;bitset&gt;</tt>,
+<tt>&lt;locale&gt;</tt>, <tt>&lt;string&gt;</tt>, and
+<tt>&lt;typeinfo&gt;</tt> loosely overlaps with the
+<tt>QBitArray</tt>, <tt>QLocale</tt>, <tt>QString</tt>, and
+<tt>QMetaObject</tt> classes in Qt.</p>
+<a name="app04fig03"></a>
+<h5 class="docTableTitle">Figure D.3. Core C++ library header
+files</h5>
+
+<table cellspacing="0" class="allBorders" border="1">
+<colgroup align="left" span="2">
+<col width="100">
+<col width="450">
+</colgroup>
+
+<thead>
+<tr>
+<th scope="col" class="docTableCell thead" align="center" valign=
+"top" style="background-color:#E6E6E6">Header File</th>
+<th scope="col" class="docTableCell thead" align="center" valign=
+"top" style="background-color:#E6E6E6">Description</th>
+</tr>
+</thead>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;bitset&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Template class for representing fixed-length bit
+sequences</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;complex&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Template class for representing complex
+numbers</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;exception&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Types and functions related to exception
+handling</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;limits&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Template class that specifies properties of
+numeric types</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;locale&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Classes and functions related to
+localization</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;new&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Functions that manage dynamic memory
+allocation</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;stdexcept&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Predefined types of exceptions for reporting
+errors</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;string&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Template string container and character
+traits</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;typeinfo&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Class that provides basic meta-information about
+a type</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;valarray&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Template classes for representing value
+arrays</span>
+</td>
+</tr>
+</table>
+<br>
+
+<p class="docText"><a name="deal with"></a>Standard C++ also
+includes a set of header files that deal with I/O, listed in
+<a class="docLink" href="#app04fig04">Figure D.4</a><a name=
+"and is"></a>. The standard I/O classes' design harks back to the
+1980s and is needlessly complex, making them very hard to extend—so
+difficult, in fact, that entire books have been written on the
+subject. It also leaves the programmer with a Pandora's box of
+unresolved issues related to character encodings and
+platform-dependent binary representations of primitive data
+types.</p>
+<a name="app04fig04"></a>
+<h5 class="docTableTitle">Figure D.4. C++ I/O library header
+files</h5>
+
+<table cellspacing="0" class="allBorders" border="1">
+<colgroup align="left" span="2">
+<col width="100">
+<col width="450">
+</colgroup>
+
+<thead>
+<tr>
+<th scope="col" class="docTableCell thead" align="center" valign=
+"top" style="background-color:#E6E6E6">Header File</th>
+<th scope="col" class="docTableCell thead" align="center" valign=
+"top" style="background-color:#E6E6E6">Description</th>
+</tr>
+</thead>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;fstream&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Template classes that manipulate external
+files</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;iomanip&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">I/O stream manipulators that take an
+argument</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;ios&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Template base class for I/O streams</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;iosfwd&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Forward declarations for several I/O stream
+template classes</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;iostream&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Standard I/O streams
+(</span><tt>cin</tt><span class="docEmphRomanAlt">,</span>
+<tt>cout</tt><span class="docEmphRomanAlt">,</span>
+<tt>cerr</tt><span class="docEmphRomanAlt">,</span>
+<tt>clog</tt><span class="docEmphRomanAlt">)</span></td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;istream&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Template class that controls input from a stream
+buffer</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;ostream&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Template class that controls output to a stream
+buffer</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;sstream&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Template classes that associate stream buffers
+with strings</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;streambuf&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Template classes that buffer I/O
+operations</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;strstream&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Classes for performing I/O stream operations on
+character arrays</span>
+</td>
+</tr>
+</table>
+<br>
+
+<p class="docText"><a class="docLink" href="ch12.html#ch12">Chapter
+12</a><a name="a large"></a> presents the corresponding Qt classes,
+which feature Unicode I/O as well as a large set of national
+character encodings and a platform-independent abstraction for
+storing binary data. Qt's I/O classes form the basis of Qt's
+inter-process communication, networking, and XML support. Qt's
+binary and text stream classes are very easy to extend to handle
+custom data types.</p>
+
+<p class="docText"><a name="iddle1126"></a><a name=
+"iddle1131"></a><a name="iddle1822"></a><a name=
+"iddle2897"></a><a name="iddle3312"></a><a name=
+"iddle3372"></a><a name="iddle3757"></a><a name=
+"iddle7706"></a><a name="iddle7767"></a><a name=
+"iddle7776"></a><a name="iddle7780"></a><a name=
+"the introduction"></a>The early 1990s saw the introduction of the
+Standard Template Library (STL), a set of template-based container
+classes, iterators, and algorithms that slipped into the ISO C++
+standard at the eleventh hour. <a class="docLink" href=
+"#app04fig05">Figure D.5</a><a name="header files"></a> lists the
+header files that form the STL. The STL has a very clean, almost
+mathematical design that provides generic type-safe functionality.
+Qt provides its own container classes, whose design is partly
+inspired by the STL. We describe them in <a class="docLink" href=
+"ch11.html#ch11">Chapter 11</a>.</p>
+<a name="app04fig05"></a>
+<h5 class="docTableTitle"><a name="Figure D"></a>Figure D.5. STL
+header files</h5>
+
+<table cellspacing="0" class="allBorders" border="1">
+<colgroup align="left" span="2">
+<col width="100">
+<col width="450">
+</colgroup>
+
+<thead>
+<tr>
+<th scope="col" class="docTableCell thead" align="center" valign=
+"top" style="background-color:#E6E6E6">Header File</th>
+<th scope="col" class="docTableCell thead" align="center" valign=
+"top" style="background-color:#E6E6E6">Description</th>
+</tr>
+</thead>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;algorithm&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">General-purpose template functions</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;deque&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Double-ended queue template container</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;functional&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt"><a name="help construct"></a>Templates that help
+construct and manipulate functors</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;iterator&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt"><a name="that help"></a>Templates that help
+construct and manipulate iterators</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;list&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Doubly linked list template container</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;map&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Single-valued and multi-valued map template
+containers</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;memory&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Utilities for simplifying memory
+management</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;numeric&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Template numeric operations</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;queue&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Queue template container</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;set&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Single-valued and multi-valued set template
+containers</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;stack&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Stack template container</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;utility&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Basic template functions</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;vector&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Vector template container</span>
+</td>
+</tr>
+</table>
+<br>
+
+<p class="docText"><a name="iddle1492"></a><a name=
+"iddle1594"></a><a name="iddle1650"></a><a name=
+"iddle1928"></a><a name="iddle2195"></a><a name=
+"iddle4138"></a><a name="iddle6816"></a><a name=
+"iddle7743"></a><a name="programmers also"></a>Since C++ is
+essentially a superset of the C programming language, C++
+programmers also have the entire C library at their disposal. The C
+header files are available either with their traditional names
+(e.g., <tt>&lt;stdio.h&gt;</tt>) or with new-style names with a
+<tt>c</tt>- prefix and no <tt>.h</tt> (e.g.,
+<tt>&lt;cstdio&gt;</tt><a name="functions and"></a>). When we use
+the new-style version, the functions and data types are declared in
+the <tt>std</tt> namespace. (This doesn't apply to macros such as
+<tt>ASSERT()</tt><a name="recommended if"></a>, because the
+preprocessor is unaware of namespaces.) The new-style syntax is
+recommended if your compiler supports it.</p>
+
+<p class="docText"><a class="docLink" href="#app04fig06">Figure
+D.6</a><a name="these offer"></a> lists the C library header files.
+Most of these offer functionality that overlaps with more recent
+C++ headers or with Qt. One notable exception is
+<tt>&lt;cmath&gt;</tt>, which declares mathematical functions such
+as <tt>sin()</tt>, <tt>sqrt()</tt>, and <tt>pow()</tt>.</p>
+<a name="app04fig06"></a>
+<h5 class="docTableTitle">Figure D.6. C++ header files for C
+library facilities</h5>
+
+<table cellspacing="0" class="allBorders" border="1">
+<colgroup align="left" span="2">
+<col width="100">
+<col width="450">
+</colgroup>
+
+<thead>
+<tr>
+<th scope="col" class="docTableCell thead" align="center" valign=
+"top" style="background-color:#E6E6E6">Header File</th>
+<th scope="col" class="docTableCell thead" align="center" valign=
+"top" style="background-color:#E6E6E6">Description</th>
+</tr>
+</thead>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;cassert&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">The</span> <tt>ASSERT()</tt> <span class=
+"docEmphRomanAlt">macro</span></td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;cctype&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Functions for classifying and mapping
+characters</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;cerrno&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Macros related to error condition
+reporting</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;cfloat&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Macros that specify properties of primitive
+floating-point types</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;ciso646&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Alternative spellings for ISO 646 charset
+users</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;climits&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Macros that specify properties of primitive
+integer types</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;clocale&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Functions and types related to
+localization</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;cmath&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Mathematical functions and constants</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;csetjmp&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Functions for performing non-local jumps</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;csignal&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Functions for handling system signals</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;cstdarg&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Macros for implementing variable argument list
+functions</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;cstddef&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Common definitions for several standard
+headers</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;cstdio&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Functions for performing I/O</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;cstdlib&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">General utility functions</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;cstring&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Functions for manipulating</span> <tt>char</tt>
+<span class="docEmphRomanAlt">arrays</span></td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;ctime&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Types and functions for manipulating time</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;cwchar&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Extended multibyte and wide character
+utilities</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>&lt;cwctype&gt;</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Functions for classifying and mapping wide
+characters</span>
+</td>
+</tr>
+</table>
+<br>
+
+<p class="docText"><a name="Dinkumware offers"></a>This completes
+our quick overview of the Standard C++ library. On the Internet,
+Dinkumware offers complete reference documentation for the Standard
+C++ library at <a class="docLink" target="_blank" href=
+"http://www.dinkumware.com/refxcpp.html">http://www.dinkumware.com/refxcpp.html</a><a name="a comprehensive"></a>,
+and SGI has a comprehensive STL programmer's guide at <a class=
+"docLink" target="_blank" href=
+"http://www.sgi.com/tech/stl/">http://www.sgi.com/tech/stl/</a><a name="definition of"></a>.
+The official definition of the Standard C++ library is in the C and
+C++ standards, available as PDF files or paper copies from the
+International Organization for Standardization (ISO).</p>
+
+<p class="docText"><a name="In this"></a>In this appendix, we
+covered a lot of ground at a fast pace. When you start learning Qt
+from <a class="docLink" href="ch01.html#ch01">Chapter 1</a><a name=
+"find that"></a>, you should find that the syntax is a lot simpler
+and clearer than this appendix might have suggested. Good Qt
+programming only requires the use of a subset of C++ and usually
+avoids the need for the more complex and obscure syntax that C++
+makes possible. Once you start typing in code and building and
+running executables, the clarity and simplicity of the Qt approach
+will become apparent. And as soon as you start writing more
+ambitious programs, especially those that need fast and fancy
+graphics, the C++/Qt combination will continue to keep pace with
+your needs.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"app04lev1sec2.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"app05.html"><img src="images/next.gif" width="20" height="20"
+border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

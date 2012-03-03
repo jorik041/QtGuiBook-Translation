@@ -1,0 +1,785 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch02.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch02.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch02.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch02.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch01lev1sec4.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch02lev1sec1.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch02"></a>
+<h2 id="title-ID0E1CNM" class="docChapterTitle">2. Creating
+Dialogs</h2>
+
+<p class="docText"><img border="0" id="" width="150" height="119"
+src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzbnBpZV9nY3NoL29fcHIyaGMwdGFlZWoucHBy.jpg"
+alt="">
+</p>
+
+<ul>
+<li>
+<p class="docList"><a name="iddle1981"></a><a name=
+"iddle2583"></a><a name="iddle2763"></a><span class=
+"docEmphasis"><a class="docLink" href=
+"ch02lev1sec1.html#ch02lev1sec1">Subclassing QDialog</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch02lev1sec2.html#ch02lev1sec2">Signals and Slots in
+Depth</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch02lev1sec3.html#ch02lev1sec3">Rapid Dialog
+Design</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch02lev1sec4.html#ch02lev1sec4">Shape-Changing
+Dialogs</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch02lev1sec5.html#ch02lev1sec5">Dynamic Dialogs</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch02lev1sec6.html#ch02lev1sec6">Built-in Widget and Dialog
+Classes</a></span>
+</p>
+</li>
+</ul>
+
+<p class="docText"><a name="This chapter"></a>This chapter will
+teach you how to create dialog boxes using Qt. Dialog boxes present
+users with options and choices, and allow them to set the options
+to their preferred values and to make their choices. They are
+called dialog boxes, or simply "dialogs", because they provide a
+means by which users and applications can "talk to" each other.</p>
+
+<p class="docText"><a name="applications consist"></a>Most GUI
+applications consist of a main window with a menu bar and toolbar,
+along with dozens of dialogs that complement the main window. It is
+also possible to create dialog applications that respond directly
+to the user's choices by performing the appropriate actions (e.g.,
+a calculator application).</p>
+
+<p class="docText"><a name="will create"></a>We will create our
+first dialog purely by writing code to show how it is done. Then we
+will see how to build dialogs using <span class="docEmphasis">Qt
+Designer</span>, Qt's visual design tool. Using <span class=
+"docEmphasis">Qt Designer</span><a name="to test"></a> is a lot
+faster than hand-coding and makes it easy to test different designs
+and to change designs later.</p>
+<a name="ch02lev1sec1"></a>
+<h3 class="docSection1Title" id="-100000">Subclassing QDialog</h3>
+
+<p class="docText"><a name="Find dialog"></a>Our first example is a
+Find dialog written entirely in C++. It is shown in <a class=
+"docLink" href="#ch02fig01">Figure 2.1</a><a name="its own"></a>.
+We will implement the dialog as a class in its own right. By doing
+so, we make it an independent, self-contained component, with its
+own signals and slots.</p>
+<a name="ch02fig01"></a>
+<center>
+<h5 class="docFigureTitle">Figure 2.1. The Find dialog</h5>
+
+<p class="docText"><img border="0" id="" width="310" height="126"
+src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzcGlqZmlzaC9nMXAyZ2MwLjA-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="iddle1793"></a><a name=
+"iddle2064"></a><a name="iddle2140"></a><a name=
+"iddle2752"></a><a name="iddle2761"></a><a name=
+"iddle2762"></a><a name="iddle2768"></a><a name=
+"iddle2770"></a><a name="iddle2843"></a><a name=
+"iddle3144"></a><a name="iddle4266"></a><a name=
+"iddle4603"></a><a name="iddle4923"></a><a name=
+"iddle4925"></a><a name="iddle7456"></a><a name=
+"iddle7475"></a><a name="iddle7529"></a><a name=
+"iddle7832"></a><a name="two files"></a>The source code is spread
+across two files: <tt>finddialog.h</tt> and
+<tt>finddialog.cpp</tt>. We will start with
+<tt>finddialog.h</tt>.</p>
+
+<div class="docText">
+<pre>
+<span class="docEmphRomanAlt">1</span> #ifndef FINDDIALOG_H
+<span class="docEmphRomanAlt">2</span> #define FINDDIALOG_H
+
+<span class="docEmphRomanAlt">3</span> #include &lt;QDialog&gt;
+
+<span class="docEmphRomanAlt">4</span> class QCheckBox;
+<span class="docEmphRomanAlt">5</span> class QLabel;
+<span class="docEmphRomanAlt">6</span> class QLineEdit;
+<span class="docEmphRomanAlt">7</span> class QPushButton;
+</pre>
+</div>
+<br>
+
+<p class="docText">Lines 1 and 2 (and 27) protect the header file
+against multiple inclusions.</p>
+
+<p class="docText">Line 3 includes the definition of
+<tt>QDialog</tt>, the base class for dialogs in Qt.
+<tt>QDialog</tt> is derived from <tt>QWidget</tt>.</p>
+
+<p class="docText"><a name="classes that"></a>Lines 4 to 7 are
+forward declarations of the Qt classes that we will use to
+implement the dialog. A <span class="docEmphasis">forward
+declaration</span><a name="the C"></a> tells the C++ compiler that
+a class exists, without giving all the detail that a class
+definition (usually located in a header file of its own) provides.
+We will say more about this shortly.</p>
+
+<p class="docText">Next, we define <tt>FindDialog</tt> as a
+subclass of <tt>QDialog</tt>:</p>
+
+<div class="docText">
+<pre>
+ <span class=
+"docEmphRomanAlt">8</span> class FindDialog : public QDialog
+ <span class="docEmphRomanAlt">9</span> {
+<span class="docEmphRomanAlt">10</span>     Q_OBJECT
+
+<span class="docEmphRomanAlt">11</span> public:
+<span class=
+"docEmphRomanAlt">12</span>     FindDialog(QWidget *parent = 0);
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>Q_OBJECT</tt><a name="for all"></a>
+macro at the beginning of the class definition is necessary for all
+classes that define signals or slots.</p>
+
+<p class="docText"><a name="The"></a>The
+<tt>FindDialog</tt><a name="typical of"></a> constructor is typical
+of Qt widget classes. The <tt>parent</tt><a name=
+"specifies the"></a> parameter specifies the parent widget. The
+default is a null pointer, meaning that the dialog has no
+parent.</p>
+
+<div class="docText">
+<pre>
+<span class="docEmphRomanAlt">13</span> signals:
+<span class=
+"docEmphRomanAlt">14</span>     void findNext(const QString &amp;str, Qt::CaseSensitivity cs);
+<span class=
+"docEmphRomanAlt">15</span>     void findPrevious(const QString &amp;str, Qt::CaseSensitivity cs);
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>signals</tt><a name="the user"></a>
+section declares two signals that the dialog emits when the user
+clicks the <span class="docEmphRomanAlt">Find</span> button. If the
+<span class="docEmphRomanAlt">Search backward</span> option is
+enabled, the dialog emits <tt>findPrevious()</tt>; otherwise, it
+emits <tt>findNext()</tt>.</p>
+
+<p class="docText">The <tt>signals</tt><a name=
+"preprocessor converts"></a> keyword is actually a macro. The C++
+preprocessor converts it into standard C++ before the compiler sees
+it. <tt>Qt::CaseSensitivity</tt> is an enum type that can take the
+values <tt>Qt::CaseSensitive</tt> and
+<tt>Qt::CaseInsensitive</tt>.</p>
+
+<div class="docText">
+<pre>
+<span class="docEmphRomanAlt">16</span> private slots:
+<span class="docEmphRomanAlt">17</span>     void findClicked();
+<span class=
+"docEmphRomanAlt">18</span>     void enableFindButton(const QString &amp;text);
+
+<span class="docEmphRomanAlt">19</span> private:
+<span class="docEmphRomanAlt">20</span>     QLabel *label;
+<span class="docEmphRomanAlt">21</span>     QLineEdit *lineEdit;
+<span class=
+"docEmphRomanAlt">22</span>     QCheckBox *caseCheckBox;
+<span class=
+"docEmphRomanAlt">23</span>     QCheckBox *backwardCheckBox;
+<span class=
+"docEmphRomanAlt">24</span>     QPushButton *findButton;
+<span class=
+"docEmphRomanAlt">25</span>     QPushButton *closeButton;
+<span class="docEmphRomanAlt">26</span> };
+
+<span class="docEmphRomanAlt">27</span> #endif
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle2406"></a><a name=
+"iddle2756"></a><a name="iddle2844"></a><a name=
+"iddle3002"></a><a name="iddle5269"></a><a name=
+"iddle5649"></a><a name="iddle6100"></a><a name=
+"iddle6135"></a><a name="iddle6136"></a><a name=
+"iddle6146"></a><a name="iddle6156"></a><a name=
+"iddle6167"></a><a name="iddle6171"></a><a name=
+"iddle6177"></a><a name="iddle6372"></a><a name=
+"iddle6586"></a><a name="iddle7135"></a><a name=
+"iddle7193"></a><a name="iddle7207"></a><a name=
+"iddle7546"></a><a name="we will"></a>In the class's private
+section, we declare two slots. To implement the slots, we will need
+to access most of the dialog's child widgets, so we keep pointers
+to them as well. The <tt>slots</tt> keyword is, like
+<tt>signals</tt><a name="construct that"></a>, a macro that expands
+into a construct that the C++ compiler can digest.</p>
+
+<p class="docText"><a name="their classes"></a>For the private
+variables, we used forward declarations of their classes. This was
+possible because they are all pointers and we don't access them in
+the header file, so the compiler doesn't need the full class
+definitions. We could have included the relevant header files
+(<tt>&lt;QCheckBox&gt;</tt>, <tt>&lt;QLabel&gt;</tt><a name=
+"using forward"></a>, etc.), but using forward declarations when it
+is possible makes compiling somewhat faster.</p>
+
+<p class="docText">We will now look at <tt>finddialog.cpp</tt>,
+which contains the implementation of the <tt>FindDialog</tt>
+class.</p>
+
+<div class="docText">
+<pre>
+<span class="docEmphRomanAlt">1</span> #include &lt;QtGui&gt;
+
+<span class="docEmphRomanAlt">2</span> #include "finddialog.h"
+</pre>
+</div>
+<br>
+
+<p class="docText">First, we include <tt>&lt;QtGui&gt;</tt><a name=
+"consists of"></a>, a header file that contains the definition of
+Qt's GUI classes. Qt consists of several modules, each of which
+lives in its own library. The most important modules are
+<span class="docEmphasis">QtCore</span>, <span class=
+"docEmphasis">QtGui</span>, <span class=
+"docEmphasis">QtNetwork</span>, <span class=
+"docEmphasis">QtOpenGL</span>, <span class=
+"docEmphasis">QtScript</span>, <span class=
+"docEmphasis">QtSql</span>, <span class=
+"docEmphasis">QtSvg</span><a name="and"></a>, and <span class=
+"docEmphasis">QtXml</span>. The <tt>&lt;QtGui&gt;</tt><a name=
+"contains the"></a> header file contains the definition of all the
+classes that are part of the <span class=
+"docEmphasis">QtCore</span> and <span class=
+"docEmphasis">QtGui</span><a name="this header"></a> modules.
+Including this header saves us the bother of including every class
+individually.</p>
+
+<p class="docText">In <tt>finddialog.h</tt>, instead of including
+<tt>&lt;QDialog&gt;</tt> and using forward declarations for
+<tt>QCheckBox</tt>, <tt>QLabel</tt>, <tt>QLineEdit</tt>, and
+<tt>QPushButton</tt>, we could simply have included
+<tt>&lt;QtGui&gt;</tt><a name="big header"></a>. However, it is
+generally bad style to include such a big header file from another
+header file, especially in larger applications.</p>
+
+<div class="docText">
+<pre>
+ <span class=
+"docEmphRomanAlt">3</span> FindDialog::FindDialog(QWidget *parent)
+ <span class="docEmphRomanAlt">4</span>     : QDialog(parent)
+ <span class="docEmphRomanAlt">5</span> {
+ <span class=
+"docEmphRomanAlt">6</span>     label = new QLabel(tr("Find &amp;what:"));
+ <span class=
+"docEmphRomanAlt">7</span>     lineEdit = new QLineEdit;
+ <span class=
+"docEmphRomanAlt">8</span>     label-&gt;setBuddy(lineEdit);
+
+ <span class=
+"docEmphRomanAlt">9</span>     caseCheckBox = new QCheckBox(tr("Match &amp;case"));
+<span class=
+"docEmphRomanAlt">10</span>     backwardCheckBox = new QCheckBox(tr("Search &amp;backward"));
+
+<span class=
+"docEmphRomanAlt">11</span>     findButton = new QPushButton(tr("&amp;Find"));
+<span class=
+"docEmphRomanAlt">12</span>     findButton-&gt;setDefault(true);
+<span class=
+"docEmphRomanAlt">13</span>     findButton-&gt;setEnabled(false);
+
+<span class=
+"docEmphRomanAlt">14</span>     closeButton = new QPushButton(tr("Close"));
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1003"></a><a name=
+"iddle1096"></a><a name="iddle1112"></a><a name=
+"iddle1147"></a><a name="iddle1149"></a><a name=
+"iddle1402"></a><a name="iddle1424"></a><a name=
+"iddle1432"></a><a name="iddle1636"></a><a name=
+"iddle1747"></a><a name="iddle2054"></a><a name=
+"iddle2160"></a><a name="iddle2381"></a><a name=
+"iddle2413"></a><a name="iddle2789"></a><a name=
+"iddle2953"></a><a name="iddle3429"></a><a name=
+"iddle3430"></a><a name="iddle3435"></a><a name=
+"iddle3440"></a><a name="iddle4267"></a><a name=
+"iddle4571"></a><a name="iddle4606"></a><a name=
+"iddle5160"></a><a name="iddle5271"></a><a name=
+"iddle5445"></a><a name="iddle5477"></a><a name=
+"iddle6466"></a><a name="iddle6468"></a><a name=
+"iddle6501"></a><a name="iddle7427"></a><a name=
+"iddle8006"></a><a name="iddle8154"></a><a name=
+"iddle8200"></a><a name="iddle8553"></a><a name=
+"iddle8629"></a><a name="the"></a>On line 4, we pass on the
+<tt>parent</tt><a name="child widgets"></a> parameter to the base
+class constructor. Then we create the child widgets. The
+<tt>tr()</tt><a name="mark them"></a> function calls around the
+string literals mark them for translation to other languages. The
+function is declared in <tt>QObject</tt> and every subclass that
+contains the <tt>Q_OBJECT</tt> macro. It's a good habit to surround
+user-visible strings with <tt>tr()</tt><a name=
+"your applications"></a>, even if you don't have immediate plans
+for translating your applications to other languages. We cover
+translating Qt applications in <a class="docLink" href=
+"ch18.html#ch18">Chapter 18</a>.</p>
+
+<p class="docText"><a name="the string"></a>In the string literals,
+we use ampersands ('&amp;') to indicate shortcut keys. For example,
+line 11 creates a <span class="docEmphRomanAlt"><span class=
+"docEmphUl">F</span>ind</span> button, which the user can activate
+by pressing <span class="docEmphRomanAlt">Alt+F</span><a name=
+"to control"></a> on platforms that support shortcut keys.
+Ampersands can also be used to control focus: On line 6 we create a
+label with a shortcut key (<span class=
+"docEmphRomanAlt">Alt+W</span><a name="and on"></a>), and on line 8
+we set the label's buddy to be the line editor. A <span class=
+"docEmphasis">buddy</span><a name="widget that"></a> is a widget
+that accepts the focus when the label's shortcut key is pressed. So
+when the user presses <span class=
+"docEmphRomanAlt">Alt+W</span><a name="focus goes"></a> (the
+label's shortcut), the focus goes to the line editor (the label's
+buddy).</p>
+
+<p class="docText">On line 12, we make the <span class=
+"docEmphRomanAlt">Find</span> button the dialog's default button by
+calling <tt>setDefault(true)</tt><a name="when the"></a>. The
+default button is the button that is pressed when the user hits
+<span class="docEmphRomanAlt">Enter</span>. On line 13, we disable
+the <span class="docEmphRomanAlt">Find</span><a name=
+"is usually"></a> button. When a widget is disabled, it is usually
+shown grayed out and will not respond to user interaction.</p>
+
+<div class="docText">
+<pre>
+<span class=
+"docEmphRomanAlt">15</span>   connect(lineEdit, SIGNAL(textChanged(const QString &amp;)),
+<span class=
+"docEmphRomanAlt">16</span>           this, SLOT(enableFindButton(const QString &amp;)));
+<span class=
+"docEmphRomanAlt">17</span>   connect(findButton, SIGNAL(clicked()),
+<span class=
+"docEmphRomanAlt">18</span>           this, SLOT(findClicked()));
+<span class=
+"docEmphRomanAlt">19</span>   connect(closeButton, SIGNAL(clicked()),
+<span class=
+"docEmphRomanAlt">20</span>           this, SLOT(close()));
+</pre>
+</div>
+<br>
+
+<p class="docText">The private slot <tt>enableFindButton(const
+QString &amp;)</tt><a name="The private"></a> is called whenever
+the text in the line editor changes. The private slot
+<tt>findClicked()</tt><a name="the"></a> is called when the user
+clicks the <span class="docEmphRomanAlt">Find</span> button. The
+dialog closes itself when the user clicks <span class=
+"docEmphRomanAlt">Close</span>. The <tt>close()</tt> slot is
+inherited from <tt>QWidget</tt><a name="widget from"></a>, and its
+default behavior is to hide the widget from view (without deleting
+it). We will look at the code for the <tt>enableFindButton()</tt>
+and <tt>findClicked()</tt><a name="later on"></a> slots later
+on.</p>
+
+<p class="docText">Since <tt>QObject</tt> is one of
+<tt>FindDialog</tt>'s ancestors, we can omit the <tt>QObject::</tt>
+prefix in front of the <tt>connect()</tt> calls.</p>
+
+<div class="docText">
+<pre>
+<span class=
+"docEmphRomanAlt">21</span>    QHBoxLayout *topLeftLayout = new QHBoxLayout;
+<span class=
+"docEmphRomanAlt">22</span>    topLeftLayout-&gt;addWidget(label);
+<span class=
+"docEmphRomanAlt">23</span>    topLeftLayout-&gt;addWidget(lineEdit);
+
+<span class=
+"docEmphRomanAlt">24</span>    QVBoxLayout *leftLayout = new QVBoxLayout;
+<span class=
+"docEmphRomanAlt">25</span>    leftLayout-&gt;addLayout(topLeftLayout);
+<span class=
+"docEmphRomanAlt">26</span>    leftLayout-&gt;addWidget(caseCheckBox);
+<span class=
+"docEmphRomanAlt">27</span>    leftLayout-&gt;addWidget(backwardCheckBox);
+
+<span class=
+"docEmphRomanAlt">28</span>    QVBoxLayout *rightLayout = new QVBoxLayout;
+<span class=
+"docEmphRomanAlt">29</span>    rightLayout-&gt;addWidget(findButton);
+<span class=
+"docEmphRomanAlt">30</span>    rightLayout-&gt;addWidget(closeButton);
+<span class=
+"docEmphRomanAlt">31</span>    rightLayout-&gt;addStretch();
+
+<span class=
+"docEmphRomanAlt">32</span>    QHBoxLayout *mainLayout = new QHBoxLayout;
+<span class=
+"docEmphRomanAlt">33</span>    mainLayout-&gt;addLayout(leftLayout);
+<span class=
+"docEmphRomanAlt">34</span>    mainLayout-&gt;addLayout(rightLayout);
+<span class="docEmphRomanAlt">35</span>    setLayout(mainLayout);
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1097"></a><a name=
+"iddle1550"></a><a name="iddle2776"></a><a name=
+"iddle3502"></a><a name="iddle3510"></a><a name=
+"iddle3520"></a><a name="iddle3680"></a><a name=
+"iddle3845"></a><a name="iddle3986"></a><a name=
+"iddle4113"></a><a name="iddle4412"></a><a name=
+"iddle5159"></a><a name="iddle5256"></a><a name=
+"iddle6535"></a><a name="iddle6588"></a><a name=
+"iddle6615"></a><a name="iddle6623"></a><a name=
+"iddle6876"></a><a name="iddle7218"></a><a name=
+"iddle7388"></a><a name="iddle7493"></a><a name=
+"iddle7502"></a><a name="iddle7589"></a><a name=
+"iddle7668"></a><a name="iddle7784"></a><a name=
+"iddle7880"></a><a name="iddle8589"></a><a name=
+"contain both"></a>Next, we lay out the child widgets using layout
+managers. Layouts can contain both widgets and other layouts. By
+nesting <tt>QHBoxLayout</tt>s, <tt>QVBoxLayout</tt><a name=
+"and"></a>s, and <tt>QGridLayout</tt><a name=
+"various combinations"></a>s in various combinations, it is
+possible to build very sophisticated dialogs.</p>
+
+<p class="docText"><a name="the Find"></a>For the Find dialog, we
+use two <tt>QHBoxLayout</tt>s and two <tt>QVBoxLayout</tt>s, as
+shown in <a class="docLink" href="#ch02fig02">Figure
+2.2</a><a name="on the"></a>. The outer layout is the main layout;
+it is installed on the <tt>FindDialog</tt><a name="for the"></a> on
+line 35 and is responsible for the dialog's entire area. The other
+three layouts are sub-layouts. The little "spring" at the bottom
+right of <a class="docLink" href="#ch02fig02">Figure
+2.2</a><a name="space below"></a> is a spacer item (or "stretch").
+It uses up the empty space below the <span class=
+"docEmphRomanAlt">Find</span> and <span class=
+"docEmphRomanAlt">Close</span><a name="top of"></a> buttons,
+ensuring that these buttons occupy the top of their layout.</p>
+<a name="ch02fig02"></a>
+<center>
+<h5 class="docFigureTitle">Figure 2.2. The Find dialog's
+layouts</h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzZnBpYWZpc2gvLjJ0bDJnYzBfMGln.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="174" src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzcGlnZmlzaC9mMmkyZ2MwLjA-.jpg"
+alt="">
+</center>
+<br>
+
+<p class="docText"><a name="is that"></a>One subtle aspect of the
+layout manager classes is that they are not widgets. Instead, they
+are derived from <tt>QLayout</tt><a name="in turn"></a>, which in
+turn is derived from <tt>QObject</tt><a name=
+"are represented"></a>. In the figure, widgets are represented by
+solid outlines and layouts are represented by dashed outlines to
+highlight the difference between them. In a running application,
+layouts are invisible.</p>
+
+<p class="docText"><a name="When the"></a>When the sublayouts are
+added to the parent layout (lines 25, 33, and 34), the sublayouts
+are automatically reparented. Then, when the main layout is
+installed on the dialog (line 35), it becomes a child of the
+dialog, and all the widgets in the layouts are reparented to become
+children of the dialog. The resulting parent–child hierarchy is
+depicted in <a class="docLink" href="#ch02fig03">Figure
+2.3</a>.</p>
+
+<div class="docText">
+<pre>
+<span class=
+"docEmphRomanAlt">36</span>    setWindowTitle(tr("Find"));
+<span class=
+"docEmphRomanAlt">37</span>    setFixedHeight(sizeHint().height());
+<span class="docEmphRomanAlt">38</span> }
+</pre>
+</div>
+<br>
+<a name="ch02fig03"></a>
+<center>
+<h5 class="docFigureTitle"><a name="Find dialog"></a>Figure 2.3.
+The Find dialog's parent–child relationships</h5>
+
+<p class="docText"><img border="0" id="" width="374" height="214"
+src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzcGlnZmlzaC9mM2kyZ2MwLjA-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="set the"></a>Finally, we set the title
+to be shown in the dialog's title bar and we set the window to have
+a fixed height, since there aren't any widgets in the dialog that
+<a name="iddle2111"></a><a name="iddle2372"></a><a name=
+"iddle2380"></a><a name="iddle2750"></a><a name=
+"iddle2758"></a><a name="iddle2759"></a><a name=
+"iddle6587"></a><a name="iddle7208"></a><a name=
+"iddle7460"></a><a name="iddle7462"></a><a name="iddle7534"></a>can
+meaningfully occupy any extra vertical space. The
+<tt>QWidget::sizeHint()</tt> function returns a widget's "ideal"
+size.</p>
+
+<p class="docText">This completes the review of
+<tt>FindDialog</tt>'s constructor. Since we used
+<tt>new</tt><a name="we need"></a> to create the dialog's widgets
+and layouts, it would seem that we need to write a destructor that
+calls <tt>delete</tt><a name="we created"></a> on each widget and
+layout we created. But this isn't necessary, since Qt automatically
+deletes child objects when the parent is destroyed, and the child
+widgets and layouts are all descendants of the
+<tt>FindDialog</tt>.</p>
+
+<p class="docText">Now we will look at the dialog's slots:</p>
+
+<div class="docText">
+<pre>
+<span class=
+"docEmphRomanAlt">39</span> void FindDialog::findClicked()
+<span class="docEmphRomanAlt">40</span> {
+<span class=
+"docEmphRomanAlt">41</span>     QString text = lineEdit-&gt;text();
+<span class=
+"docEmphRomanAlt">42</span>     Qt::CaseSensitivity cs =
+<span class=
+"docEmphRomanAlt">43</span>             caseCheckBox-&gt;isChecked() ? Qt::CaseSensitive
+<span class=
+"docEmphRomanAlt">44</span>                                       : Qt::CaseInsensitive;
+<span class=
+"docEmphRomanAlt">45</span>     if (backwardCheckBox-&gt;isChecked()) {
+<span class=
+"docEmphRomanAlt">46</span>         emit findPrevious(text, cs);
+<span class="docEmphRomanAlt">47</span>     } else {
+<span class=
+"docEmphRomanAlt">48</span>         emit findNext(text, cs);
+<span class="docEmphRomanAlt">49</span>     }
+<span class="docEmphRomanAlt">50</span> }
+
+<span class=
+"docEmphRomanAlt">51</span> void FindDialog::enableFindButton(const QString &amp;text)
+<span class="docEmphRomanAlt">52</span> {
+<span class=
+"docEmphRomanAlt">53</span>     findButton-&gt;setEnabled(!text.isEmpty());
+<span class="docEmphRomanAlt">54</span> }
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>findClicked()</tt> slot is called when
+the user clicks the <span class="docEmphRomanAlt">Find</span>
+button. It emits the <tt>findPrevious()</tt> or the
+<tt>findNext()</tt> signal, depending on the <span class=
+"docEmphRomanAlt">Search backward</span> option. The
+<tt>emit</tt><a name="is converted"></a> keyword is specific to Qt;
+like other Qt extensions it is converted into standard C++ by the
+C++ preprocessor.</p>
+
+<p class="docText"><a name="iddle2884"></a><a name=
+"iddle2928"></a><a name="iddle3565"></a><a name=
+"iddle3744"></a><a name="iddle3803"></a><a name=
+"iddle3818"></a><a name="iddle3855"></a><a name=
+"iddle4608"></a><a name="iddle5335"></a><a name=
+"iddle6606"></a><a name="iddle7341"></a><a name=
+"iddle7910"></a><a name="iddle8290"></a><a name=
+"iddle8317"></a><a name="iddle8469"></a>The
+<tt>enableFindButton()</tt><a name="changes the"></a> slot is
+called whenever the user changes the text in the line editor. It
+enables the button if there is some text in the editor, and
+disables it otherwise.</p>
+
+<p class="docText"><a name="create a"></a>These two slots complete
+the dialog. We can now create a <tt>main.cpp</tt><a name=
+"to test"></a> file to test our <tt>FindDialog</tt> widget:</p>
+
+<div class="docText">
+<pre>
+<span class=
+"docEmphRomanAlt">1</span> #include &lt;QApplication&gt;
+
+<span class="docEmphRomanAlt">2</span> #include "finddialog.h"
+
+<span class=
+"docEmphRomanAlt">3</span> int main(int argc, char *argv[])
+<span class="docEmphRomanAlt">4</span> {
+<span class=
+"docEmphRomanAlt">5</span>     QApplication app(argc, argv);
+<span class=
+"docEmphRomanAlt">6</span>     FindDialog *dialog = new FindDialog;
+<span class="docEmphRomanAlt">7</span>     dialog-&gt;show();
+<span class="docEmphRomanAlt">8</span>     return app.exec();
+<span class="docEmphRomanAlt">9</span> }
+</pre>
+</div>
+<br>
+
+<p class="docText">To compile the program, run <tt>qmake</tt> as
+usual. Since the <tt>FindDialog</tt> class definition contains the
+<tt>Q_OBJECT</tt> macro, the makefile generated by <tt>qmake</tt>
+will include special rules to run <tt>moc</tt>, Qt's meta-object
+compiler. (We cover Qt's meta-object system in the next
+section.)</p>
+
+<p class="docText">For <tt>moc</tt><a name="header file"></a> to
+work correctly, we must put the class definition in a header file,
+separate from the implementation file. The code generated by
+<tt>moc</tt><a name="includes this"></a> includes this header file
+and adds some C++ boilerplate code of its own.</p>
+
+<p class="docText"><a name="use the"></a>Classes that use the
+<tt>Q_OBJECT</tt><a name="must have"></a> macro must have
+<tt>moc</tt> run on them. This isn't a problem because
+<tt>qmake</tt><a name="you forget"></a> automatically adds the
+necessary rules to the makefile. But if you forget to regenerate
+your makefile using <tt>qmake</tt> and <tt>moc</tt><a name=
+"some functions"></a> isn't run, the linker will complain that some
+functions are declared but not implemented. The messages can be
+fairly obscure. GCC produces error messages like this one:</p>
+
+<div class="docText">
+<pre>
+finddialog.o: In function `FindDialog::tr(char const*, char const*)':
+/usr/lib/qt/src/corelib/global/qglobal.h:1430: undefined reference to
+`FindDialog::staticMetaObject'
+</pre>
+</div>
+<br>
+
+<p class="docText">Visual C++'s output starts like this:</p>
+
+<div class="docText">
+<pre>
+finddialog.obj : error LNK2001: unresolved external symbol
+"public:~virtual int __thiscall MyClass::qt_metacall(enum QMetaObject
+::Call,int,void * *)"
+</pre>
+</div>
+<br>
+
+<p class="docText">If this ever happens to you, run <tt>qmake</tt>
+again to update the makefile, then rebuild the application.</p>
+
+<p class="docText"><a name="your platform"></a>Now run the program.
+If shortcut keys are shown on your platform, verify that the
+shortcut keys <span class="docEmphRomanAlt">Alt+W</span>,
+<span class="docEmphRomanAlt">Alt+C</span>, <span class=
+"docEmphRomanAlt">Alt+B</span>, and <span class=
+"docEmphRomanAlt">Alt+F</span> trigger the correct behavior. Press
+<span class="docEmphRomanAlt">Tab</span><a name="the keyboard"></a>
+to navigate through the widgets with the keyboard. The default tab
+order is the order in which the widgets were created. This can be
+changed using <tt>QWidget::setTabOrder()</tt>.</p>
+
+<p class="docText"><a name="iddle1748"></a><a name=
+"iddle4116"></a><a name="iddle5446"></a><a name=
+"iddle7452"></a><a name="iddle7457"></a><a name=
+"iddle7474"></a><a name="iddle7526"></a><a name=
+"iddle7530"></a><a name="iddle7545"></a><a name=
+"ensures that"></a>Providing a sensible tab order and keyboard
+shortcuts ensures that users who don't want to (or cannot) use a
+mouse are able to make full use of the application. Full keyboard
+control is also appreciated by fast typists.</p>
+
+<p class="docText">In <a class="docLink" href=
+"ch03.html#ch03">Chapter 3</a><a name="will use"></a>, we will use
+the Find dialog inside a real application, and we will connect the
+<tt>findPrevious()</tt> and <tt>findNext()</tt> signals to some
+slots.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch01lev1sec4.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch02lev1sec1.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

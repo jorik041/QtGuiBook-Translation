@@ -1,0 +1,476 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch12lev1sec5.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch12lev1sec5.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch12lev1sec5.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch12lev1sec5.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch12lev1sec4.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch13.html"><img src="images/next.gif" width="20" height="20"
+border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch12lev1sec5"></a>
+<h3 class="docSection1Title" id="-100000">Inter-Process
+Communication</h3>
+
+<p class="docText"><a name="The"></a>The <tt>QProcess</tt><a name=
+"us to"></a> class allows us to run external programs and to
+interact with them. The class works asynchronously, doing its work
+in the background so that the user interface remains responsive.
+<tt>QProcess</tt><a name="signals to"></a> emits signals to notify
+us when the external process has data or has finished.</p>
+
+<p class="docText"><a name="that provides"></a>We will review the
+code of a small application that provides a user interface for an
+external image conversion program. For this example, we rely on the
+ImageMagick <tt>convert</tt><a name="all major"></a> program, which
+is freely available for all major platforms. Our user interface is
+shown in <a class="docLink" href="#ch12fig02">Figure 12.2</a>.</p>
+<a name="ch12fig02"></a>
+<center>
+<h5 class="docFigureTitle">Figure 12.2. The Image Converter
+application</h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZ3BuYWlwY3RodGVjby92cnNsLl9q.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="311" src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzbmlqcGNnaHRlY28vdnJwcy4-.jpg"
+alt="">
+</center>
+<br>
+
+<p class="docText">The user interface was created in <span class=
+"docEmphasis">Qt Designer</span>. The <tt>.ui</tt><a name=
+"will focus"></a> file is with the examples that accompany this
+book. Here, we will focus on the subclass that is derived from the
+<tt>uic</tt>-generated <tt>Ui::ConvertDialog</tt> class, starting
+with the header:</p>
+
+<div class="docText">
+<pre>
+#ifndef CONVERTDIALOG_H
+#define CONVERTDIALOG_H
+
+#include &lt;QDialog&gt;
+#include &lt;QProcess&gt;
+</pre>
+</div>
+<br>
+
+<div class="docText">
+<pre>
+#include "ui_convertdialog.h"
+
+class ConvertDialog : public QDialog, private Ui::ConvertDialog
+{
+    Q_OBJECT
+
+public:
+    ConvertDialog(QWidget *parent = 0);
+
+private slots:
+    void on_browseButton_clicked();
+    void convertImage();
+    void updateOutputTextEdit();
+    void processFinished(int exitCode, QProcess::ExitStatus exitStatus);
+    void processError(QProcess::ProcessError error);
+
+private:
+    QProcess process;
+    QString targetFile;
+};
+
+#endif
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1262"></a><a name=
+"iddle1612"></a><a name="iddle1859"></a><a name=
+"iddle1861"></a><a name="iddle4130"></a><a name=
+"iddle5648"></a><a name="iddle7447"></a><a name=
+"iddle7522"></a><a name="subclasses of"></a>The header follows the
+familiar pattern for subclasses of <span class="docEmphasis">Qt
+Designer</span><a name="other examples"></a> forms. One minor
+difference from some of the other examples we have seen is that
+here we have used private inheritance for the
+<tt>Ui::ConvertDialog</tt><a name="access to"></a> class. This
+prevents access to the form's widgets from outside the form's
+functions. Thanks to <span class="docEmphasis">Qt Designer</span>'s
+automatic connection mechanism (p. <a class="docLink" href=
+"ch02lev1sec3.html#page_28">28</a>), the
+<tt>on_browseButton_clicked()</tt> slot is automatically connected
+to the <span class="docEmphRomanAlt">Browse</span> button's
+<tt>clicked()</tt> signal.</p>
+
+<div class="docText">
+<pre>
+ConvertDialog::ConvertDialog(QWidget *parent)
+    : QDialog(parent)
+{
+    setupUi(this);
+
+    QPushButton *convertButton =
+            buttonBox-&gt;button(QDialogButtonBox::Ok);
+    convertButton-&gt;setText(tr("&amp;Convert"));
+    convertButton-&gt;setEnabled(false);
+
+    connect(convertButton, SIGNAL(clicked()),
+            this, SLOT(convertImage()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(&amp;process, SIGNAL(readyReadStandardError()),
+            this, SLOT(updateOutputTextEdit()));
+    connect(&amp;process, SIGNAL(finished(int, QProcess::ExitStatus)),
+            this, SLOT(processFinished(int, QProcess::ExitStatus)));
+    connect(&amp;process, SIGNAL(error(QProcess::ProcessError)),
+            this, SLOT(processError(QProcess::ProcessError)));
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1517"></a><a name=
+"iddle1860"></a><a name="iddle1862"></a><a name=
+"iddle1866"></a><a name="iddle2455"></a><a name=
+"iddle2772"></a><a name="iddle2917"></a><a name=
+"iddle4131"></a><a name="iddle5020"></a><a name=
+"iddle5619"></a><a name="iddle5622"></a><a name=
+"iddle5624"></a><a name="iddle6798"></a><a name=
+"iddle7409"></a><a name="iddle7745"></a>The
+<tt>setupUi()</tt><a name="the signal"></a> call creates and lays
+out all the form's widgets, and establishes the signal–slot
+connection for the <tt>on_browseButton_clicked()</tt><a name=
+"We get"></a> slot. We get a pointer to the button box's
+<span class="docEmphRomanAlt">OK</span><a name="give it"></a>
+button and give it more suitable text. We also disable it, since
+initially there is no image to convert, and we connect it to the
+<tt>convertImage()</tt><a name="we connect"></a> slot. Then we
+connect the button box's <tt>rejected()</tt> signal (emitted by the
+<span class="docEmphRomanAlt">Close</span> button) to the dialog's
+<tt>reject()</tt> slot. After that, we connect three signals from
+the <tt>QProcess</tt><a name="data on"></a> object to three private
+slots. Whenever the external process has data on its <tt>cerr</tt>,
+we will handle it in <tt>updateOutputTextEdit()</tt>.</p>
+
+<div class="docText">
+<pre>
+void ConvertDialog::on_browseButton_clicked()
+{
+    QString initialName = sourceFileEdit-&gt;text();
+    if (initialName.isEmpty())
+        initialName = QDir::homePath();
+    QString fileName =
+            QFileDialog::getOpenFileName(this, tr("Choose File"),
+                                         initialName);
+    fileName = QDir::toNativeSeparators(fileName);
+    if (!fileName.isEmpty()) {
+        sourceFileEdit-&gt;setText(fileName);
+        buttonBox-&gt;button(QDialogButtonBox::Ok)-&gt;setEnabled(true);
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <span class="docEmphRomanAlt">Browse</span>
+button's <tt>clicked()</tt><a name="the"></a> signal is
+automatically connected to the <tt>on_browseButton_clicked()</tt>
+slot by <tt>setupUi()</tt><a name="the file"></a>. If the user has
+previously selected a file, we initialize the file dialog with that
+file's name; otherwise, we use the user's home directory.</p>
+
+<div class="docText">
+<pre>
+void ConvertDialog::convertImage()
+{
+    QString sourceFile = sourceFileEdit-&gt;text();
+    targetFile = QFileInfo(sourceFile).path() + QDir::separator()
+                 + QFileInfo(sourceFile).baseName() + "."
+                 + targetFormatComboBox-&gt;currentText().toLower();
+    buttonBox-&gt;button(QDialogButtonBox::Ok)-&gt;setEnabled(false);
+    outputTextEdit-&gt;clear();
+
+    QStringList args;
+    if (enhanceCheckBox-&gt;isChecked())
+        args &lt;&lt; "-enhance";
+    if (monochromeCheckBox-&gt;isChecked())
+        args &lt;&lt; "-monochrome";
+    args &lt;&lt; sourceFile &lt;&lt; targetFile;
+
+    process.start("convert", args);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1183"></a><a name=
+"iddle1518"></a><a name="iddle1863"></a><a name=
+"iddle1864"></a><a name="iddle1865"></a><a name=
+"iddle2717"></a><a name="iddle4503"></a><a name=
+"iddle4505"></a><a name="iddle4958"></a><a name=
+"iddle5623"></a><a name="iddle5625"></a><a name=
+"iddle6290"></a><a name="iddle6758"></a><a name=
+"iddle7102"></a><a name="iddle7104"></a><a name=
+"iddle7709"></a><a name="iddle7746"></a><a name=
+"iddle8342"></a>When the user clicks the <span class=
+"docEmphRomanAlt">Convert</span><a name="the extension"></a>
+button, we copy the source file's name and change the extension to
+match the target file format. We use the platform-specific
+directory separator ('/' or '\', available as
+<tt>QDir::separator()</tt><a name="will be"></a>) instead of
+hard-coding slashes because the file name will be visible to the
+user.</p>
+
+<p class="docText"><a name="disable the"></a>We then disable the
+<tt>Convert</tt><a name="we clear"></a> button to avoid the user
+accidentally launching multiple conversions, and we clear the text
+editor that we use to show status information.</p>
+
+<p class="docText"><a name="To initiate"></a>To initiate the
+external process, we call <tt>QProcess::start()</tt><a name=
+"name of"></a> with the name of the program we want to run
+(<tt>convert</tt><a name="any arguments"></a>) and any arguments it
+requires. In this case, we pass the <tt>-enhance</tt> and
+<tt>-monochrome</tt><a name="the source"></a> flags if the user
+checked the appropriate options, followed by the source and target
+file names. The <tt>convert</tt><a name="from the"></a> program
+infers the required conversion from the file extensions.</p>
+
+<div class="docText">
+<pre>
+void ConvertDialog::updateOutputTextEdit()
+{
+    QByteArray newData = process.readAllStandardError();
+    QString text = outputTextEdit-&gt;toPlainText()
+                   + QString::fromLocal8Bit(newData);
+    outputTextEdit-&gt;setPlainText(text);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">Whenever the external process writes to
+<tt>cerr</tt>, the <tt>updateOutputTextEdit()</tt><a name=
+"it to"></a> slot is called. We read the error text and add it to
+the <tt>QTextEdit</tt>'s existing text.</p>
+
+<div class="docText">
+<pre>
+void ConvertDialog::processFinished(int exitCode,
+                                    QProcess::ExitStatus exitStatus)
+{
+    if (exitStatus == QProcess::CrashExit) {
+        outputTextEdit-&gt;append(tr("Conversion program crashed"));
+    } else if (exitCode != 0) {
+        outputTextEdit-&gt;append(tr("Conversion failed"));
+    } else {
+        outputTextEdit-&gt;append(tr("File %1 created").arg(targetFile));
+    }
+    buttonBox-&gt;button(QDialogButtonBox::Ok)-&gt;setEnabled(true);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="user know"></a>When the process has
+finished, we let the user know the outcome and enable the
+<span class="docEmphRomanAlt">Convert</span> button.</p>
+
+<div class="docText">
+<pre>
+void ConvertDialog::processError(QProcess::ProcessError error)
+{
+    if (error == QProcess::FailedToStart) {
+        outputTextEdit-&gt;append(tr("Conversion program not found"));
+        buttonBox-&gt;button(QDialogButtonBox::Ok)-&gt;setEnabled(true);
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1241"></a><a name=
+"iddle1340"></a><a name="iddle1632"></a><a name=
+"iddle2334"></a><a name="iddle2663"></a><a name=
+"iddle2693"></a><a name="iddle2726"></a><a name=
+"iddle5008"></a><a name="iddle5620"></a><a name=
+"iddle6264"></a><a name="iddle6265"></a><a name=
+"iddle7903"></a><a name="iddle7965"></a>If the process cannot be
+started, <tt>QProcess</tt> emits <tt>error()</tt> instead of
+<tt>finished()</tt>. We report any error and enable the
+<tt>Click</tt> button.</p>
+
+<p class="docText"><a name="conversions asynchronously"></a>In this
+example, we have performed the file conversions asynchronously—that
+is, we have told <tt>QProcess</tt><a name="the"></a> to run the
+<tt>convert</tt><a name="keeps the"></a> program and to return
+control to the application immediately. This keeps the user
+interface responsive while the processing occurs in the background.
+But in some situations we need the external process to complete
+before we can go any further in our application, and in such cases
+we need <tt>QProcess</tt><a name="to operate"></a> to operate
+synchronously.</p>
+
+<p class="docText"><a name="example where"></a>One common example
+where synchronous behavior is desirable is for applications that
+support plain text editing using the user's preferred text editor.
+This is straightforward to implement using
+<tt>QProcess</tt><a name="assume that"></a>. For example, let's
+assume that we have the plain text in a <tt>QTextEdit</tt>, and we
+provide an <span class="docEmphRomanAlt">Edit</span> button that
+the user can click, connected to an <tt>edit()</tt> slot.</p>
+
+<div class="docText">
+<pre>
+void ExternalEditor::edit()
+{
+    QTemporaryFile outFile;
+    if (!outFile.open())
+        return;
+
+    QString fileName = outFile.fileName();
+    QTextStream out(&amp;outFile);
+    out &lt;&lt; textEdit-&gt;toPlainText();
+    outFile.close();
+
+    QProcess::execute(editor, QStringList() &lt;&lt; options &lt;&lt; fileName);
+
+    QFile inFile(fileName);
+    if (!inFile.open(QIODevice::ReadOnly))
+        return;
+
+    QTextStream in(&amp;inFile);
+    textEdit-&gt;setPlainText(in.readAll());
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">We use <tt>QTemporaryFile</tt><a name=
+"specify any"></a> to create an empty file with a unique name. We
+don't specify any arguments to
+<tt>QTemporaryFile::open()</tt><a name="opening in"></a> since it
+conveniently defaults to opening in read-write mode. We write the
+contents of the text editor to the temporary file, and then we
+close the file because some text editors cannot work on already
+open files.</p>
+
+<p class="docText">The <tt>QProcess::execute()</tt><a name=
+"the process"></a> static function runs an external process and
+blocks until the process has finished. The <tt>editor</tt> argument
+is a <tt>QString</tt><a name="The"></a> holding the name of an
+editor executable (e.g., "gvim"). The <tt>options</tt> argument is
+a <tt>QStringList</tt> (containing one item, "-f", if we are using
+<tt>gvim</tt>).</p>
+
+<p class="docText"><a name="iddle1765"></a><a name=
+"iddle2367"></a><a name="iddle2664"></a><a name=
+"iddle2696"></a><a name="iddle3486"></a><a name=
+"iddle4160"></a><a name="iddle4919"></a><a name=
+"iddle5621"></a><a name="iddle5626"></a><a name=
+"iddle5627"></a><a name="iddle5629"></a><a name=
+"iddle6995"></a><a name="iddle7710"></a><a name=
+"iddle8513"></a><a name="iddle8515"></a><a name=
+"iddle8530"></a><a name="the process"></a>After the user has closed
+the text editor, the process finishes and the
+<tt>execute()</tt><a name="then open"></a> call returns. We then
+open the temporary file and read its contents into the
+<tt>QTextEdit</tt>. <tt>QTemporaryFile</tt><a name="out of"></a>
+automatically deletes the temporary file when the object goes out
+of scope.</p>
+
+<p class="docText"><a name="connections are"></a>Signal–slot
+connections are not needed when <tt>QProcess</tt><a name=
+"If finer"></a> is used synchronously. If finer control is required
+than provided by the static <tt>execute()</tt><a name=
+"can use"></a> function, we can use an alternative approach. This
+involves creating a <tt>QProcess</tt> object and calling
+<tt>start()</tt> on it, and then forcing it to block by calling
+<tt>QProcess::waitForStarted()</tt>, and if that is successful,
+calling <tt>QProcess::waitForFinished()</tt>. See the
+<tt>QProcess</tt> reference documentation for an example that uses
+this approach.</p>
+
+<p class="docText">In this section, we used
+<tt>QProcess</tt><a name="already exist"></a> to give us access to
+preexisting functionality. Using applications that already exist
+can save development time and can insulate us from the details of
+issues that are of marginal interest to our main application's
+purpose. Another way to access preexisting functionality is to link
+against a library that provides it. But where no suitable library
+exists, wrapping a console application using <tt>QProcess</tt> can
+work well.</p>
+
+<p class="docText">Another use of <tt>QProcess</tt><a name=
+"if our"></a> is to launch other GUI applications. However, if our
+aim is communication between applications rather than simply
+running one from another, we might be better off having them
+communicate directly, using Qt's networking classes or the ActiveQt
+extension on Windows. And if we want to launch the user's preferred
+web browser or email client, we can simply call
+<tt>QDesktopServices::openUrl()</tt>.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch12lev1sec4.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch13.html"><img src="images/next.gif" width="20" height="20"
+border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

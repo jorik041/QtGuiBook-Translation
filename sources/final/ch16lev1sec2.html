@@ -1,0 +1,427 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch16lev1sec2.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch16lev1sec2.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch16lev1sec2.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch16lev1sec2.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch16lev1sec1.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch16lev1sec3.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch16lev1sec2"></a>
+<h3 class="docSection1Title" id="-100000">Reading XML with DOM</h3>
+
+<p class="docText"><a name="DOM is"></a>DOM is a standard API for
+parsing XML developed by the W3C. Qt provides a non-validating DOM
+Level 2 implementation for reading, manipulating, and writing XML
+documents.</p>
+
+<p class="docText"><a name="an XML"></a>DOM represents an XML file
+as a tree in memory. We can navigate through the DOM tree as much
+as we want, and we can modify the tree and save it back to disk as
+an XML file.</p>
+
+<p class="docText"><a name="the following"></a>Let's consider the
+following XML document:</p>
+
+<div class="docText">
+<pre>
+&lt;doc&gt;
+    &lt;quote&gt;Scio me nihil scire&lt;/quote&gt;
+    &lt;translation&gt;I know that I know nothing&lt;/translation&gt;
+&lt;/doc&gt;
+</pre>
+</div>
+<br>
+
+<p class="docText">It corresponds to the following DOM tree:</p>
+
+<p class="docText"><img border="0" id="" width="325" height="128"
+src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzNy5pcGljaDBpNDEvZmdzZ2Yx.jpg"
+alt="">
+</p>
+
+<p class="docText">The DOM tree contains nodes of different types.
+For example, an <tt>Element</tt><a name="closing tag"></a> node
+corresponds to an opening tag and its matching closing tag. The
+material that falls between the tags appears as child nodes of the
+<tt>Element</tt> node. In Qt, the node <a name=
+"iddle2199"></a><a name="iddle2200"></a><a name=
+"iddle2205"></a><a name="iddle2581"></a><a name=
+"iddle4968"></a><a name="iddle4974"></a>types (like all other
+DOM-related classes) have a <tt>QDom</tt> prefix; thus,
+<tt>QDomElement</tt> represents an <tt>Element</tt> node, and
+<tt>QDomText</tt> represents a <tt>Text</tt> node.</p>
+
+<p class="docText"><a name="have different"></a>Different types of
+nodes can have different kinds of child nodes. For example, an
+<tt>Element</tt> node can contain other <tt>Element</tt> nodes, as
+well as <tt>EntityReference</tt>, <tt>Text</tt>,
+<tt>CDATASection</tt>, <tt>ProcessingInstruction</tt>, and
+<tt>Comment</tt> nodes. <a class="docLink" href="#ch16fig03">Figure
+16.3</a><a name="The nodes"></a> shows which nodes can have which
+kinds of child nodes. The nodes shown in gray cannot have any child
+nodes of their own.</p>
+<a name="ch16fig03"></a>
+<center>
+<h5 class="docFigureTitle">Figure 16.3. Parent–child relationships
+between DOM nodes</h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZmlmYWlwY3RoM2cxNi9pMHNsLl9n.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="217" src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZmlncGNmaDNnMTYvaTBpcy4-.jpg"
+alt="">
+</center>
+<br>
+
+<p class="docText"><a name="reading XML"></a>To illustrate how to
+use DOM for reading XML files, we will write a parser for the book
+index file format described in the preceding section (p. <a class=
+"docLink" href="ch16lev1sec1.html#page_389">389</a>).</p>
+
+<div class="docText">
+<pre>
+class DomParser
+{
+public:
+    DomParser(QTreeWidget *tree);
+
+    bool readFile(const QString &amp;fileName);
+
+private:
+    void parseBookindexElement(const QDomElement &amp;element);
+    void parseEntryElement(const QDomElement &amp;element,
+                           QTreeWidgetItem *parent);
+    void parsePageElement(const QDomElement &amp;element,
+                          QTreeWidgetItem *parent);
+    QTreeWidget *treeWidget;
+};
+</pre>
+</div>
+<br>
+
+<p class="docText">We define a class called
+<tt>DomParser</tt><a name="file and"></a> that will parse a book
+index XML file and display the result in a
+<tt>QTreeWidget</tt>.</p>
+
+<div class="docText">
+<pre>
+DomParser::DomParser(QTreeWidget *tree)
+{
+    treeWidget = tree;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle2191"></a><a name=
+"iddle2201"></a><a name="iddle2204"></a><a name=
+"iddle3981"></a><a name="iddle4269"></a><a name=
+"iddle4963"></a><a name="iddle4964"></a><a name=
+"iddle4967"></a><a name="iddle4969"></a><a name=
+"iddle5224"></a><a name="iddle6765"></a><a name=
+"iddle6810"></a><a name="iddle7158"></a><a name="we simply"></a>In
+the constructor, we simply assign the given tree widget to the
+member variable. All the parsing is done inside the
+<tt>readFile()</tt> function.</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+bool DomParser::readFile(const QString &amp;fileName)
+{
+    QFile file(fileName);
+    if (!file.open(QFile::ReadOnly | QFile::Text)) {
+        std::cerr &lt;&lt; "Error: Cannot read file " &lt;&lt; qPrintable(fileName)
+                  &lt;&lt; ": " &lt;&lt; qPrintable(file.errorString())
+                  &lt;&lt; std::endl;
+        return false;
+    }
+
+    QString errorStr;
+    int errorLine;
+    int errorColumn;
+
+    QDomDocument doc;
+    if (!doc.setContent(&amp;file, false, &amp;errorStr, &amp;errorLine,
+                        &amp;errorColumn)) {
+        std::cerr &lt;&lt; "Error: Parse error at line " &lt;&lt; errorLine &lt;&lt; ", "
+                  &lt;&lt; "column " &lt;&lt; errorColumn &lt;&lt; ": "
+                  &lt;&lt; qPrintable(errorStr) &lt;&lt; std::endl;
+        return false;
+    }
+
+    QDomElement root = doc.documentElement();
+    if (root.tagName() != "bookindex") {
+        std::cerr &lt;&lt; "Error: Not a bookindex file" &lt;&lt; std::endl;
+        return false;
+    }
+
+    parseBookindexElement(root);
+    return true;
+}
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText">In <tt>readFile()</tt><a name="name was"></a>,
+we begin by trying to open the file whose name was passed in. If an
+error occurs, we output an error message and return
+<tt>false</tt><a name="to signify"></a> to signify failure.
+Otherwise, we set up some variables to hold parse error
+information, should they be needed, and then create a
+<tt>QDomDocument</tt><a name="call"></a>. When we call
+<tt>setContent()</tt><a name="the DOM"></a> on the DOM document,
+the entire XML document provided by the <tt>QIODevice</tt> is read
+and parsed. The <tt>setContent()</tt> function automatically opens
+the device if it isn't already open. The <tt>false</tt> argument to
+<tt>setContent()</tt> disables namespace processing; refer to the
+<span class="docEmphasis">QtXml</span><a name="how to"></a>
+reference documentation for an introduction to XML namespaces and
+how to handle them in Qt.</p>
+
+<p class="docText"><a name="an error"></a>If an error occurs, we
+output an error message and return <tt>false</tt> to indicate
+failure. If the parse is successful, we call
+<tt>documentElement()</tt> on the <tt>QDomDocument</tt> to obtain
+its single <tt>QDomElement</tt> child, and we check that it is a
+<tt>&lt;bookindex&gt;</tt> element. If we have a
+<tt>&lt;bookindex&gt;</tt>, we call
+<tt>parseBookindexElement()</tt><a name="done using"></a> to parse
+it. As in the preceding section, the parsing is done using
+recursive descent.</p>
+
+<div class="docText">
+<pre>
+void DomParser::parseBookindexElement(const QDomElement &amp;element)
+{
+    QDomNode child = element.firstChild();
+    while (!child.isNull()) {
+        if (child.toElement().tagName() == "entry")
+            parseEntryElement(child.toElement(),
+                              treeWidget-&gt;invisibleRootItem());
+        child = child.nextSibling();
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1252"></a><a name=
+"iddle2202"></a><a name="iddle4261"></a><a name=
+"iddle4270"></a><a name="iddle4971"></a><a name=
+"iddle4973"></a><a name="iddle6410"></a><a name=
+"iddle7353"></a><a name="iddle7929"></a><a name="iddle8107"></a>In
+<tt>parseBookindexElement()</tt><a name="expect each"></a>, we
+iterate over all the child nodes. We expect each node to be an
+<tt>&lt;entry&gt;</tt> element, and for each one that is, we call
+<tt>parseEntry()</tt><a name="for the"></a> to parse it. We ignore
+unknown nodes, to allow for the book index format to be extended in
+the future without preventing old parsers from working. All
+<tt>&lt;entry&gt;</tt><a name="are direct"></a> nodes that are
+direct children of the <tt>&lt;bookindex&gt;</tt><a name=
+"populating to"></a> node are top-level nodes in the tree widget we
+are populating to reflect the DOM tree, so when we want to parse
+each one we pass both the node element and the tree's invisible
+root item to be the widget tree item's parent.</p>
+
+<p class="docText"><a name="The"></a>The <tt>QDomNode</tt><a name=
+"store any"></a> class can store any type of node. If we want to
+process a node further, we must first convert it to the right data
+type. In this example, we only care about <tt>Element</tt><a name=
+"we call"></a> nodes, so we call <tt>toElement()</tt> on the
+<tt>QDomNode</tt> to convert it to a <tt>QDomElement</tt> and then
+call <tt>tagName()</tt> to retrieve the element's tag name. If the
+node is <span class="docEmphasis">not</span> of type
+<tt>Element</tt>, the <tt>toElement()</tt> function returns a null
+<tt>QDomElement</tt> object, with an empty tag name.</p>
+
+<div class="docText">
+<pre>
+void DomParser::parseEntryElement(const QDomElement &amp;element,
+                                  QTreeWidgetItem *parent)
+{
+    QTreeWidgetItem *item = new QTreeWidgetItem(parent);
+    item-&gt;setText(0, element.attribute("term"));
+
+    QDomNode child = element.firstChild();
+    while (!child.isNull()) {
+        if (child.toElement().tagName() == "entry") {
+            parseEntryElement(child.toElement(), item);
+        } else if (child.toElement().tagName() == "page") {
+            parsePageElement(child.toElement(), item);
+        }
+        child = child.nextSibling();
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">In <tt>parseEntryElement()</tt><a name=
+"is passed"></a>, we create a tree widget item. The parent item
+that is passed in is either the tree's invisible root item (if this
+is a top-level entry) or another entry (if this is a sub-entry). We
+call <tt>setText()</tt><a name="in the"></a> to set the text shown
+in the item's first column to the value of the
+<tt>&lt;entry&gt;</tt> tag's <tt>term</tt> attribute.</p>
+
+<p class="docText">Once we have initialized the
+<tt>QTreeWidgetItem</tt>, we iterate over the child nodes of the
+<tt>QDomElement</tt> node corresponding to the current
+<tt>&lt;entry&gt;</tt> tag. For each child element that is an
+<tt>&lt;entry&gt;</tt> tag, we call <tt>parseEntryElement()</tt>
+recursively with the current item as the second argument. Each
+child's <tt>QTreeWidgetItem</tt><a name="its parent"></a> will then
+be created with the current entry as its parent. If the child
+element is a <tt>&lt;page&gt;</tt>, we <a name=
+"iddle2203"></a><a name="iddle4273"></a><a name=
+"iddle4491"></a><a name="iddle4970"></a><a name=
+"iddle6016"></a><a name="iddle6404"></a><a name=
+"iddle7983"></a><a name="iddle8222"></a>call
+<tt>parsePageElement()</tt>.</p>
+
+<div class="docText">
+<pre>
+void DomParser::parsePageElement(const QDomElement &amp;element,
+                                 QTreeWidgetItem *parent)
+{
+    QString page = element.text();
+    QString allPages = parent-&gt;text(1);
+    if (!allPages.isEmpty())
+         allPages += ", ";
+    allPages += page;
+    parent-&gt;setText(1, allPages);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">In <tt>parsePageElement()</tt>, we call
+<tt>text()</tt><a name="that occurs"></a> on the element to obtain
+the text that occurs between the <tt>&lt;page&gt;</tt> and
+<tt>&lt;/page&gt;</tt><a name="list of"></a> tags; then we add the
+text to the comma-separated list of page numbers in the
+<tt>QTreeWidgetItem</tt>'s second column. The
+<tt>QDomElement::text()</tt><a name="through the"></a> function
+navigates through the element's child nodes and concatenates all
+the text stored in <tt>Text</tt> and <tt>CDATA</tt> nodes.</p>
+
+<p class="docText">Let's now see how we can use the
+<tt>DomParser</tt> class to parse a file:</p>
+
+<div class="docText">
+<pre>
+int main(int argc, char *argv[])
+{
+    QApplication app(argc, argv);
+    QStringList args = QApplication::arguments();
+    ...
+    QTreeWidget treeWidget;
+    ...
+    DomParser parser(&amp;treeWidget);
+    for (int i = 1; i &lt; args.count(); ++i)
+        parser.readFile(args[i]);
+
+    return app.exec();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">We start by setting up a <tt>QTreeWidget</tt>.
+Then we create a <tt>DomParser</tt>. For each file listed on the
+command line, we call <tt>DomParser::readFile()</tt><a name=
+"tree widget"></a> to open and parse each file and populate the
+tree widget.</p>
+
+<p class="docText"><a name="Like the"></a>Like the previous
+example, we need the following line in the application's
+<tt>.pro</tt><a name="link against"></a> file to link against the
+<span class="docEmphasis">QtXml</span> library:</p>
+
+<div class="docText">
+<pre>
+QT += xml
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="the example"></a>As the example
+illustrates, navigating through a DOM tree is straightforward,
+although not quite as convenient as using
+<tt>QXmlStreamReader</tt><a name="own higher"></a>. Programmers who
+use DOM a lot often write their own higher-level wrapper functions
+to simplify commonly needed operations.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch16lev1sec1.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch16lev1sec3.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

@@ -1,0 +1,276 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch06lev1sec2.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch06lev1sec2.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch06lev1sec2.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch06lev1sec2.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch06lev1sec1.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch06lev1sec3.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch06lev1sec2"></a>
+<h3 class="docSection1Title" id="-100000">Stacked Layouts</h3>
+
+<p class="docText"><a name="The"></a>The
+<tt>QStackedLayout</tt><a name="out a"></a> class lays out a set of
+child widgets, or "pages", and shows only one at a time, hiding the
+others from the user. The <tt>QStackedLayout</tt><a name=
+"is invisible"></a> itself is invisible and provides no intrinsic
+means for the user to change the page. The small arrows and the
+dark gray frame in <a class="docLink" href="#ch06fig05">Figure
+6.5</a> are provided by <span class="docEmphasis">Qt
+Designer</span><a name="also includes"></a> to make the layout
+easier to design with. For convenience, Qt also includes
+<tt>QStackedWidget</tt>, which provides a <tt>QWidget</tt> with a
+built-in <tt>QStackedLayout</tt>.</p>
+<a name="ch06fig05"></a>
+<center>
+<h5 class="docFigureTitle">Figure 6.5. <tt>QStackedLayout</tt></h5>
+
+<p class="docText"><img border="0" id="" width="199" height="133"
+src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzLnBpbHRzYS9ob2V5YXNjY3Fka3RqZ3B1.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="To make"></a>The pages are numbered
+from 0. To make a specific child widget visible, we can call
+<tt>setCurrentIndex()</tt><a name="widget is"></a> with a page
+number. The page number for a child widget is available using
+<tt>indexOf()</tt>.</p>
+
+<p class="docText"><a name="iddle1115"></a><a name=
+"iddle1953"></a><a name="iddle2610"></a><a name=
+"iddle3587"></a><a name="iddle4404"></a><a name=
+"iddle4409"></a><a name="iddle5287"></a><a name=
+"iddle5293"></a><a name="iddle5294"></a><a name=
+"iddle5885"></a><a name="iddle5888"></a><a name=
+"iddle5891"></a><a name="iddle6122"></a><a name=
+"iddle7171"></a><a name="iddle7175"></a><a name=
+"iddle7689"></a><a name="iddle7963"></a>The Preferences dialog
+shown in <a class="docLink" href="#ch06fig06">Figure 6.6</a> is an
+example that uses <tt>QStackedLayout</tt>. The dialog consists of a
+<tt>QListWidget</tt> on the left and a <tt>QStackedLayout</tt> on
+the right. Each item in the <tt>QListWidget</tt><a name="the"></a>
+corresponds to a different page in the <tt>QStackedLayout</tt>.
+Here's the relevant code from the dialog's constructor:</p>
+
+<div class="docText">
+<pre>
+PreferenceDialog::PreferenceDialog(QWidget *parent)
+    : QDialog(parent)
+{
+    ...
+    listWidget = new QListWidget;
+    listWidget-&gt;addItem(tr("Appearance"));
+    listWidget-&gt;addItem(tr("Web Browser"));
+    listWidget-&gt;addItem(tr("Mail &amp; News"));
+    listWidget-&gt;addItem(tr("Advanced"));
+
+    stackedLayout = new QStackedLayout;
+    stackedLayout-&gt;addWidget(appearancePage);
+    stackedLayout-&gt;addWidget(webBrowserPage);
+    stackedLayout-&gt;addWidget(mailAndNewsPage);
+    stackedLayout-&gt;addWidget(advancedPage);
+    connect(listWidget, SIGNAL(currentRowChanged(int)),
+            stackedLayout, SLOT(setCurrentIndex(int)));
+    ...
+    listWidget-&gt;setCurrentRow(0);
+}
+</pre>
+</div>
+<br>
+<a name="ch06fig06"></a>
+<center>
+<h5 class="docFigureTitle">Figure 6.6. Two pages of the Preferences
+dialog</h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzbHBpY2Vmcy9oMmVzZXJlY3BucmF0anBnXy4-.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="193" src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzcHBpY2Vmc2gvMmVzZXJlY3BucmpnLg--.jpg"
+alt="">
+</center>
+<br>
+
+<p class="docText">We create a <tt>QListWidget</tt><a name=
+"create a"></a> and populate it with the page names. Then we create
+a <tt>QStackedLayout</tt><a name="call"></a> and call
+<tt>addWidget()</tt> for each page. We connect the list widget's
+<tt>currentRowChanged(int)</tt> signal to the stacked layout's
+<tt>setCurrentIndex(int)</tt> to implement the page switching and
+call <tt>setCurrentRow()</tt><a name="to start"></a> on the list
+widget at the end of the constructor to start on page 0.</p>
+
+<p class="docText"><a name="Forms such"></a>Forms such as this are
+also very easy to create using <span class="docEmphasis">Qt
+Designer</span>:</p>
+<a name="ch06pro01"></a>
+<table border="0" class="docText">
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>1.</b>
+</div>
+</td>
+<td>
+<div class="docText">Create a new form based on one of the "Dialog"
+templates or on the "Widget" template.<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>2.</b>
+</div>
+</td>
+<td>
+<div class="docText">Add a <tt>QListWidget</tt> and a
+<tt>QStackedWidget</tt> to the form.<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td>
+</td>
+<td>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>3.</b>
+</div>
+</td>
+<td>
+<div class="docText"><a name="iddle1114"></a><a name=
+"iddle2620"></a><a name="iddle4422"></a><a name=
+"iddle5796"></a><a name="iddle5798"></a><a name=
+"iddle5892"></a><a name="iddle6117"></a><a name=
+"iddle7173"></a><a name="iddle7622"></a><a name=
+"iddle7624"></a>Fill each page with child widgets and layouts.<br>
+<br>
+(To create a new page, right-click and choose <span class=
+"docEmphRomanAlt">Insert Page</span>; to switch pages, click the
+tiny left or right arrow located at the top right of the
+<tt>QStackedWidget</tt>.)<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>4.</b>
+</div>
+</td>
+<td>
+<div class="docText">Lay out the widgets side by side using a
+horizontal layout.<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>5.</b>
+</div>
+</td>
+<td>
+<div class="docText">Connect the list widget's
+<tt>currentRowChanged(int)</tt> signal to the stacked widget's
+<tt>setCurrentIndex(int)</tt> slot.<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>6.</b>
+</div>
+</td>
+<td>
+<div class="docText">Set the value of the list widget's
+<tt>currentRow</tt> property to 0.<br>
+<br></div>
+</td>
+</tr>
+</table>
+
+<p class="docText"><a name="have implemented"></a>Since we have
+implemented page switching using predefined signals and slots, the
+dialog will exhibit the correct behavior when previewed in
+<span class="docEmphasis">Qt Designer</span>.</p>
+
+<p class="docText"><a name="cases where"></a>For cases where the
+number of pages is small and likely to remain small, a simpler
+alternative to using a <tt>QStackedWidget</tt> and
+<tt>QListWidget</tt> is to use a <tt>QTabWidget</tt>.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch06lev1sec1.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch06lev1sec3.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

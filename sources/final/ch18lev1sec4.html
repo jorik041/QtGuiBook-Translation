@@ -1,0 +1,334 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch18lev1sec4.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch18lev1sec4.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch18lev1sec4.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch18lev1sec4.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch18lev1sec3.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch19.html"><img src="images/next.gif" width="20" height="20"
+border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch18lev1sec4"></a>
+<h3 class="docSection1Title" id="-100000">Translating
+Applications</h3>
+
+<p class="docText"><a name="Translating a"></a>Translating a Qt
+application that contains <tt>tr()</tt><a name="a three"></a> calls
+is a three-step process:</p>
+<a name="ch18pro01"></a>
+<table border="0" class="docText">
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>1.</b>
+</div>
+</td>
+<td>
+<div class="docText"><a name="ch18pro01st1"></a>Run
+<tt>lupdate</tt> to extract all the user-visible strings from the
+application's source code.<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>2.</b>
+</div>
+</td>
+<td>
+<div class="docText"><a name="ch18pro01st2"></a>Translate the
+application using <span class="docEmphasis">Qt Linguist</span>.<br>
+<br></div>
+</td>
+</tr>
+
+<tr>
+<td width="25" valign="top">
+<div class="docText"><b>3.</b>
+</div>
+</td>
+<td>
+<div class="docText"><a name="ch18pro01st3"></a>Run
+<tt>lrelease</tt> to generate binary <tt>.qm</tt> files that the
+application can load using <tt>QTranslator</tt>.<br>
+<br></div>
+</td>
+</tr>
+</table>
+
+<p class="docText">Steps <a class="docLink" href=
+"#ch18pro01st1">1</a> and <a class="docLink" href=
+"#ch18pro01st3">3</a><a name="performed by"></a> are performed by
+application developers. Step <a class="docLink" href=
+"#ch18pro01st2">2</a><a name="often as"></a> is handled by
+translators. This cycle can be repeated as often as necessary
+during the application's development and lifetime.</p>
+
+<p class="docText"><a name="how to"></a>As an example, we will show
+how to translate the Spreadsheet application in <a class="docLink"
+href="ch03.html#ch03">Chapter 3</a>. The application already
+contains <tt>tr()</tt> calls around every user-visible string.</p>
+
+<p class="docText">First, we must modify the application's
+<tt>.pro</tt><a name="For example"></a> file slightly to specify
+which languages we want to support. For example, if we want to
+support German and French in addition to English, we would add the
+following <tt>TRANSLATIONS</tt> entry to
+<tt>spreadsheet.pro</tt>:</p>
+
+<div class="docText">
+<pre>
+TRANSLATIONS = spreadsheet_de.ts \
+               spreadsheet_fr.ts
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="and one"></a>Here, we specify two
+translation files: one for German and one for French. These files
+will be created the first time we run <tt>lupdate</tt> and are
+updated every time we subsequently run <tt>lupdate</tt>.</p>
+
+<p class="docText">These files normally have a <tt>.ts</tt><a name=
+"as compact"></a> extension. They are in a straightforward XML
+format and are not as compact as the binary <tt>.qm</tt> files
+understood by <tt>QTranslator</tt>. It is <tt>lrelease</tt>'s job
+to convert human-readable <tt>.ts</tt> files into machine-efficient
+<tt>.qm</tt> files. For the curious, <tt>.ts</tt> stands for
+"translation source" and <tt>.qm</tt> for "Qt message" file.</p>
+
+<p class="docText"><a name="are located"></a>Assuming that we are
+located in the directory that contains the Spreadsheet
+application's source code, we can run <tt>lupdate</tt> on
+<tt>spreadsheet.pro</tt><a name="command line"></a> from the
+command line as follows:</p>
+
+<div class="docText">
+<pre>
+lupdate -verbose spreadsheet.pro
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1654"></a><a name=
+"iddle1658"></a><a name="iddle4475"></a><a name=
+"iddle5484"></a><a name="iddle6276"></a><a name=
+"iddle7147"></a><a name="iddle8161"></a><a name=
+"iddle8273"></a><a name="The"></a>The <tt>-verbose</tt> option
+tells <tt>lupdate</tt><a name="more feedback"></a> to provide more
+feedback than usual. Here's the expected output:</p>
+
+<div class="docText">
+<pre>
+Updating 'spreadsheet_de.ts'...
+    Found 98 source texts (98 new and 0 already existing)
+Updating 'spreadsheet_fr.ts'...
+    Found 98 source texts (98 new and 0 already existing)
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="string that"></a>Every string that
+appears within a <tt>tr()</tt> call in the application's source
+code is stored in the <tt>.ts</tt> files, along with an empty
+translation. Strings that appear in the application's <tt>.ui</tt>
+files are also included.</p>
+
+<p class="docText">The <tt>lupdate</tt> tool assumes by default
+that the arguments to <tt>tr()</tt> are Latin-1 strings. If this
+isn't the case, we must add a <tt>CODECFORTR</tt> entry to the
+<tt>.pro</tt> file. For example:</p>
+
+<div class="docText">
+<pre>
+CODECFORTR = EUC-JP
+</pre>
+</div>
+<br>
+
+<p class="docText">This must be done in addition to calling
+<tt>QTextCodec::setCodecForTr()</tt> from the application's
+<tt>main()</tt> function.</p>
+
+<p class="docText">Translations then need to be added to the
+<tt>spreadsheet_de.ts</tt> and <tt>spreadsheet_fr.ts</tt> files
+using <span class="docEmphasis">Qt Linguist</span>. (<a class=
+"docLink" href="#ch18fig02">Figure 18.2</a> shows <span class=
+"docEmphasis">Qt Linguist</span> in action.)</p>
+<a name="ch18fig02"></a>
+<center>
+<h5 class="docFigureTitle">Figure 18.2. <span class=
+"docEmphasis">Qt Linguist</span> in action</h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83YWdwYXJoX2EvdG5paW50Y3NzZ2x0YWpsLnA-.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="361" src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83anBhcmguYW4vdGl0c2NpbnNncGdhbA--.jpg"
+alt="">
+</center>
+<br>
+
+<p class="docText">To run <span class="docEmphasis">Qt
+Linguist</span>, click <span class="docEmphRomanAlt">Qt by
+Trolltech v4.x.y|Linguist</span> in the <span class=
+"docEmphRomanAlt">Start</span> menu on Windows, type
+<tt>linguist</tt> on the command line on Unix, or double-click
+<span class="docEmphRomanAlt">Linguist</span><a name="to a"></a> in
+the Mac OS X Finder. To start adding translations to a <tt>.ts</tt>
+file, click <span class="docEmphRomanAlt">File|Open</span> and
+choose the file to translate.</p>
+
+<p class="docText">The left-hand side of <span class=
+"docEmphasis">Qt Linguist</span><a name="The top"></a>'s main
+window shows a tree view. The top-level items are the contexts of
+the application being translated. For the Spreadsheet application,
+these are "FindDialog", "GoToCellDialog", "MainWindow",
+"SortDialog", and "Spreadsheet". Every context has zero or more
+child items. Each child item occupies three columns, the first
+showing a <span class="docEmphRomanAlt">Done</span><a name=
+"any translation"></a> flag, the second showing a source text, and
+the third showing any translation. The top-right area shows the
+current source text and its translation; this is where translations
+are added and edited. The bottom-right area is a list of
+suggestions automatically provided by <span class="docEmphasis">Qt
+Linguist</span>.</p>
+
+<p class="docText">Once we have a translated <tt>.ts</tt><a name=
+"binary"></a> file, we need to convert it to a binary <tt>.qm</tt>
+file for it to be usable by <tt>QTranslator</tt>. To do this from
+within <span class="docEmphasis">Qt Linguist</span>, click
+<span class="docEmphRomanAlt">File|Release</span><a name=
+"run the"></a>. Typically, we would start by translating only a few
+strings and run the application with the <tt>.qm</tt><a name=
+"sure that"></a> file to make sure that everything works
+properly.</p>
+
+<p class="docText"><a name="want to"></a>If we want to regenerate
+the <tt>.qm</tt><a name="files for"></a> files for all
+<tt>.ts</tt><a name="use the"></a> files, we can use the
+<tt>lrelease</tt><a name="as follows"></a> tool as follows:</p>
+
+<div class="docText">
+<pre>
+lrelease -verbose spreadsheet.pro
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="the"></a>Assuming that we translated 19
+strings to French and clicked the <span class=
+"docEmphRomanAlt">Done</span> flag for 17 of them,
+<tt>lrelease</tt> produces the following output:</p>
+
+<div class="docText">
+<pre>
+Updating 'spreadsheet_de.qm'...
+    Generated 0 translations (0 finished and 0 unfinished)
+    Ignored 98 untranslated source texts
+Updating 'spreadsheet_fr.qm'...
+    Generated 19 translations (17 finished and 2 unfinished)
+    Ignored 79 untranslated source texts
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="the original"></a>Untranslated strings
+are shown in the original languages when running the application.
+The <span class="docEmphRomanAlt">Done</span> flag is ignored by
+<tt>lrelease</tt><a name="translations are"></a>; it can be used by
+translators to identify which translations are finished and which
+ones must be revisited.</p>
+
+<p class="docText"><a name="the application"></a>When we modify the
+source code of the application, the translation files may become
+out of date. The solution is to run <tt>lupdate</tt> again, provide
+translations for the new strings, and regenerate the <tt>.qm</tt>
+files. Some development teams find it useful to run
+<tt>lupdate</tt><a name="ready to"></a> frequently, whereas others
+prefer to wait until the application is almost ready to
+release.</p>
+
+<p class="docText">The <tt>lupdate</tt> and <span class=
+"docEmphasis">Qt Linguist</span><a name="Translations that"></a>
+tools are quite smart. Translations that are no longer used are
+kept in the <tt>.ts</tt><a name="case they"></a> files in case they
+are needed in later releases. When updating <tt>.ts</tt> files,
+<tt>lupdate</tt><a name="uses an"></a> uses an intelligent merging
+algorithm that can save translators considerable time with text
+that is the same or similar in different contexts.</p>
+
+<p class="docText"><a name="information about"></a>For more
+information about <span class="docEmphasis">Qt Linguist</span>,
+<tt>lupdate</tt>, and <tt>lrelease</tt><a name="to the"></a>, refer
+to the <span class="docEmphasis">Qt Linguist</span> manual at
+<a class="docLink" target="_blank" href=
+"http://doc.trolltech.com/4.3/linguist-manual.html">http://doc.trolltech.com/4.3/linguist-manual.html</a>.
+The manual contains a full explanation of <span class=
+"docEmphasis">Qt Linguist</span>'s user interface and a
+step-by-step tutorial for programmers.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch18lev1sec3.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch19.html"><img src="images/next.gif" width="20" height="20"
+border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

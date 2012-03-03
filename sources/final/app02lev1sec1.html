@@ -1,0 +1,792 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>app02lev1sec1.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/app02lev1sec1.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fapp02lev1sec1.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fapp02lev1sec1.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href="app02.html"><img src=
+"images/prev.gif" width="20" height="20" border="0" align=
+"absmiddle" alt="Previous Page"></a> <a href=
+"app02lev1sec2.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="app02"></a>
+<h2 id="title-ID0EMQPM" class="docAppendixTitle">B. Building Qt
+Applications</h2>
+
+<ul>
+<li>
+<p class="docList"><a name="iddle1405"></a><a name=
+"iddle1722"></a><a name="iddle3746"></a><a name=
+"iddle3861"></a><a name="iddle5340"></a><a name=
+"iddle6749"></a><a name="iddle8284"></a><span class=
+"docEmphasis"><a class="docLink" href=
+"app02lev1sec1.html#app02lev1sec1">Using qmake</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="app02lev1sec2.html#app02lev1sec2">Using Third-Party Build
+Tools</a></span>
+</p>
+</li>
+</ul>
+
+<p class="docText"><a name="Building Qt"></a>Building Qt
+applications is greatly simplified by the use of a build tool.
+Three options are open to us: We can use the <tt>qmake</tt><a name=
+"with Qt"></a> tool supplied with Qt, we can use a third-party
+build tool, or we can use an integrated development environment
+(IDE).</p>
+
+<p class="docText">The <tt>qmake</tt><a name="generates a"></a>
+tool generates a platform-specific makefile from a platform-neutral
+<tt>.pro</tt> file. The tool has the necessary logic to invoke Qt's
+code-generating tools (<tt>moc</tt>, <tt>uic</tt>, and
+<tt>rcc</tt>) built-in. We have used <tt>qmake</tt><a name=
+"using relatively"></a> for all the examples in the book, in most
+cases using relatively simple <tt>.pro</tt> files. In fact,
+<tt>qmake</tt><a name="features including"></a> provides a rich
+range of features including the ability to create makefiles that
+recursively invoke other makefiles and to switch certain features
+on or off depending on the target platform. In the first section of
+this appendix, we will review <tt>qmake</tt> and introduce some of
+its more advanced features.</p>
+
+<p class="docText"><a name="but it"></a>In theory, any third-party
+build tool can be used for Qt development, but it is much easier to
+use one that is already Qt-aware. We will look at some of the
+Qt-aware build tools in the second section.</p>
+
+<p class="docText"><a name="iddle1180"></a><a name=
+"iddle1737"></a><a name="iddle2069"></a><a name=
+"iddle2331"></a><a name="iddle2840"></a><a name=
+"iddle3009"></a><a name="iddle3135"></a><a name=
+"iddle3201"></a><a name="iddle3249"></a><a name=
+"iddle3412"></a><a name="iddle3537"></a><a name=
+"iddle3543"></a><a name="iddle3823"></a><a name=
+"iddle4454"></a><a name="iddle4466"></a><a name=
+"iddle4485"></a><a name="iddle4487"></a><a name=
+"iddle4494"></a><a name="iddle4501"></a><a name=
+"iddle4518"></a><a name="iddle4921"></a><a name=
+"iddle5662"></a><a name="iddle6750"></a><a name=
+"iddle6916"></a><a name="iddle7587"></a><a name=
+"iddle7879"></a><a name="iddle7959"></a><a name=
+"iddle8276"></a><a name="iddle8285"></a><a name=
+"iddle8475"></a><a name="to build"></a>Some developers would rather
+use an IDE to build their applications. Trolltech provides software
+to integrate with Visual Studio and Eclipse (shown in <a class=
+"docLink" href="#app02fig01">Figure B.1</a><a name=
+"support for"></a>), and the open source IDEs KDevelop and
+QDevelop—both written using Qt—provide excellent support for Qt
+development.</p>
+<a name="app02fig01"></a>
+<center>
+<h5 class="docFigureTitle"><a name="Visual Studio"></a>Figure B.1.
+The Qt Visual Studio and Eclipse integrations in action</h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83X3BwcnNobmlhdGkvdmlzbmN0b2FsZS5nZ3Rq.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="181" src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83LnByc2huaWFpL3RzdmljbnRvanBlZ2c-.jpg"
+alt="">
+</center>
+<br>
+<a name="app02lev1sec1"></a>
+<h3 class="docSection1Title" id="-100000">Using qmake</h3>
+
+<p class="docText">The <tt>qmake</tt><a name="supplied with"></a>
+tool is supplied with Qt. It is used to build Qt itself as well as
+the tools and examples that accompany it. Throughout the book, we
+have used <tt>qmake</tt><a name="project"></a> project
+(<tt>.pro</tt><a name="build our"></a>) files to build our example
+applications and plugins. In this section, we will study the
+<tt>.pro</tt><a name="syntax in"></a> file syntax in a more
+systematic (although by no means comprehensive) way, and we will
+review a few fundamental <tt>qmake</tt> concepts. For complete
+coverage, see the <tt>qmake</tt> manual, available online at
+<a class="docLink" target="_blank" href=
+"http://doc.trolltech.com/4.3/qmake-manual.html">http://doc.trolltech.com/4.3/qmake-manual.html</a>.</p>
+
+<p class="docText">The purpose of a <tt>.pro</tt><a name=
+"involved in"></a> file is to list the source files that are
+involved in a project. Since <tt>qmake</tt><a name="and its"></a>
+is used for building Qt and its associated tools, it knows Qt very
+well and can generate rules for invoking <tt>moc</tt>,
+<tt>uic</tt>, and <tt>rcc</tt><a name="to learn"></a>. As a result,
+the syntax is very concise and easy to learn.</p>
+
+<p class="docText"><a name="are"></a>The three main types of
+project files are <tt>app</tt> (for stand-alone applications),
+<tt>lib</tt> (for static and shared libraries), and
+<tt>subdirs</tt> (for recursive subdirectory builds). This can be
+specified using the <tt>TEMPLATE</tt> variable, as follows:</p>
+
+<div class="docText">
+<pre>
+TEMPLATE = lib
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>subdirs</tt><a name="we need"></a>
+template can be used for building targets in subdirectories. In
+that case, we need to specify only the <tt>SUBDIRS</tt><a name=
+"to"></a> variable in addition to <tt>TEMPLATE = subdirs</tt>. In
+each subdirectory, <tt>qmake</tt><a name="a"></a> looks for a
+<tt>.pro</tt><a name="file named"></a> file named after the
+directory and will build that project. The
+<tt>examples.pro</tt><a name="with the"></a> file supplied with the
+examples provided for this book uses the <tt>subdirs</tt><a name=
+"to run"></a> template to run <tt>qmake</tt> on the individual
+examples.</p>
+
+<p class="docText">If no <tt>TEMPLATE</tt> entry is present, the
+default is <tt>app</tt>. For <tt>app</tt> or <tt>lib</tt> projects,
+the most commonly used variables are the following:</p>
+
+<ul>
+<li>
+<p class="docList"><tt>HEADERS</tt> specifies the project's C++
+header (<tt>.h</tt>) files.</p>
+</li>
+
+<li>
+<p class="docList"><tt>SOURCES</tt> specifies the project's C++
+implementation (<tt>.cpp</tt>) files.</p>
+</li>
+
+<li>
+<p class="docList"><tt>FORMS</tt> specifies the <span class=
+"docEmphasis">Qt Designer</span> <tt>.ui</tt> files to be processed
+by <tt>uic</tt>.</p>
+</li>
+
+<li>
+<p class="docList"><tt>RESOURCES</tt> specifies the <tt>.qrc</tt>
+files to be processed by <tt>rcc</tt>.</p>
+</li>
+
+<li>
+<p class="docList"><tt>DEFINES</tt> specifies the C++ preprocessor
+symbols that should be predefined.</p>
+</li>
+
+<li>
+<p class="docList"><tt>INCLUDEPATH</tt><a name=
+"preprocessor for"></a> specifies the directories that should be
+searched by the C++ preprocessor for locating global header
+files.</p>
+</li>
+
+<li>
+<p class="docList"><tt>LIBS</tt><a name="to the"></a> specifies the
+libraries to link to the project. The libraries are specified
+either as absolute paths or using the Unix-inspired <tt>-L</tt> and
+<tt>-l</tt> flags (e.g., <tt>-L/usr/local/lib</tt> and
+<tt>-ldb_cxx</tt>).</p>
+</li>
+
+<li>
+<p class="docList"><tt>CONFIG</tt> specifies various project
+configuration and compiler options.</p>
+</li>
+
+<li>
+<p class="docList"><a name="iddle1414"></a><a name=
+"iddle1767"></a><a name="iddle2045"></a><a name=
+"iddle2105"></a><a name="iddle2181"></a><a name=
+"iddle2184"></a><a name="iddle2309"></a><a name=
+"iddle2322"></a><a name="iddle2849"></a><a name=
+"iddle3136"></a><a name="iddle3250"></a><a name=
+"iddle3540"></a><a name="iddle3739"></a><a name=
+"iddle3747"></a><a name="iddle3824"></a><a name=
+"iddle4023"></a><a name="iddle4359"></a><a name=
+"iddle4458"></a><a name="iddle4460"></a><a name=
+"iddle4464"></a><a name="iddle4520"></a><a name=
+"iddle6019"></a><a name="iddle6103"></a><a name=
+"iddle6139"></a><a name="iddle6852"></a><a name=
+"iddle7728"></a><a name="iddle7933"></a><a name=
+"iddle8153"></a><a name="iddle8432"></a><a name=
+"iddle8476"></a><a name="iddle8495"></a><a name=
+"iddle8521"></a><tt>QT</tt><a name="default is"></a> specifies the
+Qt modules that are used by the project. (The default is <tt>core
+gui</tt>, corresponding to the <span class=
+"docEmphasis">QtCore</span> and <span class=
+"docEmphasis">QtGui</span> modules.)</p>
+</li>
+
+<li>
+<p class="docList"><tt>VERSION</tt> specifies the version number of
+the target library.</p>
+</li>
+
+<li>
+<p class="docList"><tt>TARGET</tt><a name="executable or"></a>
+specifies the base name of the target executable or library,
+excluding any extension, prefix, or version number. (The default is
+the name of the current directory.)</p>
+</li>
+
+<li>
+<p class="docList"><tt>DESTDIR</tt><a name="default is"></a>
+specifies the directory in which the target executable should be
+put. (The default is platform-dependent; for example, on Linux, it
+is the current directory, and on Windows, it is the <tt>debug</tt>
+or <tt>release</tt> subdirectory.)</p>
+</li>
+
+<li>
+<p class="docList"><tt>DLLDESTDIR</tt><a name="in which"></a>
+specifies the directory in which the target library file should be
+put. (It has the same default as <tt>DESTDIR</tt>.)</p>
+</li>
+</ul>
+
+<p class="docText">The <tt>CONFIG</tt><a name="used to"></a>
+variable is used to control various aspects of the build process.
+The following options are supported:</p>
+
+<ul>
+<li>
+<p class="docList"><tt>debug</tt><a name="means that"></a> means
+that an executable or library with debugging information should be
+built, and links against the debug versions of the Qt
+libraries.</p>
+</li>
+
+<li>
+<p class="docList"><tt>release</tt><a name="an executable"></a>
+means that an executable or library without debugging information
+should be built, and links against the release versions of the Qt
+libraries. If both <tt>debug</tt> and <tt>release</tt> are
+specified, <tt>debug</tt> wins.</p>
+</li>
+
+<li>
+<p class="docList"><tt>warn_off</tt><a name="off as"></a> switches
+off as many warnings as possible. By default, builds are done with
+warnings switched on.</p>
+</li>
+
+<li>
+<p class="docList"><tt>qt</tt><a name="is included"></a> means that
+the application or library uses Qt. This option is included by
+default.</p>
+</li>
+
+<li>
+<p class="docList"><tt>dll</tt><a name="should be"></a> means that
+a shared library should be built.</p>
+</li>
+
+<li>
+<p class="docList"><tt>staticlib</tt> means that a static library
+should be built.</p>
+</li>
+
+<li>
+<p class="docList"><tt>plugin</tt><a name="shared libraries"></a>
+means that a plugin should be built. Plugins are always shared
+libraries, so this option implies the <tt>dll</tt> option.</p>
+</li>
+
+<li>
+<p class="docList"><tt>console</tt><a name="to the"></a> means that
+the application needs to write to the console (using <tt>cout</tt>,
+<tt>cerr</tt>, <tt>qWarning()</tt>, etc.).</p>
+</li>
+
+<li>
+<p class="docList"><tt>app_bundle</tt><a name=
+"executable should"></a> applies only to Mac OS X builds, and means
+that the executable should be put in a bundle, which is the default
+on Mac OS X.</p>
+</li>
+
+<li>
+<p class="docList"><tt>lib_bundle</tt><a name="Mac OS"></a> applies
+only to Mac OS X builds, and means that the library should be put
+in a framework.</p>
+</li>
+</ul>
+
+<p class="docText"><a name="a makefile"></a>To generate a makefile
+for a project file called <tt>hello.pro</tt><a name="we type"></a>,
+we type</p>
+
+<div class="docText">
+<pre>
+qmake hello.pro
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="can invoke"></a>After that, we can
+invoke <tt>make</tt> or <tt>nmake</tt><a name="build the"></a> to
+build the project. We can also use <tt>qmake</tt> to generate a
+Microsoft Visual Studio project (<tt>.dsp</tt> or <tt>.vproj</tt>)
+file by typing</p>
+
+<div class="docText">
+<pre>
+qmake -tp vc hello.pro
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1695"></a><a name=
+"iddle3748"></a><a name="iddle4455"></a><a name=
+"iddle4462"></a><a name="iddle4495"></a><a name=
+"iddle4496"></a><a name="iddle4522"></a><a name=
+"iddle4532"></a><a name="iddle7601"></a><a name=
+"iddle8699"></a><a name="file using"></a>On Mac OS X, we can
+generate an Xcode project file using</p>
+
+<div class="docText">
+<pre>
+qmake -spec macx-xcode hello.pro
+</pre>
+</div>
+<br>
+
+<p class="docText">and makefiles using</p>
+
+<div class="docText">
+<pre>
+qmake -spec macx-g++ hello.pro
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>-spec</tt> command-line option lets us
+specify a platform/compiler combination. Normally,
+<tt>qmake</tt><a name="some cases"></a> detects the correct
+platform, but in some cases it may be necessary to specify it
+explicitly. For example, to generate a makefile that invokes the
+Intel C++ Compiler (ICC) for Linux in 64-bit mode, we would
+type</p>
+
+<div class="docText">
+<pre>
+qmake -spec linux-icc-64 hello.pro
+</pre>
+</div>
+<br>
+
+<p class="docText">The possible specifications are located in Qt's
+<tt>mkspecs</tt> directory.</p>
+
+<p class="docText">Although <tt>qmake</tt>'s primary purpose is to
+generate makefiles from <tt>.pro</tt> files, we can also use
+<tt>qmake</tt> to generate a <tt>.pro</tt> file for the current
+directory, using the <tt>-project</tt> option. For example:</p>
+
+<div class="docText">
+<pre>
+qmake -project
+</pre>
+</div>
+<br>
+
+<p class="docText">In this mode, <tt>qmake</tt><a name=
+"extensions"></a> will search the current directory for files with
+known extensions (<tt>.h</tt>, <tt>.cpp</tt>, <tt>.ui</tt>, etc.)
+and produce a <tt>.pro</tt> file that lists these files.</p>
+
+<p class="docText"><a name="look in"></a>In the rest of this
+section, we will look in more detail at the <tt>.pro</tt> file
+syntax. A <tt>.pro</tt> file entry normally has the syntax</p>
+
+<div class="docText">
+<pre>
+<span class="docEmphasis">variable</span> = <span class=
+"docEmphasis">values</span>
+</pre>
+</div>
+<br>
+
+<p class="docText">where <span class=
+"docEmphasis"><tt>values</tt></span><a name="sign"></a> is a list
+of string values. Comments start with the pound sign
+(<tt>#</tt><a name="the end"></a>) and terminate at the end of the
+line. For example, the line</p>
+
+<div class="docText">
+<pre>
+CONFIG = qt release warn_off       # I know what I'm doing
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="list"></a>assigns the list ["qt",
+"release", "warn_off"] to the <tt>CONFIG</tt><a name=
+"overwriting any"></a> variable, overwriting any previous values.
+Additional operators are provided to supplement the <tt>=</tt>
+operator. The <tt>+=</tt><a name="us append"></a> operator lets us
+append values to a variable. Thus, the lines</p>
+
+<div class="docText">
+<pre>
+CONFIG  = qt
+CONFIG += release
+CONFIG += warn_off
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="assign the"></a>effectively assign the
+list ["qt", "release", "warn_off"] to <tt>CONFIG</tt>, just as the
+previous example did. The <tt>-=</tt><a name="the variable"></a>
+operator removes all occurrences of the specified values from the
+variable's current value. Thus,</p>
+
+<div class="docText">
+<pre>
+CONFIG  = qt release warn_off
+CONFIG -= qt
+</pre>
+</div>
+<br>
+
+<p class="docText">leaves <tt>CONFIG</tt> with the list ["release",
+"warn_off"]. The <tt>*=</tt><a name="a variable"></a> operator adds
+a value to a variable, but only if the value is not already in the
+variable's list; otherwise, it does nothing. For example, the
+line</p>
+
+<div class="docText">
+<pre>
+SOURCES *= main.cpp
+</pre>
+</div>
+<br>
+
+<p class="docText">will add the implementation file
+<tt>main.cpp</tt> to the project only if it isn't specified
+already. Finally, the <tt>~=</tt><a name="match a"></a> operator
+can be used to replace any values that match a regular expression
+with the specified replacement text, using a syntax inspired by
+<tt>sed</tt> (the Unix stream editor). For example,</p>
+
+<div class="docText">
+<pre>
+SOURCES ~= s/\.cpp\b/.cxx/
+</pre>
+</div>
+<br>
+
+<p class="docText">replaces all <tt>.cpp</tt> file extensions with
+<tt>.cxx</tt> in the <tt>SOURCES</tt> variable.</p>
+
+<p class="docText"><a name="iddle2431"></a><a name=
+"iddle4502"></a>Inside the list of values, <tt>qmake</tt><a name=
+"other"></a> provides ways to access the values of other
+<tt>qmake</tt><a name="in"></a> variables, of environment
+variables, and of Qt configuration options. The syntaxes are listed
+in <a class="docLink" href="#app02fig02">Figure B.2</a>.</p>
+<a name="app02fig02"></a>
+<h5 class="docTableTitle"><a name="available in"></a>Figure B.2.
+Variable accessors available in <tt>qmake</tt></h5>
+
+<table cellspacing="0" class="allBorders" border="1">
+<colgroup align="left" span="2">
+<col width="200">
+<col width="350">
+</colgroup>
+
+<thead>
+<tr>
+<th scope="col" class="docTableCell thead" align="center" valign=
+"top" style="background-color:#E6E6E6">Accessor</th>
+<th scope="col" class="docTableCell thead" align="center" valign=
+"top" style="background-color:#E6E6E6">Description</th>
+</tr>
+</thead>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>$$</tt><span class="docEmphasis"><tt>varName</tt></span>
+<span class="docEmphRomanAlt">or</span> <tt>$${</tt><span class=
+"docEmphasis"><tt>varName</tt></span><tt>}</tt></td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Value of</span> <tt>qmake</tt> <span class=
+"docEmphRomanAlt"><a name="that point"></a>variable at that point
+in the</span> <tt>.pro</tt> <span class=
+"docEmphRomanAlt">file</span></td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>$$(</tt><span class=
+"docEmphasis"><tt>varName</tt></span><tt>)</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt"><a name="Value of"></a>Value of environment
+variable when</span> <tt>qmake</tt> <span class=
+"docEmphRomanAlt">is run</span></td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>$(</tt><span class=
+"docEmphasis"><tt>varName</tt></span><tt>)</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt"><a name="environment variable"></a>Value of
+environment variable when makefile is processed</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>$$[</tt><span class=
+"docEmphasis"><tt>varName</tt></span><tt>]</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt"><a name="of Qt"></a>Value of Qt configuration
+option</span>
+</td>
+</tr>
+</table>
+<br>
+
+<p class="docText"><a name="as"></a>In the examples so far, we
+always used standard variables, such as <tt>SOURCES</tt> and
+<tt>CONFIG</tt><a name="set the"></a>, but it is possible to set
+the value of any variable and to refer to it later using the
+<tt>$$</tt><span class="docEmphasis"><tt>varName</tt></span> or
+<tt>$${</tt><span class=
+"docEmphasis"><tt>varName</tt></span><tt>}</tt> syntax. For
+example:</p>
+
+<div class="docText">
+<pre>
+MY_VERSION    = 1.2
+SOURCES_BASIC = alphadialog.cpp \
+                main.cpp \
+                windowpanel.cpp
+SOURCES_EXTRA = bezierextension.cpp \
+                xplot.cpp
+SOURCES       = $$SOURCES_BASIC \
+                $$SOURCES_EXTRA
+TARGET        = imgpro_$${MY_VERSION}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="earlier and"></a>The next example
+combines several of the syntaxes shown earlier and uses the
+built-in function <tt>$$lower()</tt> to convert strings to
+lowercase:</p>
+
+<div class="docText">
+<pre>
+# List of classes in the project
+MY_CLASSES    = Annotation \
+                CityBlock \
+                CityScape \
+                CityView
+
+# Append .cpp extension to lowercased class names, and add main.cpp
+SOURCES       = $$lower($$MY_CLASSES)
+SOURCES      ~= s/([a-z0-9_]+)/\1.cpp/
+SOURCES      += main.cpp
+# Append .h extension to lowercased class names
+HEADERS       = $$lower($$MY_CLASSES)
+HEADERS      ~= s/([a-z0-9_]+)/\1.h/
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle3194"></a><a name=
+"iddle3650"></a><a name="iddle4426"></a><a name=
+"iddle4456"></a><a name="iddle4492"></a><a name=
+"iddle8308"></a><a name="iddle8610"></a><a name=
+"names that"></a>Sometimes we may need to specify file names that
+include spaces in a <tt>.pro</tt> file. In that case, we can simply
+put quotes around the file name.</p>
+
+<p class="docText"><a name="to specify"></a>When compiling a
+project on different platforms, it might be necessary to specify
+different files or different options based on the platform. The
+general syntax for conditionals in <tt>qmake</tt> is</p>
+
+<div class="docText">
+<pre>
+<span class="docEmphasis">condition</span> {
+    <span class="docEmphasis">then-case</span>
+} else {
+    <span class="docEmphasis">else-case</span>
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <span class=
+"docEmphasis"><tt>condition</tt></span><a name="a platform"></a>
+part can be a platform name (e.g., <tt>win32</tt>, <tt>unix</tt>,
+or <tt>macx</tt><a name="more complex"></a>) or a more complex
+predicate. The <span class=
+"docEmphasis"><tt>then-case</tt></span><a name="and"></a> and
+<span class="docEmphasis"><tt>else-case</tt></span><a name=
+"the values"></a> parts specify the values of variables using the
+standard syntax. For example:</p>
+
+<div class="docText">
+<pre>
+win32 {
+    SOURCES += serial_win.cpp
+} else {
+    SOURCES += serial_unix.cpp
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>else</tt><a name="is optional"></a>
+branch is optional. For convenience, <tt>qmake</tt> also supports a
+one-line syntax when the <span class=
+"docEmphasis"><tt>then-case</tt></span><a name="is no"></a> part
+consists of only one variable assignment and there is no
+<span class="docEmphasis"><tt>else-case</tt></span>:</p>
+
+<div class="docText">
+<pre>
+<span class="docEmphasis">condition</span>:<span class=
+"docEmphasis">then-case</span>
+</pre>
+</div>
+<br>
+
+<p class="docText">For example:</p>
+
+<div class="docText">
+<pre>
+macx:SOURCES += serial_mac.cpp
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="files that"></a>If we have several
+project files that need to share some of the same entries, we can
+factor out the common entries in a separate file and include it in
+the individual <tt>.pro</tt> files that need it using the
+<tt>include()</tt> directive:</p>
+
+<div class="docText">
+<pre>
+include(../common.pri)
+
+HEADERS      += window.h
+SOURCES      += main.cpp \
+                window.cpp
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="other project"></a>Conventionally,
+project files that are meant to be included by other project files
+are given a <tt>.pri</tt> (project include) extension.</p>
+
+<p class="docText">In a previous example, we saw the
+<tt>$$lower()</tt><a name="Another useful"></a> built-in function,
+which returns a lowercase version of its argument. Another useful
+function is <tt>$$system()</tt><a name="we need"></a>: It allows us
+to generate strings from external applications. For example, if we
+need to determine which version of Unix is being used, we can
+write</p>
+
+<div class="docText">
+<pre>
+OS_VERSION = $$system(uname -r).
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1361"></a><a name=
+"iddle1649"></a><a name="iddle3375"></a><a name=
+"iddle3749"></a><a name="iddle4402"></a><a name=
+"iddle7039"></a><a name="iddle8305"></a><a name="use the"></a>We
+can then use the resulting variable in a condition, together with
+<tt>contains()</tt>:</p>
+
+<div class="docText">
+<pre>
+contains(OS_VERSION, SunOS):SOURCES += mythread_sun.c
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="we have"></a>In this section, we have
+barely skimmed the surface. The <tt>qmake</tt><a name=
+"tool provides"></a> tool provides many more options and features
+than we presented here, including support for precompiled headers,
+for Mac OS X universal binaries, and for user-defined compilers or
+tools. Refer to the online <tt>qmake</tt><a name=
+"full details"></a> manual for full details.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href="app02.html"><img src=
+"images/prev.gif" width="20" height="20" border="0" align=
+"absmiddle" alt="Previous Page"></a> <a href=
+"app02lev1sec2.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

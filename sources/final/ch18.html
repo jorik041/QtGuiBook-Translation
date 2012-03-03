@@ -1,0 +1,789 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch18.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch18.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch18.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch18.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href="part03.html"><img src=
+"images/prev.gif" width="20" height="20" border="0" align=
+"absmiddle" alt="Previous Page"></a> <a href=
+"ch18lev1sec1.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="part03"></a>
+<h1 class="docPartTitle" id="title-ID0EJ2OM">Part III: Advanced
+Qt</h1>
+
+<blockquote>
+<p class="docText">&nbsp;</p>
+</blockquote>
+<br>
+<a name="ch18"></a>
+<h2 id="title-ID0EV3OM" class="docChapterTitle">18.
+Internationalization</h2>
+
+<p class="docText"><img border="0" id="" width="150" height="103"
+src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83ZXBwdDhocF9lcl8vMWlzY2Nob25lYS5wZ3Jq.jpg"
+alt="">
+</p>
+
+<ul>
+<li>
+<p class="docList"><a name="iddle3225"></a><a name=
+"iddle3263"></a><a name="iddle3558"></a><a name=
+"iddle3617"></a><a name="iddle3631"></a><a name=
+"iddle3634"></a><a name="iddle5480"></a><a name=
+"iddle6142"></a><a name="iddle8019"></a><a name=
+"iddle8157"></a><a name="iddle8201"></a><span class=
+"docEmphasis"><a class="docLink" href=
+"ch18lev1sec1.html#ch18lev1sec1">Working with Unicode</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch18lev1sec2.html#ch18lev1sec2">Making Applications
+Translation-Aware</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch18lev1sec3.html#ch18lev1sec3">Dynamic Language
+Switching</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch18lev1sec4.html#ch18lev1sec4">Translating
+Applications</a></span>
+</p>
+</li>
+</ul>
+
+<p class="docText"><a name="In addition"></a>In addition to the
+Latin alphabet used for English and for many European languages, Qt
+4 also provides extensive support for the rest of the world's
+writing systems:</p>
+
+<ul>
+<li>
+<p class="docList"><a name="Unicode throughout"></a>Qt uses Unicode
+throughout the API and internally. No matter what language we use
+for the user interface, the application can support all users
+alike.</p>
+</li>
+
+<li>
+<p class="docList"><a name="engine can"></a>Qt's text engine can
+handle all the major non-Latin writing systems, including Arabic,
+Chinese, Cyrillic, Hebrew, Japanese, Korean, Thai, and the Indic
+languages.</p>
+</li>
+
+<li>
+<p class="docList"><a name="and Hebrew"></a>Qt's layout engine
+supports right-to-left layouts for languages such as Arabic and
+Hebrew.</p>
+</li>
+
+<li>
+<p class="docList"><a name="methods for"></a>Certain languages
+require special input methods for entering text. Editor widgets
+such as <tt>QLineEdit</tt> and <tt>QTextEdit</tt> work well with
+any input method installed on the user's system.</p>
+</li>
+</ul>
+
+<p class="docText"><a name="their native"></a>Often, it isn't
+enough to allow users to enter text in their native language; the
+entire user interface must be translated as well. Qt makes this
+easy: Simply wrap all user-visible strings with the
+<tt>tr()</tt><a name="use Qt"></a> function (as we have done in
+earlier chapters) and use Qt's supporting tools to prepare
+translation files in the required languages. Qt provides a GUI tool
+called <span class="docEmphasis">Qt Linguist</span> for use by
+translators. <span class="docEmphasis">Qt Linguist</span> is
+complemented by two command-line programs, <tt>lupdate</tt> and
+<tt>lrelease</tt>, which are typically run by the application's
+developers.</p>
+
+<p class="docText"><a name="the user"></a>For most applications, a
+translation file is loaded at startup, based on the user's locale
+settings. But in a few cases, it is also necessary for users to be
+able to switch languages at run-time. This is perfectly possible
+with Qt, although it does require a bit of extra work. And thanks
+to Qt's layout system, the various user interface components will
+automatically adjust to make room for the translated texts when
+they are longer than the original texts.</p>
+<a name="ch18lev1sec1"></a>
+<h3 class="docSection1Title" id="-100000">Working with Unicode</h3>
+
+<p class="docText"><a name="iddle1043"></a><a name=
+"iddle1196"></a><a name="iddle1226"></a><a name=
+"iddle1308"></a><a name="iddle1536"></a><a name=
+"iddle1559"></a><a name="iddle2115"></a><a name=
+"iddle2117"></a><a name="iddle2391"></a><a name=
+"iddle2470"></a><a name="iddle2817"></a><a name=
+"iddle2954"></a><a name="iddle2966"></a><a name=
+"iddle2967"></a><a name="iddle3013"></a><a name=
+"iddle3347"></a><a name="iddle3381"></a><a name=
+"iddle3408"></a><a name="iddle3463"></a><a name=
+"iddle3467"></a><a name="iddle3477"></a><a name=
+"iddle3478"></a><a name="iddle3483"></a><a name=
+"iddle3751"></a><a name="iddle3882"></a><a name=
+"iddle4187"></a><a name="iddle4803"></a><a name=
+"iddle5905"></a><a name="iddle7487"></a><a name=
+"iddle7891"></a><a name="iddle7905"></a><a name=
+"iddle7931"></a><a name="iddle7956"></a><a name=
+"iddle8017"></a><a name="iddle8020"></a><a name=
+"iddle8029"></a><a name="iddle8030"></a><a name=
+"iddle8055"></a><a name="iddle8296"></a><a name=
+"iddle8440"></a><a name="iddle8682"></a><a name=
+"character encoding"></a>Unicode is a character encoding standard
+that supports most of the world's writing systems. The original
+idea behind Unicode is that by using 16 bits for storing characters
+instead of 8 bits, it would be possible to encode around 65000
+characters instead of only 256.<sup class="docFootnote"><a class=
+"docLink" href="#ch18fn01">[*]</a></sup><a name="ASCII and"></a>
+Unicode contains ASCII and ISO 8859-1 (Latin-1) as subsets at the
+same code positions. For example, the character 'A' has value
+<tt>0x41</tt><a name="in ASCII"></a> in ASCII, Latin-1, and
+Unicode, and the character 'Ñ' has value <tt>0xD1</tt><a name=
+"and Unicode"></a> in both Latin-1 and Unicode.</p>
+
+<blockquote>
+<p class="docFootnote"><sup><a name=
+"ch18fn01">[*]</a></sup><a name="versions of"></a> Recent versions
+of the Unicode standard assign character values above 65535. These
+characters can be represented using sequences of two 16-bit values
+called "surrogate pairs".</p>
+</blockquote>
+
+<p class="docText">Qt's <tt>QString</tt> class stores strings as
+Unicode. Each character in a <tt>QString</tt> is a 16-bit
+<tt>QChar</tt> rather than an 8-bit <tt>char</tt><a name=
+"of a"></a>. Here are two ways of setting the first character of a
+string to 'A':</p>
+
+<div class="docText">
+<pre>
+str[0] = 'A';
+str[0] = QChar(0x41);
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="encoded in"></a>If the source file is
+encoded in Latin-1, specifying Latin-1 characters is just as
+easy:</p>
+
+<div class="docText">
+<pre>
+str[0] = 'Ñ';
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="value works"></a>And if the source file
+has another encoding, the numeric value works fine:</p>
+
+<div class="docText">
+<pre>
+str[0] = QChar(0xD1);
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="its numeric"></a>We can specify any
+Unicode character by its numeric value. For example, here's how to
+specify the Greek capital letter sigma ('<img alt="n-ary summation"
+src="images/U2211.GIF">') and the euro currency symbol ('€'):</p>
+
+<div class="docText">
+<pre>
+str[0] = QChar(0x03A3);
+str[0] = QChar(0x20AC);
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="are listed"></a>The numeric values of
+all the characters supported by Unicode are listed at <a class=
+"docLink" target="_blank" href=
+"http://www.unicode.org/standard/">http://www.unicode.org/standard/</a><a name="need non"></a>.
+If you rarely need non-Latin-1 Unicode characters, looking up
+characters online is sufficient; but Qt provides more convenient
+ways of entering Unicode strings in a Qt program, as we will see
+later in this section.</p>
+
+<p class="docText"><a name="engine supports"></a>Qt 4's text engine
+supports the following writing systems on all platforms: Arabic,
+Chinese, Cyrillic, Greek, Hebrew, Japanese, Korean, Lao, Latin,
+Thai, and Vietnamese. It also supports all the Unicode 4.1 scripts
+that don't require any special processing. In addition, the
+following writing systems are supported on X11 with Fontconfig and
+on recent versions of Windows: Bengali, Devanagari, Gujarati,
+Gurmukhi, Kannada, Khmer, Malayalam, Syriac, Tamil, Telugu, Thaana
+(Dhivehi), and Tibetan. Finally, Oriya is supported on X11, and
+Mongolian and Sinhala are supported on Windows XP. Assuming that
+the proper fonts are installed on the system, Qt can render text
+using any of these writing systems. <a name=
+"iddle1315"></a><a name="iddle1448"></a><a name=
+"iddle1486"></a><a name="iddle1491"></a><a name=
+"iddle1524"></a><a name="iddle1652"></a><a name=
+"iddle1657"></a><a name="iddle2402"></a><a name=
+"iddle2718"></a><a name="iddle2729"></a><a name=
+"iddle3226"></a><a name="iddle3320"></a><a name=
+"iddle3324"></a><a name="iddle3325"></a><a name=
+"iddle3326"></a><a name="iddle3327"></a><a name=
+"iddle3331"></a><a name="iddle3332"></a><a name=
+"iddle3333"></a><a name="iddle3337"></a><a name=
+"iddle3339"></a><a name="iddle3340"></a><a name=
+"iddle3594"></a><a name="iddle4805"></a><a name=
+"iddle4808"></a><a name="iddle4809"></a><a name=
+"iddle6270"></a><a name="iddle6272"></a><a name=
+"iddle6297"></a><a name="iddle6300"></a><a name=
+"iddle6320"></a><a name="iddle6323"></a><a name=
+"iddle7144"></a><a name="iddle7233"></a><a name=
+"iddle8116"></a><a name="iddle8259"></a><a name=
+"iddle8300"></a><a name="iddle8375"></a><a name=
+"And assuming"></a>And assuming that the proper input methods are
+installed, users will be able to enter text that uses these writing
+systems in their Qt applications.</p>
+
+<p class="docText">Programming with <tt>QChar</tt><a name=
+"different from"></a> is slightly different from programming with
+<tt>char</tt><a name="obtain the"></a>. To obtain the numeric value
+of a <tt>QChar</tt>, call <tt>unicode()</tt> on it. To obtain the
+ASCII or Latin-1 value of a <tt>QChar</tt> (as a <tt>char</tt>),
+call <tt>toLatin1()</tt>. For non-Latin-1 characters,
+<tt>toLatin1()</tt> returns '\0'.</p>
+
+<p class="docText"><a name="program are"></a>If we know that all
+the strings in a program are ASCII, we can use standard
+<tt>&lt;cctype&gt;</tt> functions such as <tt>isalpha()</tt>,
+<tt>isdigit()</tt>, and <tt>isspace()</tt> on the return value of
+<tt>toLatin1()</tt><a name="use"></a>. However, it is generally
+better to use <tt>QChar</tt><a name="for any"></a>'s member
+functions for performing these operations, since they will work for
+any Unicode character. The functions <tt>QChar</tt> provides
+include <tt>isPrint()</tt>, <tt>isPunct()</tt>, <tt>isSpace()</tt>,
+<tt>isMark()</tt>, <tt>isLetter()</tt>, <tt>isNumber()</tt>,
+<tt>isLetterOrNumber()</tt>, <tt>isDigit()</tt>,
+<tt>isSymbol()</tt>, <tt>isLower()</tt>, and
+<tt>isUpper()</tt><a name="character is"></a>. For example, here's
+one way to test that a character is a digit or an uppercase
+letter:</p>
+
+<div class="docText">
+<pre>
+if (ch.isDigit() || ch.isUpper())
+    ...
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="uppercase and"></a>The code snippet
+works for any alphabet that distinguishes between uppercase and
+lowercase, including Latin, Greek, and Cyrillic.</p>
+
+<p class="docText"><a name="a Unicode"></a>Once we have a Unicode
+string, we can use it anywhere in Qt's API where a
+<tt>QString</tt><a name="is then"></a> is expected. It is then Qt's
+responsibility to display it properly and to convert it to the
+relevant encodings when talking to the operating system.</p>
+
+<p class="docText"><a name="Special care"></a>Special care is
+needed when we read and write text files. Text files can use a
+variety of encodings, and it is often impossible to guess a text
+file's encoding from its contents. By default,
+<tt>QTextStream</tt><a name="local"></a> uses the system's local
+8-bit encoding (available as
+<tt>QTextCodec::codecForLocale()</tt><a name="both reading"></a>)
+for both reading and writing. For American and West European
+locales, this usually means Latin-1.</p>
+
+<p class="docText"><a name="to be"></a>If we design our own file
+format and want to be able to read and write arbitrary Unicode
+characters, we can save the data as Unicode by calling</p>
+
+<div class="docText">
+<pre>
+stream.setCodec("UTF-16");
+stream.setGenerateByteOrderMark(true);
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="the"></a>before we start writing to the
+<tt>QTextStream</tt><a name="that requires"></a>. The data will
+then be saved in UTF-16, a format that requires two bytes per
+character, and will be prefixed with a special 16-bit value (the
+Unicode byte order mark, <tt>0xFFFE</tt><a name="and whether"></a>)
+identifying that the file is in Unicode and whether the bytes are
+in little-endian or big-endian order. The UTF-16 format is
+identical to the memory representation of a
+<tt>QString</tt><a name="On the"></a>, so reading and writing
+Unicode strings in UTF-16 can be very fast. On the other hand,
+there is an inherent overhead when saving pure ASCII data in UTF-16
+format, since it stores two bytes for every character instead of
+just one.</p>
+
+<p class="docText"><a name="be specified"></a>Other encodings can
+be specified by calling <tt>setCodec()</tt><a name=
+"appropriate"></a> with an appropriate <tt>QTextCodec</tt><a name=
+"A"></a>. A <tt>QTextCodec</tt><a name="object that"></a> is an
+object that converts between Unicode and a given encoding. Qt uses
+<tt>QTextCodec</tt><a name="in a"></a>s in a variety of contexts.
+Internally, they are used <a name="iddle1653"></a><a name=
+"iddle2690"></a><a name="iddle5481"></a><a name=
+"iddle6273"></a><a name="iddle6275"></a><a name=
+"iddle6317"></a><a name="iddle7127"></a><a name=
+"iddle7146"></a><a name="iddle8158"></a><a name=
+"iddle8373"></a><a name="iddle8702"></a><a name=
+"iddle8703"></a><a name="they are"></a>to support fonts, input
+methods, the clipboard, drag and drop, and file names. But they are
+also available to us when we write Qt applications.</p>
+
+<p class="docText">When reading a text file,
+<tt>QTextStream</tt><a name="starts with"></a> detects UTF-16
+automatically if the file starts with the byte order mark. This
+behavior can be turned off by calling
+<tt>setAutoDetectUnicode(false)</tt><a name="with the"></a>. If the
+data is UTF-16 but can't be assumed to start with the byte order
+mark, it is best to call <tt>setCodec()</tt> with "UTF-16" before
+reading.</p>
+
+<p class="docText"><a name="Unicode is"></a>Another encoding that
+supports the whole of Unicode is UTF-8. Its main advantage over
+UTF-16 is that it is a superset of ASCII. Any character in the
+range <tt>0x00</tt> to <tt>0x7F</tt> is represented as a single
+byte. Other characters, including Latin-1 characters above
+<tt>0x7F</tt><a name="about half"></a>, are represented by
+multi-byte sequences. For text that is mostly ASCII, UTF-8 takes up
+about half the space consumed by UTF-16. To use UTF-8 with
+<tt>QTextStream</tt>, call <tt>setCodec()</tt><a name=
+"codec name"></a> with "UTF-8" as the codec name before reading and
+writing.</p>
+
+<p class="docText"><a name="always want"></a>If we always want to
+read and write Latin-1 regardless of the user's locale, we can set
+the "ISO 8859-1" codec on the <tt>QTextStream</tt><a name=
+"For example"></a>. For example:</p>
+
+<div class="docText">
+<pre>
+QTextStream in(&amp;file);
+in.setCodec("ISO 8859-1");
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="formats specify"></a>Some file formats
+specify their encoding in their header. The header is typically
+plain ASCII to ensure that it is read correctly no matter what
+encoding is used (assuming that it is a superset of ASCII). The XML
+file format is an interesting example of this. XML files are
+normally encoded as UTF-8 or UTF-16. The proper way to read them in
+is to call <tt>setCodec()</tt><a name="If the"></a> with "UTF-8".
+If the format is UTF-16, <tt>QTextStream</tt> will automatically
+detect this and adjust itself. The <tt>&lt;?xml?&gt;</tt> header of
+an XML file sometimes contains an <tt>encoding</tt> argument, for
+example:</p>
+
+<div class="docText">
+<pre>
+&lt;?xml version="1.0" encoding="EUC-KR"?&gt;
+</pre>
+</div>
+<br>
+
+<p class="docText">Since <tt>QTextStream</tt><a name=
+"started reading"></a> doesn't allow us to change the encoding once
+it has started reading, the right way to respect an explicit
+encoding is to start reading the file afresh, using the correct
+codec (obtained from <tt>QTextCodec::codecForName()</tt><a name=
+"can avoid"></a>). In the case of XML, we can avoid having to
+handle the encoding ourselves by using Qt's XML classes, described
+in <a class="docLink" href="ch16.html#ch16">Chapter 16</a>.</p>
+
+<p class="docText">Another use of <tt>QTextCodec</tt><a name=
+"occur in"></a>s is to specify the encoding of strings that occur
+in the source code. Let's consider, for example, a team of Japanese
+programmers who are writing an application targeted primarily at
+Japan's home market. These programmers are likely to write their
+source code in a text editor that uses an encoding such as EUC-JP
+or Shift-JIS. Such an editor allows them to type in Japanese
+characters seamlessly so that they can write code like this:</p>
+
+<div class="docText">
+<pre>
+QPushButton *button = new QPushButton(tr(<img border="0" id=""
+width="40" height="16" src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83cDE0aDQuanAvaXM0ZmNpZ2cw.jpg"
+alt="">));
+</pre>
+</div>
+<br>
+
+<p class="docText">By default, Qt interprets arguments to
+<tt>tr()</tt> as Latin-1. To change this, call the
+<tt>QTextCodec::setCodecForTr()</tt> static function. For
+example:</p>
+
+<div class="docText">
+<pre>
+QTextCodec::setCodecForTr(QTextCodec::codecForName("EUC-JP"));
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1186"></a><a name=
+"iddle1312"></a><a name="iddle1525"></a><a name=
+"iddle1560"></a><a name="iddle2468"></a><a name=
+"iddle2469"></a><a name="iddle2883"></a><a name=
+"iddle2955"></a><a name="iddle3093"></a><a name=
+"iddle3342"></a><a name="iddle3343"></a><a name=
+"iddle3349"></a><a name="iddle3395"></a><a name=
+"iddle3466"></a><a name="iddle3468"></a><a name=
+"iddle3931"></a><a name="iddle5305"></a><a name=
+"iddle5482"></a><a name="iddle6274"></a><a name=
+"iddle6277"></a><a name="iddle6963"></a><a name=
+"iddle7001"></a><a name="iddle7145"></a><a name=
+"iddle7426"></a><a name="iddle8094"></a><a name=
+"iddle8131"></a><a name="iddle8159"></a><a name=
+"iddle8202"></a><a name="iddle8246"></a><a name=
+"iddle8374"></a><a name="iddle8376"></a><a name=
+"iddle8640"></a><a name="iddle8653"></a><a name="call to"></a>This
+must be done before the first call to <tt>tr()</tt>. Typically, we
+would do this in <tt>main()</tt>, immediately after the
+<tt>QCoreApplication</tt> or <tt>QApplication</tt> object is
+created.</p>
+
+<p class="docText"><a name="as Latin"></a>Other strings specified
+in the program will still be interpreted as Latin-1 strings. If the
+programmers want to enter Japanese characters in those as well,
+they can explicitly convert them to Unicode using a
+<tt>QTextCodec</tt>:</p>
+
+<div class="docText">
+<pre>
+QString text = japaneseCodec-&gt;toUnicode(<img border="0" id=""
+width="60" height="14" src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83cDE0aDUuanAvaXM0ZmNpZ2cw.jpg"
+alt="">);
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="Qt to"></a>Alternatively, they can tell
+Qt to use a specific codec when converting between <tt>const char
+*</tt> and <tt>QString</tt> by calling
+<tt>QTextCodec::setCodecForCStrings()</tt>:</p>
+
+<div class="docText">
+<pre>
+QTextCodec::setCodecForCStrings(QTextCodec::codecForName("EUC-JP"));
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="described above"></a>The techniques
+described above can be applied to any non-Latin-1 language,
+including Chinese, Greek, Korean, and Russian.</p>
+
+<p class="docText"><a name="a list"></a>Here's a list of the
+encodings supported by Qt 4.3:</p>
+
+<ul>
+<li>
+<p class="docList">Apple Roman</p>
+</li>
+
+<li>
+<p class="docList">Big5</p>
+</li>
+
+<li>
+<p class="docList">Big5-HKSCS</p>
+</li>
+
+<li>
+<p class="docList">EUC-JP</p>
+</li>
+
+<li>
+<p class="docList">EUC-KR</p>
+</li>
+
+<li>
+<p class="docList">GB18030-0</p>
+</li>
+
+<li>
+<p class="docList">IBM 850</p>
+</li>
+
+<li>
+<p class="docList">IBM 866</p>
+</li>
+
+<li>
+<p class="docList">IBM 874</p>
+</li>
+
+<li>
+<p class="docList">ISO 2022-JP</p>
+</li>
+
+<li>
+<p class="docList">ISO 8859-1</p>
+</li>
+
+<li>
+<p class="docList">ISO 8859-2</p>
+</li>
+
+<li>
+<p class="docList">ISO 8859-3</p>
+</li>
+
+<li>
+<p class="docList">ISO 8859-4</p>
+</li>
+
+<li>
+<p class="docList">ISO 8859-5</p>
+</li>
+
+<li>
+<p class="docList">ISO 8859-6</p>
+</li>
+
+<li>
+<p class="docList">ISO 8859-7</p>
+</li>
+
+<li>
+<p class="docList">ISO 8859-8</p>
+</li>
+
+<li>
+<p class="docList">ISO 8859-9</p>
+</li>
+
+<li>
+<p class="docList">ISO 8859-10</p>
+</li>
+
+<li>
+<p class="docList">ISO 8859-13</p>
+</li>
+
+<li>
+<p class="docList">ISO 8859-14</p>
+</li>
+
+<li>
+<p class="docList">ISO 8859-15</p>
+</li>
+
+<li>
+<p class="docList">ISO 8859-16</p>
+</li>
+
+<li>
+<p class="docList">Iscii-Bng</p>
+</li>
+
+<li>
+<p class="docList">Iscii-Dev</p>
+</li>
+
+<li>
+<p class="docList">Iscii-Gjr</p>
+</li>
+
+<li>
+<p class="docList">Iscii-Knd</p>
+</li>
+
+<li>
+<p class="docList">Iscii-Mlm</p>
+</li>
+
+<li>
+<p class="docList">Iscii-Ori</p>
+</li>
+
+<li>
+<p class="docList">Iscii-Pnj</p>
+</li>
+
+<li>
+<p class="docList">Iscii-Tlg</p>
+</li>
+
+<li>
+<p class="docList">Iscii-Tml</p>
+</li>
+
+<li>
+<p class="docList">JIS X 0201</p>
+</li>
+
+<li>
+<p class="docList">JIS X 0208</p>
+</li>
+
+<li>
+<p class="docList">KOI8-R</p>
+</li>
+
+<li>
+<p class="docList">KOI8-U</p>
+</li>
+
+<li>
+<p class="docList">MuleLao-1</p>
+</li>
+
+<li>
+<p class="docList">ROMAN8</p>
+</li>
+
+<li>
+<p class="docList">Shift-JIS</p>
+</li>
+
+<li>
+<p class="docList">TIS-620</p>
+</li>
+
+<li>
+<p class="docList">TSCII</p>
+</li>
+
+<li>
+<p class="docList">UTF-8</p>
+</li>
+
+<li>
+<p class="docList">UTF-16</p>
+</li>
+
+<li>
+<p class="docList">UTF-16BE</p>
+</li>
+
+<li>
+<p class="docList">UTF-16LE</p>
+</li>
+
+<li>
+<p class="docList">Windows-1250</p>
+</li>
+
+<li>
+<p class="docList">Windows-1251</p>
+</li>
+
+<li>
+<p class="docList">Windows-1252</p>
+</li>
+
+<li>
+<p class="docList">Windows-1253</p>
+</li>
+
+<li>
+<p class="docList">Windows-1254</p>
+</li>
+
+<li>
+<p class="docList">Windows-1255</p>
+</li>
+
+<li>
+<p class="docList">Windows-1256</p>
+</li>
+
+<li>
+<p class="docList">Windows-1257</p>
+</li>
+
+<li>
+<p class="docList">Windows-1258</p>
+</li>
+
+<li>
+<p class="docList">WINSAMI2</p>
+</li>
+</ul>
+
+<p class="docText"><a name="of these"></a>For all of these,
+<tt>QTextCodec::codecForName()</tt><a name="always return"></a>
+will always return a valid pointer. Other encodings can be
+supported by subclassing <tt>QTextCodec</tt>.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href="part03.html"><img src=
+"images/prev.gif" width="20" height="20" border="0" align=
+"absmiddle" alt="Previous Page"></a> <a href=
+"ch18lev1sec1.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

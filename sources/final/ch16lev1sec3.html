@@ -1,0 +1,440 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch16lev1sec3.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch16lev1sec3.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch16lev1sec3.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch16lev1sec3.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch16lev1sec2.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch16lev1sec4.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch16lev1sec3"></a>
+<h3 class="docSection1Title" id="-100000">Reading XML with SAX</h3>
+
+<p class="docText"><a name="iddle2396"></a><a name=
+"iddle3384"></a><a name="iddle3982"></a><a name=
+"iddle4060"></a><a name="iddle4276"></a><a name=
+"iddle4277"></a><a name="iddle6688"></a><a name=
+"iddle6690"></a><a name="iddle6692"></a><a name=
+"iddle6694"></a><a name="iddle6695"></a><a name=
+"iddle6697"></a><a name="iddle6698"></a><a name=
+"iddle6699"></a><a name="iddle6703"></a><a name=
+"iddle6704"></a><a name="iddle7022"></a><a name=
+"iddle7714"></a><a name="iddle8381"></a><a name=
+"iddle8711"></a><a name="SAX is"></a>SAX is a public domain de
+facto standard API for reading XML documents. Qt's SAX classes are
+modeled after the SAX2 Java implementation, with some differences
+in naming to match the Qt conventions. Compared with DOM, SAX is
+more low-level and usually faster. But since the
+<tt>QXmlStreamReader</tt><a name="earlier in"></a> class presented
+earlier in this chapter offers a more Qt-like API and is faster
+than the SAX parser, the main use of the SAX parser is for porting
+code that uses the SAX API into Qt. For more information about SAX,
+see <a class="docLink" target="_blank" href=
+"http://www.saxproject.org/">http://www.saxproject.org/</a>.</p>
+
+<p class="docText"><a name="provides a"></a>Qt provides a SAX-based
+non-validating XML parser called <tt>QXmlSimpleReader</tt><a name=
+"parser goes"></a>. This parser recognizes well-formed XML and
+supports XML namespaces. When the parser goes through the document,
+it calls virtual functions in registered handler classes to
+indicate parsing events. (These "parsing events" are unrelated to
+Qt events, such as key and mouse events.) For example, let's assume
+the parser is analyzing the following XML document:</p>
+
+<div class="docText">
+<pre>
+&lt;doc&gt;
+    &lt;quote&gt;Gnothi seauton&lt;/quote&gt;
+&lt;/doc&gt;
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="following parsing"></a>The parser would
+call the following parsing event handlers:</p>
+
+<div class="docText">
+<pre>
+startDocument()
+startElement("doc")
+startElement("quote")
+characters("Gnothi seauton")
+endElement("quote")
+endElement("doc")
+endDocument()
+</pre>
+</div>
+<br>
+
+<p class="docText">The preceding functions are all declared in
+<tt>QXmlContentHandler</tt>. For simplicity, we omitted some of the
+arguments to <tt>startElement()</tt> and <tt>endElement()</tt>.</p>
+
+<p class="docText"><tt>QXmlContentHandler</tt><a name=
+"be used"></a> is just one of many handler classes that can be used
+in conjunction with <tt>QXmlSimpleReader</tt>. The others are
+<tt>QXmlEntityResolver</tt>, <tt>QXmlDTDHandler</tt>,
+<tt>QXmlErrorHandler</tt>, <tt>QXmlDeclHandler</tt>, and
+<tt>QXmlLexicalHandler</tt><a name="and give"></a>. These classes
+only declare pure virtual functions and give information about
+different kinds of parsing events. For most applications,
+<tt>QXmlContentHandler</tt> and <tt>QXmlErrorHandler</tt><a name=
+"class hierarchy"></a> are the only two that are needed. The class
+hierarchy we have used is shown in <a class="docLink" href=
+"#ch16fig04">Figure 16.4</a>.</p>
+<a name="ch16fig04"></a>
+<center>
+<h5 class="docFigureTitle"><a name="tree for"></a>Figure 16.4.
+Inheritance tree for <tt>SaxHandler</tt></h5>
+
+<p class="docText"><img border="0" id="" width="459" height="102"
+src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZmlncGNmaDRnMTYvaTBpcy4-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText">For convenience, Qt also provides
+<tt>QXmlDefaultHandler</tt><a name="classes and"></a>, a class that
+is derived from all the handler classes and that provides trivial
+implementations for all the functions. This design, with many
+abstract handler classes and one trivial subclass, is unusual for
+Qt; it was adopted to closely follow the model Java
+implementation.</p>
+
+<p class="docText"><a name="The most"></a>The most significant
+difference between using the SAX API and
+<tt>QXmlStreamReader</tt><a name="DOM API"></a> or the DOM API is
+that the SAX API requires us to manually keep track <a name=
+"iddle2613"></a><a name="iddle6696"></a><a name=
+"iddle6811"></a><a name="iddle7023"></a><a name=
+"iddle7024"></a><a name="iddle7025"></a><a name=
+"iddle7031"></a><a name="iddle7874"></a><a name="the parser"></a>of
+the parser's state using member variables, something that is not
+necessary in the other two approaches, which both allowed recursive
+descent.</p>
+
+<p class="docText"><a name="we will"></a>To illustrate how to use
+SAX for reading XML files, we will write a parser for the book
+index file format described earlier in this chapter (p. <a class=
+"docLink" href="ch16lev1sec1.html#page_389">389</a><a name=
+"a"></a>). Here we will parse using a <tt>QXmlSimpleReader</tt> and
+a <tt>QXmlDefaultHandler</tt> subclass called
+<tt>SaxHandler</tt>.</p>
+
+<p class="docText"><a name="subclass"></a>The first step to
+implement the parser is to subclass
+<tt>QXmlDefaultHandler</tt>:</p>
+
+<div class="docText">
+<pre>
+class SaxHandler : public QXmlDefaultHandler
+{
+public:
+    SaxHandler(QTreeWidget *tree);
+
+    bool readFile(const QString &amp;fileName);
+
+protected:
+    bool startElement(const QString &amp;namespaceURI,
+                      const QString &amp;localName,
+                      const QString &amp;qName,
+                      const QXmlAttributes &amp;attributes);
+    bool endElement(const QString &amp;namespaceURI,
+                    const QString &amp;localName,
+                    const QString &amp;qName);
+    bool characters(const QString &amp;str);
+    bool fatalError(const QXmlParseException &amp;exception);
+
+private:
+    QTreeWidget *treeWidget;
+    QTreeWidgetItem *currentItem;
+    QString currentText;
+};
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>SaxHandler</tt> class is derived from
+<tt>QXmlDefaultHandler</tt> and reimplements four functions:
+<tt>startElement()</tt>, <tt>endElement()</tt>,
+<tt>characters()</tt>, and <tt>fatalError()</tt>. The first three
+functions are declared in <tt>QXmlContentHandler</tt>; the last
+function is declared in <tt>QXmlErrorHandler</tt>.</p>
+
+<div class="docText">
+<pre>
+SaxHandler::SaxHandler(QTreeWidget *tree)
+{
+    treeWidget = tree;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1033"></a><a name=
+"iddle1253"></a><a name="iddle3983"></a><a name=
+"iddle4268"></a><a name="iddle5006"></a><a name=
+"iddle6412"></a><a name="iddle6693"></a><a name=
+"iddle6702"></a><a name="iddle6705"></a><a name=
+"iddle6706"></a><a name="iddle6707"></a><a name=
+"iddle6766"></a><a name="iddle7029"></a><a name=
+"iddle7030"></a><a name="iddle7159"></a><a name=
+"iddle7210"></a><a name="iddle7717"></a>The <tt>SaxHandler</tt>
+constructor accepts the <tt>QTreeWidget</tt><a name=
+"stored in"></a> we want to populate with the information stored in
+the XML file.</p>
+
+<div class="docText">
+<pre>
+bool SaxHandler::readFile(const QString &amp;fileName)
+{
+    currentItem = 0;
+
+    QFile file(fileName);
+    QXmlInputSource inputSource(&amp;file);
+    QXmlSimpleReader reader;
+    reader.setContentHandler(this);
+    reader.setErrorHandler(this);
+    return reader.parse(inputSource);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="the name"></a>This function is called
+when we have the name of a file to be parsed. We create a
+<tt>QFile</tt><a name="the file"></a> object for the file and
+create a <tt>QXmlInputSource</tt> to read the file's contents. Then
+we create a <tt>QXmlSimpleReader</tt><a name="handlers to"></a> to
+parse the file. We set the reader's content and error handlers to
+this class (<tt>SaxHandler</tt><a name="and then"></a>), and then
+we call <tt>parse()</tt><a name="reader to"></a> on the reader to
+perform the parsing. In <tt>SaxHandler</tt><a name=
+"only reimplement"></a>, we only reimplement functions from the
+<tt>QXmlContentHandler</tt> and <tt>QXmlErrorHandler</tt><a name=
+"would also"></a> classes; if we had implemented functions from
+other handler classes, we would also have needed to call the
+corresponding <tt>set</tt><span class=
+"docEmphasis"><tt>Xxx</tt></span><tt>Handler()</tt> functions.</p>
+
+<p class="docText">Instead of passing a simple <tt>QFile</tt>
+object to the <tt>parse()</tt> function, we pass a
+<tt>QXmlInputSource</tt><a name="it is"></a>. This class opens the
+file it is given, reads it (taking into account any character
+encoding specified in the <tt>&lt;?xml?&gt;</tt><a name=
+"the file"></a> declaration), and provides an interface through
+which the parser reads the file.</p>
+
+<div class="docText">
+<pre>
+bool SaxHandler::startElement(const QString &amp; /* namespaceURI */,
+                              const QString &amp; /* localName */,
+                              const QString &amp;qName,
+                              const QXmlAttributes &amp;attributes)
+{
+    if (qName == "entry") {
+        currentItem = new QTreeWidgetItem(currentItem ?
+                currentItem : treeWidget-&gt;invisibleRootItem());
+        currentItem-&gt;setText(0, attributes.value("term"));
+    } else if (qName == "page") {
+        currentText.clear();
+    }
+    return true;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>startElement()</tt><a name="a new"></a>
+function is called when the reader encounters a new opening tag.
+The third parameter is the tag's name (or more precisely, its
+"qualified name"). The fourth parameter is the list of attributes.
+In this example, we ignore the first and second parameters. They
+are useful for XML files that use XML's namespace mechanism, a
+subject that is discussed in detail in the reference
+documentation.</p>
+
+<p class="docText">If the tag is <tt>&lt;entry&gt;</tt>, we create
+a new <tt>QTreeWidgetItem</tt>. If the tag is nested within another
+<tt>&lt;entry&gt;</tt><a name="and the"></a> tag, the new tag
+defines a sub-entry in the index, and the new <a name=
+"iddle1254"></a><a name="iddle1540"></a><a name=
+"iddle2398"></a><a name="iddle2462"></a><a name=
+"iddle3290"></a><a name="iddle6411"></a><a name=
+"iddle6689"></a><a name="iddle6691"></a><a name=
+"iddle6700"></a><a name="iddle7026"></a><a name=
+"iddle7027"></a><a name=
+"iddle7354"></a><tt>QTreeWidgetItem</tt><a name="as a"></a> is
+created as a child of the <tt>QTreeWidgetItem</tt> that represents
+the encompassing entry. Otherwise, we create the
+<tt>QTreeWidgetItem</tt><a name="its parent"></a> as a top-level
+item, using the tree widget's invisible root item as its parent. We
+call <tt>setText()</tt><a name="to set"></a> to set the text shown
+in column 0 to the value of the <tt>&lt;entry&gt;</tt> tag's
+<tt>term</tt> attribute.</p>
+
+<p class="docText"><a name="tag is"></a>If the tag is
+<tt>&lt;page&gt;</tt><a name="set the"></a>, we set the
+<tt>currentText</tt><a name="an accumulator"></a> variable to be an
+empty string. The variable serves as an accumulator for the text
+located between the <tt>&lt;page&gt;</tt> and
+<tt>&lt;/page&gt;</tt> tags.</p>
+
+<p class="docText">At the end, we return <tt>true</tt><a name=
+"parsing the"></a> to tell SAX to continue parsing the file. If we
+wanted to report unknown tags as errors, we would return
+<tt>false</tt> in those cases. We would then also reimplement
+<tt>errorString()</tt> from <tt>QXmlDefaultHandler</tt> to return
+an appropriate error message.</p>
+
+<div class="docText">
+<pre>
+bool SaxHandler::characters(const QString &amp;str)
+{
+    currentText += str;
+    return true;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>characters()</tt><a name=
+"XML document"></a> function is called to report character data in
+the XML document. We simply append the characters to the
+<tt>currentText</tt> variable.</p>
+
+<div class="docText">
+<pre>
+bool SaxHandler::endElement(const QString &amp; /* namespaceURI */,
+                            const QString &amp; /* localName */,
+                            const QString &amp;qName)
+{
+    if (qName == "entry") {
+        currentItem = currentItem-&gt;parent();
+    } else if (qName == "page") {
+        if (currentItem) {
+            QString allPages = currentItem-&gt;text(1);
+            if (!allPages.isEmpty())
+                allPages += ", ";
+            allPages += currentText;
+            currentItem-&gt;setText(1, allPages);
+        }
+    }
+    return true;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>endElement()</tt><a name=
+"a closing"></a> function is called when the reader encounters a
+closing tag. Just as with <tt>startElement()</tt><a name=
+"the tag"></a>, the third parameter is the name of the tag.</p>
+
+<p class="docText"><a name="tag is"></a>If the tag is
+<tt>&lt;/entry&gt;</tt>, we update the <tt>currentItem</tt> private
+variable to point to the current <tt>QTreeWidgetItem</tt><a name=
+"invisible root"></a>'s parent. (For historical reasons, top-level
+items return 0 as their parent rather than the invisible root
+item.) This ensures that the <tt>currentItem</tt><a name=
+"variable is"></a> variable is restored to the value it held before
+the corresponding <tt>&lt;entry&gt;</tt> tag was read.</p>
+
+<p class="docText"><a name="tag is"></a>If the tag is
+<tt>&lt;/page&gt;</tt><a name="add the"></a>, we add the specified
+page number or page range to the comma-separated list in the
+current item's text in column 1.</p>
+
+<div class="docText">
+<pre>
+bool SaxHandler::fatalError(const QXmlParseException &amp;exception)
+{
+    std::cerr &lt;&lt; "Parse error at line " &lt;&lt; exception.lineNumber()
+              &lt;&lt; ", " &lt;&lt; "column " &lt;&lt; exception.columnNumber() &lt;&lt; ": "
+              &lt;&lt; qPrintable(exception.message()) &lt;&lt; std::endl;
+    return false;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle2643"></a><a name=
+"iddle2703"></a><a name="iddle4965"></a><a name=
+"iddle6701"></a><a name="iddle6730"></a><a name=
+"iddle7007"></a><a name="iddle7028"></a><a name=
+"iddle8681"></a><a name="iddle8712"></a><a name="iddle8721"></a>The
+<tt>fatalError()</tt><a name="the XML"></a> function is called when
+the reader fails to parse the XML file. If this occurs, we simply
+print a message to the console, giving the line number, the column
+number, and the parser's error text.</p>
+
+<p class="docText">This completes the implementation of
+<tt>SaxHandler</tt>. The <tt>main()</tt><a name=
+"almost identical"></a> function that uses it is almost identical
+to the one we reviewed in the previous section for
+<tt>DomParser</tt>, the difference being that we use a
+<tt>SaxHandler</tt> rather than a <tt>DomParser</tt>.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch16lev1sec2.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch16lev1sec4.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

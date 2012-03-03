@@ -1,0 +1,235 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch04lev1sec1.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch04lev1sec1.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch04lev1sec1.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch04lev1sec1.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href="ch04.html"><img src=
+"images/prev.gif" width="20" height="20" border="0" align=
+"absmiddle" alt="Previous Page"></a> <a href=
+"ch04lev1sec2.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch04"></a>
+<h2 id="title-ID0EBQNM" class="docChapterTitle">4. Implementing
+Application Functionality</h2>
+
+<p class="docText"><img border="0" id="" width="150" height="106"
+src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzbnBpZV9nY3NoL29fcHI0aGMwdGFlZWoucHBy.jpg"
+alt="">
+</p>
+
+<ul>
+<li>
+<p class="docList"><a name="iddle1410"></a><a name=
+"iddle1513"></a><a name="iddle1990"></a><a name=
+"iddle2622"></a><a name="iddle3504"></a><a name=
+"iddle3736"></a><a name="iddle5318"></a><a name=
+"iddle7666"></a><a name="iddle8549"></a><span class=
+"docEmphasis"><a class="docLink" href=
+"ch04lev1sec1.html#ch04lev1sec1">The Central Widget</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch04lev1sec2.html#ch04lev1sec2">Subclassing
+QTableWidget</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch04lev1sec3.html#ch04lev1sec3">Loading and Saving</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch04lev1sec4.html#ch04lev1sec4">Implementing the Edit
+Menu</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch04lev1sec5.html#ch04lev1sec5">Implementing the Other
+Menus</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch04lev1sec6.html#ch04lev1sec6">Subclassing
+QTableWidgetItem</a></span>
+</p>
+</li>
+</ul>
+
+<p class="docText"><a name="In the"></a>In the previous two
+chapters, we explained how to create the Spreadsheet application's
+user interface. In this chapter, we will complete the program by
+coding its underlying functionality. Among other things, we will
+see how to load and save files, how to store data in memory, how to
+implement clipboard operations, and how to add support for
+spreadsheet formulas to <tt>QTableWidget</tt>.</p>
+<a name="ch04lev1sec1"></a>
+<h3 class="docSection1Title" id="-100000">The Central Widget</h3>
+
+<p class="docText"><a name="area of"></a>The central area of a
+<tt>QMainWindow</tt><a name="be occupied"></a> can be occupied by
+any kind of widget. Here's an overview of the possibilities:</p>
+
+<div style="font-weight:bold">
+<ol class="docList" type="1">
+<li>
+<div style="font-weight:normal">
+<p class="docList"><span class="docEmphStrong">Use a standard Qt
+widget.</span>
+</p>
+
+<p class="docList">A standard widget such as <tt>QTableWidget</tt>
+or <tt>QTextEdit</tt><a name="such as"></a> can be used as the
+central widget. In this case, the application's functionality, such
+as loading and saving files, must be implemented elsewhere (e.g.,
+in a <tt>QMainWindow</tt> subclass).</p>
+</div>
+</li>
+
+<li>
+<div style="font-weight:normal">
+<p class="docList"><span class="docEmphStrong">Use a custom
+widget.</span>
+</p>
+
+<p class="docList"><a name="show data"></a>Specialized applications
+often need to show data in a custom widget. For example, an icon
+editor program would have an <tt>IconEditor</tt> widget as its
+central widget. <a class="docLink" href="ch05.html#ch05">Chapter
+5</a> explains how to write custom widgets in Qt.</p>
+</div>
+</li>
+
+<li>
+<div style="font-weight:normal">
+<p class="docList"><span class="docEmphStrong">Use a plain QWidget
+with a layout manager.</span>
+</p>
+
+<p class="docList"><a name="can be"></a>Sometimes the application's
+central area is occupied by many widgets. This can be done by using
+a <tt>QWidget</tt><a name="other widgets"></a> as the parent of all
+the other widgets, and using layout managers to size and position
+the child widgets.</p>
+</div>
+</li>
+
+<li>
+<div style="font-weight:normal">
+<p class="docList"><a name="iddle3775"></a><a name=
+"iddle3941"></a><a name="iddle5187"></a><a name=
+"iddle5348"></a><a name="iddle5795"></a><a name=
+"iddle6188"></a><a name="iddle6194"></a><a name=
+"iddle6218"></a><a name="iddle6665"></a><a name=
+"iddle7623"></a><a name="iddle7625"></a><a name=
+"iddle7860"></a><a name="iddle7924"></a><span class=
+"docEmphStrong">Use a splitter.</span>
+</p>
+
+<p class="docList"><a name="to use"></a>Another way of using
+multiple widgets together is to use a <tt>QSplitter</tt>. The
+<tt>QSplitter</tt><a name="its child"></a> arranges its child
+widgets horizontally or vertically, with splitter handles to give
+some sizing control to the user. Splitters can contain all kinds of
+widgets, including other splitters.</p>
+</div>
+</li>
+
+<li>
+<div style="font-weight:normal">
+<p class="docList"><span class="docEmphStrong">Use an MDI
+area.</span>
+</p>
+
+<p class="docList"><a name="a"></a>If the application uses MDI, the
+central area is occupied by a <tt>QMdiArea</tt><a name=
+"and each"></a> widget, and each MDI window is a child of that
+widget.</p>
+</div>
+</li>
+</ol>
+</div>
+
+<p class="docText"><a name="areas can"></a>Layouts, splitters, and
+MDI areas can be combined with standard Qt widgets or with custom
+widgets. <a class="docLink" href="ch06.html#ch06">Chapter
+6</a><a name="these classes"></a> covers these classes in
+depth.</p>
+
+<p class="docText">For the Spreadsheet application, a
+<tt>QTableWidget</tt> subclass is used as the central widget. The
+<tt>QTableWidget</tt><a name="but it"></a> class already provides
+most of the spreadsheet capability we need, but it doesn't support
+clipboard operations and doesn't understand spreadsheet formulas
+such as "=A1+A2+A3". We will implement this missing functionality
+in the <tt>Spreadsheet</tt> class.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href="ch04.html"><img src=
+"images/prev.gif" width="20" height="20" border="0" align=
+"absmiddle" alt="Previous Page"></a> <a href=
+"ch04lev1sec2.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

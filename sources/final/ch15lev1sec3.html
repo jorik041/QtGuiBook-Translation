@@ -1,0 +1,1030 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch15lev1sec3.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch15lev1sec3.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch15lev1sec3.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch15lev1sec3.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch15lev1sec2.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch15lev1sec4.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch15lev1sec3"></a>
+<h3 class="docSection1Title" id="-100000">Writing TCP Client–Server
+Applications</h3>
+
+<p class="docText"><a name="The"></a>The <tt>QTcpSocket</tt> and
+<tt>QTcpServer</tt><a name="be used"></a> classes can be used to
+implement TCP clients and servers. TCP is a transport protocol that
+forms the basis of most application-level Internet protocols,
+including FTP and HTTP, and that can also be used for custom
+protocols.</p>
+
+<p class="docText"><a name="is a"></a>TCP is a stream-oriented
+protocol. For applications, the data appears to be a long stream,
+rather like a large flat file. The high-level protocols built on
+top of TCP are typically either line-oriented or
+block-oriented:</p>
+
+<ul>
+<li>
+<p class="docList"><a name="a newline"></a>Line-oriented protocols
+transfer data as lines of text, each terminated by a newline.</p>
+</li>
+
+<li>
+<p class="docList"><a name="data blocks"></a>Block-oriented
+protocols transfer data as binary data blocks. Each block consists
+of a size field followed by that much data.</p>
+</li>
+</ul>
+
+<p class="docText"><tt>QTcpSocket</tt> is indirectly derived from
+<tt>QIODevice</tt> (through <tt>QAbstractSocket</tt><a name=
+"using a"></a>), so it can be read from and written to using a
+<tt>QDataStream</tt> or a <tt>QTextStream</tt><a name=
+"a network"></a>. One notable difference when reading data from a
+network compared with reading from a file is that we must make sure
+that we have received enough data from the peer before we use the
+<tt>&gt;&gt;</tt><a name="undefined behavior"></a> operator.
+Failing to do so may result in undefined behavior.</p>
+
+<p class="docText"><a name="we will"></a>In this section, we will
+review the code of a client and a server that use a custom
+block-oriented protocol. The client, shown in <a class="docLink"
+href="#ch15fig01">Figure 15.1</a><a name="their next"></a>, is
+called Trip Planner and allows users to plan their next train trip.
+The server is called Trip Server and provides the trip information
+to the client. We will start by writing the Trip Planner
+client.</p>
+<a name="ch15fig01"></a>
+<center>
+<h5 class="docFigureTitle"><a name="Figure"></a>Figure 15.1. The
+Trip Planner application</h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzanRsaWlucGNyaGFwdHIvbHBlc19ucGcuYQ--.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="343" src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZ3BpbmlwY3JoYXB0ci9wbHNlLm5q.jpg"
+alt="">
+</center>
+<br>
+
+<p class="docText"><a name="Planner provides"></a>The Trip Planner
+provides a <span class="docEmphRomanAlt">From</span> field, a
+<span class="docEmphRomanAlt">To</span> field, a <span class=
+"docEmphRomanAlt">Date</span> field, an <span class=
+"docEmphRomanAlt">Approximate Time</span><a name="two radio"></a>
+field, and two radio buttons to select whether the approximate time
+is that <a name="iddle7878"></a><a name="iddle8226"></a><a name=
+"iddle8268"></a>of departure or arrival. When the user clicks
+<span class="docEmphRomanAlt">Search</span><a name="with a"></a>,
+the application sends a request to the server, which responds with
+a list of train trips that match the user's criteria. The list is
+shown in a <tt>QTableWidget</tt><a name="very bottom"></a> in the
+Trip Planner window. The very bottom of the window is occupied by a
+<tt>QLabel</tt><a name="a"></a> that shows the status of the last
+operation and a <tt>QProgressBar</tt>.</p>
+
+<p class="docText">The Trip Planner's user interface was created
+using <span class="docEmphasis">Qt Designer</span> in a file called
+<tt>tripplanner.ui</tt><a name="of the"></a>. Here, we will focus
+on the source code of the <tt>QDialog</tt> subclass that implements
+the application's functionality:</p>
+
+<div class="docText">
+<pre>
+#include "ui_tripplanner.h"
+
+class QPushButton;
+
+class TripPlanner : public QDialog, private Ui::TripPlanner
+{
+    Q_OBJECT
+
+public:
+    TripPlanner(QWidget *parent = 0);
+
+private slots:
+    void connectToServer();
+    void sendRequest();
+    void updateTableWidget();
+    void stopSearch();
+    void connectionClosedByServer();
+    void error();
+
+private:
+    void closeConnection();
+
+    QPushButton *searchButton;
+    QPushButton *stopButton;
+    QTcpSocket tcpSocket;
+    quint16 nextBlockSize;
+};
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1417"></a><a name=
+"iddle1751"></a><a name="iddle1756"></a><a name=
+"iddle1757"></a><a name="iddle2167"></a><a name=
+"iddle2450"></a><a name="iddle3771"></a><a name=
+"iddle3839"></a><a name="iddle4514"></a><a name=
+"iddle5631"></a><a name="iddle5632"></a><a name=
+"iddle5633"></a><a name="iddle6126"></a><a name=
+"iddle6244"></a><a name="iddle6246"></a><a name=
+"iddle6248"></a><a name="iddle6251"></a><a name=
+"iddle6255"></a><a name="iddle6792"></a><a name=
+"iddle8227"></a><a name="iddle8229"></a><a name=
+"iddle8272"></a><a name="iddle8282"></a><a name="iddle8365"></a>The
+<tt>TripPlanner</tt> class is derived from <tt>Ui::TripPlanner</tt>
+(which is generated by <tt>uic</tt> from <tt>tripplanner.ui</tt>)
+in addition to <tt>QDialog</tt>. The <tt>tcpSocket</tt> member
+variable encapsulates the TCP connection. The
+<tt>nextBlockSize</tt><a name="received from"></a> variable is used
+when parsing the blocks received from the server.</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+TripPlanner::TripPlanner(QWidget *parent)
+    : QDialog(parent)
+{
+    setupUi(this);
+
+    searchButton = buttonBox-&gt;addButton(tr("&amp;Search"),
+                                        QDialogButtonBox::ActionRole);
+    stopButton = buttonBox-&gt;addButton(tr("S&amp;top"),
+                                      QDialogButtonBox::ActionRole);
+    stopButton-&gt;setEnabled(false);
+    buttonBox-&gt;button(QDialogButtonBox::Close)-&gt;setText(tr("&amp;Quit"));
+
+    QDateTime dateTime = QDateTime::currentDateTime();
+    dateEdit-&gt;setDate(dateTime.date());
+    timeEdit-&gt;setTime(QTime(dateTime.time().hour(), 0));
+
+    progressBar-&gt;hide();
+    progressBar-&gt;setSizePolicy(QSizePolicy::Preferred,
+                               QSizePolicy::Ignored);
+
+    tableWidget-&gt;verticalHeader()-&gt;hide();
+    tableWidget-&gt;setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+    connect(searchButton, SIGNAL(clicked()),
+            this, SLOT(connectToServer()));
+    connect(stopButton, SIGNAL(clicked()), this, SLOT(stopSearch()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+
+    connect(&amp;tcpSocket, SIGNAL(connected()), this, SLOT(sendRequest()));
+    connect(&amp;tcpSocket, SIGNAL(disconnected()),
+            this, SLOT(connectionClosedByServer()));
+    connect(&amp;tcpSocket, SIGNAL(readyRead()),
+            this, SLOT(updateTableWidget()));
+    connect(&amp;tcpSocket, SIGNAL(error(QAbstractSocket::SocketError)),
+            this, SLOT(error()));
+}
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="we initialize"></a>In the constructor,
+we initialize the date and time editors based on the current date
+and time. We also hide the progress bar, because we want to show it
+only when a connection is active. In <span class="docEmphasis">Qt
+Designer</span>, the progress bar's <tt>minimum</tt> and
+<tt>maximum</tt> properties were both set to 0. This tells the
+<tt>QProgressBar</tt><a name="a standard"></a> to behave as a busy
+indicator instead of as a standard percentage-based progress
+bar.</p>
+
+<p class="docText"><a name="Also in"></a>Also in the constructor,
+we connect the <tt>QTcpSocket</tt>'s <tt>connected()</tt>,
+<tt>disconnected()</tt>, <tt>readyRead()</tt>, and
+<tt>error(QAbstractSocket::SocketError)</tt><a name=
+"private slots"></a> signals to private slots.</p>
+
+<div class="docText">
+<pre>
+void TripPlanner::connectToServer()
+{
+    tcpSocket.connectToHost("tripserver.zugbahn.de", 6178);
+
+    tableWidget-&gt;setRowCount(0);
+    searchButton-&gt;setEnabled(false);
+    stopButton-&gt;setEnabled(true);
+    statusLabel-&gt;setText(tr("Connecting to server..."));
+    progressBar-&gt;show();
+
+    nextBlockSize = 0;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1244"></a><a name=
+"iddle1758"></a><a name="iddle2451"></a><a name=
+"iddle3609"></a><a name="iddle5164"></a><a name=
+"iddle6247"></a><a name="iddle6252"></a><a name=
+"iddle7097"></a><a name="iddle8232"></a><a name="page_374"></a>The
+<tt>connectToServer()</tt><a name="is executed"></a> slot is
+executed when the user clicks <span class=
+"docEmphRomanAlt">Search</span> to start a search. We call
+<tt>connectToHost()</tt> on the <tt>QTcpSocket</tt><a name=
+"accessible at"></a> object to connect to the server, which we
+assume is accessible at port 6178 on the fictitious host
+<tt>tripserver.zugbahn.de</tt><a name="example on"></a>. (If you
+want to try the example on your own machine, replace the host name
+with <tt>QHostAddress::LocalHost</tt>.) The
+<tt>connectToHost()</tt><a name="established later"></a> call is
+asynchronous; it always returns immediately. The connection is
+typically established later. The <tt>QTcpSocket</tt> object emits
+the <tt>connected()</tt><a name="or"></a> signal when the
+connection is up and running, or
+<tt>error(QAbstractSocket::SocketError)</tt> if the connection
+failed.</p>
+
+<p class="docText"><a name="the progress"></a>Next, we update the
+user interface, in particular making the progress bar visible.</p>
+
+<p class="docText"><a name="the"></a>Finally, we set the
+<tt>nextBlockSize</tt><a name="next block"></a> variable to 0. This
+variable stores the length of the next block received from the
+server. We have chosen to use the value of 0 to mean that we don't
+yet know the size of the next block.</p>
+
+<div class="docText">
+<pre>
+void TripPlanner::sendRequest()
+{
+    QByteArray block;
+    QDataStream out(&amp;block, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_3);
+    out &lt;&lt; quint16(0) &lt;&lt; quint8('S') &lt;&lt; fromComboBox-&gt;currentText()
+        &lt;&lt; toComboBox-&gt;currentText() &lt;&lt; dateEdit-&gt;date()
+        &lt;&lt; timeEdit-&gt;time();
+
+    if (departureRadioButton-&gt;isChecked()) {
+        out &lt;&lt; quint8('D');
+    } else {
+        out &lt;&lt; quint8('A');
+    }
+    out.device()-&gt;seek(0);
+    out &lt;&lt; quint16(block.size() - sizeof(quint16));
+    tcpSocket.write(block);
+
+    statusLabel-&gt;setText(tr("Sending request..."));
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="The"></a>The
+<tt>sendRequest()</tt><a name="executed when"></a> slot is executed
+when the <tt>QTcpSocket</tt><a name="emits the"></a> object emits
+the <tt>connected()</tt><a name="to generate"></a> signal,
+indicating that a connection has been established. The slot's task
+is to generate a request to the server, with all the information
+entered by the user.</p>
+
+<p class="docText"><a name="block with"></a>The request is a binary
+block with the following format:</p>
+
+<table cellspacing="0" class="allBorders" border="1">
+<colgroup align="left" span="2">
+<col width="100">
+<col width="300">
+</colgroup>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><a name=
+"iddle4792"></a><a name="iddle4882"></a><a name=
+"iddle5239"></a><a name="iddle6261"></a><a name=
+"iddle7062"></a><a name="iddle8234"></a><a name=
+"iddle8347"></a><a name="iddle8662"></a><tt>quint16</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Block size in bytes (excluding this field)</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>quint8</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Request type (always 'S')</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>QString</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Departure city</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>QString</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Arrival city</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>QDate</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Date of travel</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>QTime</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Approximate time of travel</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>quint8</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Time is for departure ('D') or arrival
+('A')</span>
+</td>
+</tr>
+</table>
+<br>
+
+<p class="docText">We first write the data to a <tt>QByteArray</tt>
+called <tt>block</tt>. We can't write the data directly to the
+<tt>QTcpSocket</tt><a name="be sent"></a> because we won't know the
+size of the block, which must be sent first, until after we have
+put all the data into the block.</p>
+
+<p class="docText"><a name="by the"></a>We initially write 0 as the
+block size, followed by the rest of the data. Then we call
+<tt>seek(0)</tt> on the I/O device (a <tt>QBuffer</tt> created by
+<tt>QDataStream</tt><a name="beginning of"></a> behind the scenes)
+to move back to the beginning of the byte array, and overwrite the
+initial 0 with the size of the block's data. The size is calculated
+by taking the block's size and subtracting
+<tt>sizeof(quint16)</tt><a name="the size"></a> (i.e., 2) to
+exclude the size field from the byte count. After that, we call
+<tt>write()</tt> on the <tt>QTcpSocket</tt> to send the block to
+the server.</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+void TripPlanner::updateTableWidget()
+{
+    QDataStream in(&amp;tcpSocket);
+    in.setVersion(QDataStream::Qt_4_3);
+
+    forever {
+        int row = tableWidget-&gt;rowCount();
+
+        if (nextBlockSize == 0) {
+            if (tcpSocket.bytesAvailable() &lt; sizeof(quint16))
+                break;
+            in &gt;&gt; nextBlockSize;
+        }
+
+        if (nextBlockSize == 0xFFFF) {
+            closeConnection();
+            statusLabel-&gt;setText(tr("Found %1 trip(s)").arg(row));
+            break;
+        }
+
+        if (tcpSocket.bytesAvailable() &lt; nextBlockSize)
+            break;
+
+        QDate date;
+        QTime departureTime;
+        QTime arrivalTime;
+        quint16 duration;
+        quint8 changes;
+        QString trainType;
+
+        in &gt;&gt; date &gt;&gt; departureTime &gt;&gt; duration &gt;&gt; changes &gt;&gt; trainType;
+        arrivalTime = departureTime.addSecs(duration * 60);
+        tableWidget-&gt;setRowCount(row + 1);
+
+        QStringList fields;
+        fields &lt;&lt; date.toString(Qt::LocalDate)
+               &lt;&lt; departureTime.toString(tr("hh:mm"))
+               &lt;&lt; arrivalTime.toString(tr("hh:mm"))
+               &lt;&lt; tr("%1 hr %2 min").arg(duration / 60)
+                                    .arg(duration % 60)
+               &lt;&lt; QString::number(changes)
+               &lt;&lt; trainType;
+        for (int i = 0; i &lt; fields.count(); ++i)
+            tableWidget-&gt;setItem(row, i,
+                                 new QTableWidgetItem(fields[i]));
+        nextBlockSize = 0;
+    }
+}
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle2834"></a><a name=
+"iddle6256"></a><a name="iddle6793"></a>The
+<tt>updateTableWidget()</tt> slot is connected to the
+<tt>QTcpSocket</tt>'s <tt>readyRead()</tt> signal, which is emitted
+whenever the <tt>QTcpSocket</tt><a name="us a"></a> has received
+new data from the server. The server sends us a list of possible
+train trips that match the user's criteria. Each matching trip is
+sent as a single block, and each block starts with a size.
+<a class="docLink" href="#ch15fig02">Figure 15.2</a><a name=
+"illustrates a"></a> illustrates a stream of such blocks. The
+<tt>forever</tt><a name="necessary because"></a> loop is necessary
+because we don't necessarily get one block of data from the server
+at a time.<sup class="docFootnote"><a class="docLink" href=
+"#ch15fn01">[*]</a></sup><a name="might have"></a> We might have
+received an entire block, or just part of a block, or one and a
+half blocks, or even all of the blocks at once.</p>
+
+<blockquote>
+<p class="docFootnote"><sup><a name="ch15fn01">[*]</a></sup> The
+<tt>forever</tt> keyword is provided by Qt. It simply expands to
+<tt>for (;;)</tt>.</p>
+</blockquote>
+<a name="ch15fig02"></a>
+<center>
+<h5 class="docFigureTitle">Figure 15.2. The Trip Server's
+blocks</h5>
+
+<p class="docText"><img border="0" id="" width="455" height="57"
+src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZmlncGNmaDJnMTUvaTBpcy4-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText">So, how does the <tt>forever</tt> loop work? If
+the <tt>nextBlockSize</tt><a name="the size"></a> variable is 0,
+this means that we have not read the size of the next block. We try
+to read it (assuming that at least 2 bytes are available for
+reading). The server uses a size value of <tt>0xFFFF</tt><a name=
+"no more"></a> to signify that there is no more data to receive, so
+if we read this value, we know that we have reached the end.</p>
+
+<p class="docText">If the block size is not <tt>0xFFFF</tt><a name=
+"to see"></a>, we try to read in the next block. First, we check to
+see whether there are block size bytes available to read. If there
+are not, we stop there for now. The <tt>readyRead()</tt><a name=
+"data is"></a> signal will be emitted again when more data is
+available, and we will try again then.</p>
+
+<p class="docText"><a name="block has"></a>Once we are sure that an
+entire block has arrived, we can safely use the
+<tt>&gt;&gt;</tt><a name="the"></a> operator on the
+<tt>QDataStream</tt><a name="create"></a> to extract the
+information related to a trip, and we create
+<tt>QTableWidgetItem</tt><a name="s with"></a>s with that
+information. A block received from the server has the following
+format:</p>
+
+<table cellspacing="0" class="allBorders" border="1">
+<colgroup align="left" span="2">
+<col width="100">
+<col width="300">
+</colgroup>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><a name=
+"iddle1633"></a><a name="iddle1642"></a><a name=
+"iddle1761"></a><a name="iddle2168"></a><a name=
+"iddle2456"></a><a name="iddle6242"></a><a name=
+"iddle6249"></a><a name="iddle7773"></a><a name=
+"iddle8228"></a><a name="iddle8230"></a><a name=
+"iddle8231"></a><a name="iddle8233"></a><tt>quint16</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt"><a name="in bytes"></a>Block size in bytes
+(excluding this field)</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>QDate</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Departure date</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>QTime</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Departure time</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>quint16</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Duration (in minutes)</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>quint8</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt"><a name="of changes"></a>Number of changes</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>QString</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Train type</span>
+</td>
+</tr>
+</table>
+<br>
+
+<p class="docText">At the end, we reset the
+<tt>nextBlockSize</tt><a name="unknown and"></a> variable to 0 to
+indicate that the next block's size is unknown and needs to be
+read.</p>
+
+<div class="docText">
+<pre>
+void TripPlanner::closeConnection()
+{
+    tcpSocket.close();
+    searchButton-&gt;setEnabled(true);
+    stopButton-&gt;setEnabled(false);
+    progressBar-&gt;hide();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>closeConnection()</tt><a name=
+"to the"></a> private function closes the connection to the TCP
+server and updates the user interface. It is called from
+<tt>updateTableWidget()</tt> when the <tt>0xFFFF</tt><a name=
+"will cover"></a> is read and from several other slots that we will
+cover shortly.</p>
+
+<div class="docText">
+<pre>
+void TripPlanner::stopSearch()
+{
+    statusLabel-&gt;setText(tr("Search stopped"));
+    closeConnection();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>stopSearch()</tt> slot is connected to
+the <span class="docEmphRomanAlt">Stop</span> button's
+<tt>clicked()</tt> signal. Essentially, it just calls
+<tt>closeConnection()</tt>.</p>
+
+<div class="docText">
+<pre>
+void TripPlanner::connectionClosedByServer()
+{
+    if (nextBlockSize != 0xFFFF)
+        statusLabel-&gt;setText(tr("Error: Connection closed by server"));
+    closeConnection();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>connectionClosedByServer()</tt> slot is
+connected to <tt>QTcpSocket</tt>'s <tt>disconnected()</tt><a name=
+"we have"></a> signal. If the server closes the connection and we
+have not yet received the <tt>0xFFFF</tt><a name="We call"></a>
+end-of-data marker, we tell the user that an error occurred. We
+call <tt>closeConnection()</tt><a name="to update"></a> as usual to
+update the user interface.</p>
+
+<div class="docText">
+<pre>
+void TripPlanner::error()
+{
+    statusLabel-&gt;setText(tcpSocket.errorString());
+    closeConnection();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>error()</tt> slot is connected to
+<tt>QTcpSocket</tt>'s <tt>error(QAbstractSocket::SocketError)</tt>
+signal. We ignore the error code and instead use the
+<tt>QIODevice::errorString()</tt> <a name="iddle1615"></a><a name=
+"iddle2635"></a><a name="iddle3203"></a><a name=
+"iddle6236"></a><a name="iddle6239"></a><a name=
+"iddle6240"></a><a name="iddle6260"></a><a name=
+"iddle7111"></a><a name="iddle7325"></a><a name=
+"iddle7862"></a><a name="iddle7863"></a><a name=
+"iddle8236"></a><a name="iddle8237"></a><a name=
+"iddle8238"></a><a name="iddle8240"></a><a name=
+"that occurred"></a>function, which returns a human-readable error
+message for the last error that occurred.</p>
+
+<p class="docText"><a name="This is"></a>This is all for the
+<tt>TripPlanner</tt> class. The <tt>main()</tt><a name=
+"the Trip"></a> function for the Trip Planner application looks
+just as we would expect:</p>
+
+<div class="docText">
+<pre>
+int main(int argc, char *argv[])
+{
+    QApplication app(argc, argv);
+    TripPlanner tripPlanner;
+    tripPlanner.show();
+    return app.exec();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="implement the"></a>Now let's implement
+the server. The server consists of two classes: <tt>TripServer</tt>
+and <tt>ClientSocket</tt>. The <tt>TripServer</tt> class is derived
+from <tt>QTcpServer</tt>, a class that allows us to accept incoming
+TCP connections. <tt>ClientSocket</tt> reimplements
+<tt>QTcpSocket</tt><a name="as many"></a> and handles a single
+connection. At any one time, there are as many
+<tt>ClientSocket</tt><a name="are clients"></a> objects in memory
+as there are clients being served.</p>
+
+<div class="docText">
+<pre>
+class TripServer : public QTcpServer
+{
+    Q_OBJECT
+
+public:
+    TripServer(QObject *parent = 0);
+
+private:
+    void incomingConnection(int socketId);
+};
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>TripServer</tt> class reimplements the
+<tt>incomingConnection()</tt> function from
+<tt>QTcpServer</tt><a name="connect to"></a>. This function is
+called whenever a client attempts to connect to the port the server
+is listening to.</p>
+
+<div class="docText">
+<pre>
+TripServer::TripServer(QObject *parent)
+    : QTcpServer(parent)
+{
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>TripServer</tt> constructor is
+trivial.</p>
+
+<div class="docText">
+<pre>
+void TripServer::incomingConnection(int socketId)
+{
+    ClientSocket *socket = new ClientSocket(this);
+    socket-&gt;setSocketDescriptor(socketId);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">In <tt>incomingConnection()</tt>, we create a
+<tt>ClientSocket</tt> object as a child of the
+<tt>TripServer</tt><a name="the number"></a> object, and we set its
+socket descriptor to the number provided to us. The
+<tt>ClientSocket</tt><a name="connection is"></a> object will
+delete itself automatically when the connection is terminated.</p>
+
+<div class="docText">
+<pre>
+class ClientSocket : public QTcpSocket
+{
+    Q_OBJECT
+
+public:
+    ClientSocket(QObject *parent = 0);
+
+private slots:
+    void readClient();
+
+private:
+    void generateRandomTrip(const QString &amp;from, const QString &amp;to,
+                            const QDate &amp;date, const QTime &amp;time);
+    quint16 nextBlockSize;
+};
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1616"></a><a name=
+"iddle1618"></a><a name="iddle2093"></a><a name=
+"iddle2169"></a><a name="iddle2490"></a><a name=
+"iddle5450"></a><a name="iddle6250"></a><a name=
+"iddle6257"></a><a name="iddle6761"></a><a name="iddle6794"></a>The
+<tt>ClientSocket</tt><a name="derived from"></a> class is derived
+from <tt>QTcpSocket</tt> and encapsulates the state of a single
+client.</p>
+
+<div class="docText">
+<pre>
+ClientSocket::ClientSocket(QObject *parent)
+    : QTcpSocket(parent)
+{
+    connect(this, SIGNAL(readyRead()), this, SLOT(readClient()));
+    connect(this, SIGNAL(disconnected()), this, SLOT(deleteLater()));
+
+    nextBlockSize = 0;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="the"></a>In the constructor, we
+establish the necessary signal–slot connections, and we set the
+<tt>nextBlockSize</tt><a name="variable to"></a> variable to 0,
+indicating that we do not yet know the size of the block sent by
+the client.</p>
+
+<p class="docText">The <tt>disconnected()</tt><a name=
+"connected to"></a> signal is connected to <tt>deleteLater()</tt>,
+a <tt>QObject</tt><a name="that deletes"></a>-inherited function
+that deletes the object when control returns to Qt's event loop.
+This ensures that the <tt>ClientSocket</tt> object is deleted when
+the socket connection is closed.</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+void ClientSocket::readClient()
+{
+    QDataStream in(this);
+    in.setVersion(QDataStream::Qt_4_3);
+
+    if (nextBlockSize == 0) {
+        if (bytesAvailable() &lt; sizeof(quint16))
+            return;
+        in &gt;&gt; nextBlockSize;
+    }
+    if (bytesAvailable() &lt; nextBlockSize)
+        return;
+
+    quint8 requestType;
+    QString from;
+    QString to;
+    QDate date;
+    QTime time;
+    quint8 flag;
+
+    in &gt;&gt; requestType;
+    if (requestType == 'S') {
+        in &gt;&gt; from &gt;&gt; to &gt;&gt; date &gt;&gt; time &gt;&gt; flag;
+
+        std::srand(from.length() * 3600 + to.length() * 60
+                   + time.hour());
+        int numTrips = std::rand() % 8;
+        for (int i = 0; i &lt; numTrips; ++i)
+            generateRandomTrip(from, to, date, time);
+
+        QDataStream out(this);
+        out &lt;&lt; quint16(0xFFFF);
+    }
+
+    close();
+}
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1617"></a><a name=
+"iddle1634"></a><a name="iddle2891"></a><a name=
+"iddle4884"></a><a name="iddle6243"></a><a name=
+"iddle6258"></a><a name="iddle6262"></a><a name=
+"iddle6795"></a><a name="iddle8663"></a>The <tt>readClient()</tt>
+slot is connected to <tt>QTcpSocket</tt>'s <tt>readyRead()</tt>
+signal. If <tt>nextBlockSize</tt><a name="already read"></a> is 0,
+we start by reading the block size; otherwise, we have already read
+it, and instead we check to see whether a whole block has arrived.
+Once an entire block is ready for reading, we read it in one go. We
+use the <tt>QDataStream</tt> directly on the <tt>QTcpSocket</tt>
+(the <tt>this</tt><a name="the"></a> object) and read the fields
+using the <tt>&gt;&gt;</tt> operator.</p>
+
+<p class="docText"><a name="generate a"></a>Once we have read the
+client's request, we are ready to generate a reply. If this were a
+real application, we would look up the information in a train
+schedule database and try to find matching train trips. But here we
+will be content with a function called
+<tt>generateRandomTrip()</tt><a name="the function"></a> that will
+generate a random trip. We call the function a random number of
+times, and then we send <tt>0xFFFF</tt><a name="the end"></a> to
+signify the end of the data. At the end, we close the
+connection.</p>
+
+<div class="docText">
+<pre>
+void ClientSocket::generateRandomTrip(const QString &amp; /* from */,
+        const QString &amp; /* to */, const QDate &amp;date, const QTime &amp;time)
+{
+    QByteArray block;
+    QDataStream out(&amp;block, QIODevice::WriteOnly);
+    out.setVersion(QDataStream::Qt_4_3);
+    quint16 duration = std::rand() % 200;
+    out &lt;&lt; quint16(0) &lt;&lt; date &lt;&lt; time &lt;&lt; duration &lt;&lt; quint8(1)
+        &lt;&lt; QString("InterCity");
+    out.device()-&gt;seek(0);
+    out &lt;&lt; quint16(block.size() - sizeof(quint16));
+
+    write(block);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>generateRandomTrip()</tt><a name=
+"how to"></a> function shows how to send a block of data over a TCP
+connection. This is very similar to what we did in the client in
+the <tt>sendRequest()</tt> function (p. <a class="docLink" href=
+"#page_374">374</a>). Once again, we write the block to a
+<tt>QByteArray</tt><a name="send it"></a> so that we can determine
+its size before we send it using <tt>write()</tt>.</p>
+
+<div class="docText">
+<pre>
+int main(int argc, char *argv[])
+{
+    QApplication app(argc, argv);
+    TripServer server;
+    if (!server.listen(QHostAddress::Any, 6178)) {
+        std::cerr &lt;&lt; "Failed to bind to port" &lt;&lt; std::endl;
+        return 1;
+    }
+
+    QPushButton quitButton(QObject::tr("&amp;Quit"));
+    quitButton.setWindowTitle(QObject::tr("Trip Server"));
+    QObject::connect(&amp;quitButton, SIGNAL(clicked()),
+                     &amp;app, SLOT(quit()));
+    quitButton.show();
+    return app.exec();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1178"></a><a name=
+"iddle1339"></a><a name="iddle1469"></a><a name=
+"iddle1999"></a><a name="iddle3063"></a><a name=
+"iddle3274"></a><a name="iddle3313"></a><a name=
+"iddle3554"></a><a name="iddle3591"></a><a name=
+"iddle5163"></a><a name="iddle6160"></a><a name=
+"iddle6241"></a><a name="iddle6253"></a><a name=
+"iddle6254"></a><a name="iddle6259"></a><a name=
+"iddle6414"></a><a name="iddle6770"></a><a name=
+"iddle6796"></a><a name="iddle7113"></a><a name=
+"iddle8024"></a><a name="iddle8051"></a><a name=
+"iddle8262"></a><a name="In"></a>In <tt>main()</tt><a name=
+"a"></a>, we create a <tt>TripServer</tt><a name="and a"></a>
+object and a <tt>QPushButton</tt><a name="the server"></a> that
+enables the user to stop the server. We start the server by calling
+<tt>QTcpSocket::listen()</tt><a name="and port"></a>, which takes
+the IP address and port number on which we want to accept
+connections. The special address 0.0.0.0
+(<tt>QHostAddress::Any</tt>) signifies any IP interface present on
+the local host.</p>
+
+<p class="docText">Using a <tt>QPushButton</tt><a name=
+"server would"></a> to represent the server is convenient during
+development. However, a deployed server would be expected to run
+without a GUI, as a Windows service or as a Unix daemon. Trolltech
+provides a commercial add-on for this purpose, called
+<tt>QtService</tt>.</p>
+
+<p class="docText"><a name="a block"></a>This completes our
+client–server example. In this case, we used a block-oriented
+protocol that allows us to use <tt>QDataStream</tt><a name=
+"use a"></a> for reading and writing. If we wanted to use a
+line-oriented protocol, the simplest approach would be to use
+<tt>QTcpSocket</tt>'s <tt>canReadLine()</tt> and
+<tt>readLine()</tt><a name="a slot"></a> functions in a slot
+connected to the <tt>readyRead()</tt> signal:</p>
+
+<div class="docText">
+<pre>
+QStringList lines;
+while (tcpSocket.canReadLine())
+    lines.append(tcpSocket.readLine());
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="As for"></a>We would then process each
+line that has been read. As for sending data, that can be done
+using a <tt>QTextStream</tt><a name="on the"></a> on the
+<tt>QTcpSocket</tt>.</p>
+
+<p class="docText"><a name="implementation that"></a>The server
+implementation that we have used doesn't scale very well when there
+are lots of connections. The problem is that while we are
+processing a request, we don't handle the other connections. A more
+scalable approach would be to start a new thread for each
+connection. The Threaded Fortune Server example located in Qt's
+<tt>examples/network/threadedfortuneserver</tt><a name=
+"illustrates how"></a> directory illustrates how to do this.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch15lev1sec2.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch15lev1sec4.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

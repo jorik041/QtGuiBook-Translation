@@ -1,0 +1,351 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch24.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch24.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch24.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch24.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch23lev1sec3.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch24lev1sec1.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch24"></a>
+<h2 id="title-ID0EGMPM" class="docChapterTitle">24. Embedded
+Programming</h2>
+
+<p class="docText"><img border="0" id="" width="128" height="126"
+src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83ZXBwdDRocF9lcl8vMmlzY2Nob25lYS5wZ3Jq.jpg"
+alt="">
+</p>
+
+<ul>
+<li>
+<p class="docList"><a name="iddle1216"></a><a name=
+"iddle1808"></a><a name="iddle2368"></a><a name=
+"iddle2850"></a><a name="iddle3187"></a><a name=
+"iddle3252"></a><a name="iddle3385"></a><a name=
+"iddle3573"></a><a name="iddle3848"></a><a name=
+"iddle3854"></a><a name="iddle3891"></a><a name=
+"iddle4290"></a><a name="iddle4304"></a><a name=
+"iddle4400"></a><a name="iddle6132"></a><a name=
+"iddle6379"></a><a name="iddle6382"></a><a name=
+"iddle6383"></a><a name="iddle6385"></a><a name=
+"iddle6668"></a><a name="iddle7419"></a><a name=
+"iddle7795"></a><a name="iddle8460"></a><a name=
+"iddle8641"></a><span class="docEmphasis"><a class="docLink" href=
+"ch24lev1sec1.html#ch24lev1sec1">Getting Started with Qt/Embedded
+Linux</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch24lev1sec2.html#ch24lev1sec2">Customizing Qt/Embedded
+Linux</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch24lev1sec3.html#ch24lev1sec3">Integrating Qt Applications
+with Qtopia</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch24lev1sec4.html#ch24lev1sec4">Using Qtopia APIs</a></span>
+</p>
+</li>
+</ul>
+
+<p class="docText"><a name="Developing software"></a>Developing
+software to run on mobile devices such as PDAs and mobile phones
+can be very challenging because embedded systems generally have
+slower processors, less permanent storage (flash memory or hard
+disk), less memory, and smaller displays than desktop
+computers.</p>
+
+<p class="docText"><a name="Qtopia Core"></a>Qt/Embedded Linux
+(also called Qtopia Core) is an edition of Qt optimized for
+embedded Linux. Qt/Embedded Linux provides the same API and tools
+as the desktop versions of Qt (Qt/Windows, Qt/X11, and Qt/Mac), and
+adds the classes and tools necessary for embedded programming.
+Through dual licensing, it is available for both open source and
+commercial development.</p>
+
+<p class="docText"><a name="can run"></a>Qt/Embedded Linux can run
+on any hardware that runs Linux—including Intel x86, MIPS, ARM,
+StrongARM, Motorola/Freescale 68000, and PowerPC
+architectures.<sup class="docFootnote"><a class="docLink" href=
+"#ch24fn01">[*]</a></sup><a name="implements its"></a> Unlike
+Qt/X11, it does not need the X Window System; instead, it
+implements its own window system, QWS, enabling significant storage
+and memory savings. To reduce its memory footprint even more,
+Qt/Embedded Linux can be recompiled to exclude unused features. If
+the applications and components used on a device are known in
+advance, they can be compiled together into a single executable
+that links statically against the Qt/Embedded Linux libraries.</p>
+
+<blockquote>
+<p class="docFootnote"><sup><a name=
+"ch24fn01">[*]</a></sup><a name="expected to"></a> Starting with
+version 4.4, Qt is expected to run on Windows CE as well.</p>
+</blockquote>
+
+<p class="docText"><a name="part of"></a>Qt/Embedded Linux also
+benefits from various features that are also part of the desktop
+versions of Qt, including the extensive use of implicit data
+sharing ("copy on write") as a memory-saving technique, support for
+custom widget styles through <tt>QStyle</tt><a name=
+"make the"></a>, and a layout system that adapts to make the best
+use of the available screen space.</p>
+
+<p class="docText"><a name="Qtopia PDA"></a>Qt/Embedded Linux forms
+the basis of Trolltech's embedded offering, which also includes
+Qtopia Platform, Qtopia PDA, and Qtopia Phone. These provide
+classes and applications designed specifically for portable devices
+and can be integrated with several third-party Java virtual
+machines.</p>
+<a name="ch24lev1sec1"></a>
+<h3 class="docSection1Title" id="-100000">Getting Started with
+Qt/Embedded Linux</h3>
+
+<p class="docText"><a name="iddle1740"></a><a name=
+"iddle1923"></a><a name="iddle2369"></a><a name=
+"iddle2846"></a><a name="iddle2885"></a><a name=
+"iddle2929"></a><a name="iddle6175"></a><a name=
+"iddle6475"></a><a name="iddle8439"></a><a name=
+"iddle8454"></a><a name="iddle8727"></a><a name=
+"be developed"></a>Qt/Embedded Linux applications can be developed
+on any platform equipped with an appropriate tool chain. The most
+common option is to build a GNU C++ cross-compiler on a Unix
+system. This process is simplified by a script and a set of patches
+provided by Dan Kegel at <a class="docLink" target="_blank" href=
+"http://kegel.com/crosstool/">http://kegel.com/crosstool/</a><a name="we have"></a>.
+For this chapter, we have used the Qtopia Open Source Edition
+version 4.2 available from <a class="docLink" target="_blank" href=
+"http://www.trolltech.com/products/qtopia/opensource/">http://www.trolltech.com/products/qtopia/opensource/</a><a name="This edition"></a>.
+This edition is suitable only for Linux and includes its own copy
+of Qt/Embedded Linux 4.2, along with additional tools to support
+Qtopia programming on a desktop PC.</p>
+
+<p class="docText"><a name="supports cross"></a>Qt/Embedded Linux's
+configuration system supports cross-compiling, through the
+<tt>configure</tt> script's <tt>-embedded</tt> and
+<tt>-xplatform</tt><a name="to build"></a> options. For example, to
+build for the ARM architecture we would type</p>
+
+<div class="docText">
+<pre>
+./configure -embedded arm -xplatform qws/linux-arm-g++
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="to Qt"></a>We can create custom
+configurations by adding new files to Qt's <tt>mkspecs/qws</tt>
+directory.</p>
+
+<p class="docText"><a name="Linux framebuffer"></a>Qt/Embedded
+Linux draws directly to the Linux framebuffer (the memory area
+associated with the video display). The virtual framebuffer shown
+in <a class="docLink" href="#ch24fig01">Figure 24.1</a><a name=
+"access the"></a> is an X11 application that simulates, pixel for
+pixel, the actual framebuffer. To access the framebuffer, you might
+need to grant write permissions to the <tt>/dev/fb0</tt>
+device.</p>
+<a name="ch24fig01"></a>
+<center>
+<h5 class="docFigureTitle">Figure 24.1. Qt/Embedded Linux running
+in a virtual framebuffer</h5>
+
+<p class="docText"><img border="0" id="" width="334" height="491"
+src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83cC50aG9wZ2ovaXNxcGNpYTE-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="iddle1613"></a><a name=
+"iddle1701"></a><a name="iddle2171"></a><a name=
+"iddle2296"></a><a name="iddle2298"></a><a name=
+"iddle2442"></a><a name="iddle2444"></a><a name=
+"iddle2964"></a><a name="iddle3427"></a><a name=
+"iddle3901"></a><a name="iddle4509"></a><a name=
+"iddle4713"></a><a name="iddle4848"></a><a name=
+"iddle4850"></a><a name="iddle4888"></a><a name=
+"iddle6133"></a><a name="iddle6176"></a><a name=
+"iddle6476"></a><a name="iddle6477"></a><a name=
+"iddle6674"></a><a name="iddle6678"></a><a name=
+"iddle6682"></a><a name="iddle6801"></a><a name=
+"iddle7094"></a><a name="iddle7112"></a><a name=
+"iddle8455"></a><a name="iddle8477"></a><a name=
+"one process"></a>To run Qt/Embedded Linux applications, we must
+first start one process to act as a GUI server. The server is
+responsible for allocating screen regions to clients and for
+generating mouse and keyboard events. Any Qt/Embedded Linux
+application can become a server by specifying <tt>-qws</tt> on its
+command line or by passing <tt>QApplication::GuiServer</tt> as the
+third parameter to the <tt>QApplication</tt> constructor.</p>
+
+<p class="docText"><a name="and Unix"></a>Client applications
+communicate with the Qt/Embedded Linux server using shared memory
+and Unix pipes. Behind the scenes, the clients draw themselves into
+the Linux framebuffer and are responsible for painting their own
+window decorations.</p>
+
+<p class="docText"><a name="with each"></a>Clients can communicate
+with each other using QCOP—the Qt Communication Protocol. A client
+can listen on a named channel by creating a
+<tt>QCopChannel</tt><a name="connecting to"></a> object and
+connecting to its <tt>received()</tt><a name="For example"></a>
+signal. For example:</p>
+
+<div class="docText">
+<pre>
+QCopChannel *channel = new QCopChannel("System", this);
+connect(channel, SIGNAL(received(const QString &amp;, const QByteArray &amp;)),
+        this, SLOT(received(const QString &amp;, const QByteArray &amp;)));
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="message consists"></a>A QCOP message
+consists of a name and an optional <tt>QByteArray</tt><a name=
+"static"></a>. The static <tt>QCopChannel::send()</tt> function
+broadcasts a message on a channel. For example:</p>
+
+<div class="docText">
+<pre>
+QByteArray data;
+QDataStream out(&amp;data, QIODevice::WriteOnly);
+out &lt;&lt; QDateTime::currentDateTime();
+
+QCopChannel::send("System", "clockSkew(QDateTime)", data);
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="data using"></a>The preceding example
+illustrates a common idiom: We encode the data using
+<tt>QDataStream</tt><a name="format in"></a>, and we mangle the
+data format in the message name as though it were a C++ function to
+ensure that receiver interprets the <tt>QByteArray</tt>
+correctly.</p>
+
+<p class="docText"><a name="are"></a>Various environment variables
+affect Qt/Embedded Linux applications. The most important ones are
+<tt>QWS_MOUSE_PROTO</tt> and <tt>QWS_KEYBOARD</tt><a name=
+"keyboard type"></a>, which specify the mouse device and the
+keyboard type. See <a class="docLink" target="_blank" href=
+"http://doc.trolltech.com/4.2/qtopiacore-envvars.html">http://doc.trolltech.com/4.2/qtopiacore-envvars.html</a>
+for a complete list of environment variables.</p>
+
+<p class="docText"><a name="the application"></a>If we use Unix as
+our development platform, we can test the application using the Qt
+virtual framebuffer (<tt>qvfb</tt><a name="simulates the"></a>), an
+X11 application that simulates the actual framebuffer. This
+accelerates the development cycle considerably. To enable virtual
+buffer support in Qt/Embedded Linux, pass the
+<tt>-qvfb</tt><a name="the"></a> option to the
+<tt>configure</tt><a name="Be aware"></a> script. Be aware that
+this option is not intended for production use. The virtual
+framebuffer application is located in <tt>tools/qvfb</tt><a name=
+"be invoked"></a> and can be invoked as follows:</p>
+
+<div class="docText">
+<pre>
+qvfb -width 320 -height 480 -depth 32
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="alternative to"></a>An alternative to
+using the X11-specific virtual framebuffer is to use VNC (Virtual
+Network Computing) to run the applications remotely. To enable VNC
+support in Qt/Embedded Linux, pass the <tt>-qt-gfx-vnc</tt> option
+to <tt>configure</tt>. Then launch your Qt/Embedded Linux
+applications with the <tt>-display VNC:0</tt><a name="host on"></a>
+command-line option and run a VNC client pointing at the host on
+which your applications <a name="iddle1702"></a><a name=
+"iddle2049"></a><a name="iddle2172"></a><a name=
+"iddle2297"></a><a name="iddle2299"></a><a name=
+"iddle2301"></a><a name="iddle2441"></a><a name=
+"iddle2446"></a><a name="iddle3227"></a><a name=
+"iddle3428"></a><a name="iddle3902"></a><a name=
+"iddle4844"></a><a name="iddle4912"></a><a name=
+"iddle4914"></a><a name="iddle5247"></a><a name=
+"iddle5409"></a><a name="iddle5688"></a><a name=
+"iddle5690"></a><a name="iddle6149"></a><a name=
+"iddle6669"></a><a name="iddle6670"></a><a name=
+"iddle6673"></a><a name="iddle6677"></a><a name=
+"iddle6681"></a><a name="iddle6685"></a><a name=
+"iddle7044"></a><a name="iddle8630"></a><a name="bit depth"></a>are
+running. The display size and bit depth can be specified by setting
+the <tt>QWS_SIZE</tt> and <tt>QWS_DEPTH</tt><a name=
+"applications"></a> environment variables on the host that runs the
+Qt/Embedded Linux applications (e.g., <tt>QWS_SIZE=320x480</tt> and
+<tt>QWS_DEPTH=32</tt>).</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch23lev1sec3.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch24lev1sec1.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

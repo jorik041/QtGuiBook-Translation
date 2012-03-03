@@ -1,0 +1,745 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch12.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch12.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch12.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch12.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch11lev1sec4.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch12lev1sec1.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch12"></a>
+<h2 id="title-ID0EUNOM" class="docChapterTitle">12.
+Input/Output</h2>
+
+<p class="docText"><img border="0" id="" width="150" height="96"
+src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzcmduZV9laXBjX2hwaDEyL2FjcnNvdGouZXBw.jpg"
+alt="">
+</p>
+
+<ul>
+<li>
+<p class="docList"><a name="iddle2725"></a><a name=
+"iddle4790"></a><a name="iddle4794"></a><a name=
+"iddle5004"></a><a name="iddle5223"></a><a name=
+"iddle5237"></a><a name="iddle5616"></a><a name=
+"iddle5879"></a><a name="iddle6237"></a><a name=
+"iddle6263"></a><a name="iddle6413"></a><a name=
+"iddle7060"></a><a name="iddle7554"></a><a name=
+"iddle7681"></a><a name="iddle7937"></a><a name=
+"iddle7964"></a><a name="iddle8099"></a><a name=
+"iddle8260"></a><span class="docEmphasis"><a class="docLink" href=
+"ch12lev1sec1.html#ch12lev1sec1">Reading and Writing Binary
+Data</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch12lev1sec2.html#ch12lev1sec2">Reading and Writing
+Text</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch12lev1sec3.html#ch12lev1sec3">Traversing
+Directories</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch12lev1sec4.html#ch12lev1sec4">Embedding
+Resources</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch12lev1sec5.html#ch12lev1sec5">Inter-Process
+Communication</a></span>
+</p>
+</li>
+</ul>
+
+<p class="docText"><a name="The need"></a>The need to read from or
+write to files or other devices is common to almost every
+application. Qt provides excellent support for I/O through
+<tt>QIODevice</tt><a name="abstraction that"></a>, a powerful
+abstraction that encapsulates "devices" capable of reading and
+writing blocks of bytes. Qt includes the following
+<tt>QIODevice</tt> subclasses:</p>
+
+<table cellspacing="0" class="allBorders" border="1">
+<colgroup align="left" span="2">
+<col width="125">
+<col width="425">
+</colgroup>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>QFile</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt"><a name="files in"></a>Accesses files in the
+local file system and in embedded resources</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>QTemporaryFile</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Creates and accesses temporary files in the local
+file system</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>QBuffer</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Reads data from or writes data to a</span>
+<tt>QByteArray</tt></td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>QProcess</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Runs external programs and handles inter-process
+communication</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>QTcpSocket</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Transfers a stream of data over the network using
+TCP</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>QUdpSocket</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Sends or receives UDP datagrams over the
+network</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>QSslSocket</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Transfers an encrypted data stream over the
+network using SSL/TLS</span>
+</td>
+</tr>
+</table>
+<br>
+
+<p class="docText"><tt>QProcess</tt>, <tt>QTcpSocket</tt>,
+<tt>QUdpSocket</tt>, and <tt>QSslSocket</tt><a name=
+"only once"></a> are sequential devices, meaning that the data can
+be accessed only once, starting from the first byte and progressing
+serially to the last byte. <tt>QFile</tt>, <tt>QTemporaryFile</tt>,
+and <tt>QBuffer</tt><a name="read any"></a> are random-access
+devices, so bytes can be read any number of times from any
+position; they provide the <tt>QIODevice::seek()</tt> function for
+repositioning the file pointer.</p>
+
+<p class="docText"><a name="stream classes"></a>In addition to the
+device classes, Qt also provides two higher-level stream classes
+that we can use to read from, and write to, any I/O device:
+<tt>QDataStream</tt> for binary data and
+<tt>QTextStream</tt><a name="such as"></a> for text. These classes
+take care of issues such as byte ordering and text encodings,
+ensuring that Qt applications running on different platforms or in
+different countries can read and write each other's files. This
+makes Qt's I/O classes much more convenient than the corresponding
+Standard C++ classes, which leave these issues to the application
+programmer.</p>
+
+<p class="docText"><tt>QFile</tt><a name="they are"></a> makes it
+easy to access individual files, whether they are in the file
+system or embedded in the application's executable as resources.
+For applications that need to identify whole sets of files to work
+on, Qt provides the <tt>QDir</tt> and <a name=
+"iddle1025"></a><a name="iddle1322"></a><a name=
+"iddle1516"></a><a name="iddle1563"></a><a name=
+"iddle1887"></a><a name="iddle2714"></a><a name=
+"iddle3297"></a><a name="iddle3309"></a><a name=
+"iddle4150"></a><a name="iddle4875"></a><a name=
+"iddle4877"></a><a name="iddle4885"></a><a name=
+"iddle4895"></a><a name="iddle5013"></a><a name=
+"iddle5222"></a><a name="iddle5228"></a><a name=
+"iddle5606"></a><a name="iddle5953"></a><a name=
+"iddle6432"></a><a name="iddle7368"></a><a name=
+"iddle7744"></a><a name="iddle7748"></a><a name=
+"iddle7750"></a><a name="iddle7762"></a><a name=
+"iddle7778"></a><a name="iddle7786"></a><a name=
+"iddle8126"></a><a name="iddle8422"></a><a name=
+"iddle8673"></a><tt>QFileInfo</tt><a name="directories and"></a>
+classes, which handle directories and provide information about the
+files inside them.</p>
+
+<p class="docText">The <tt>QProcess</tt><a name=
+"communicate with"></a> class allows us to launch external programs
+and to communicate with them through their standard input, standard
+output, and standard error channels (<tt>cin</tt>,
+<tt>cout</tt><a name="and"></a>, and <tt>cerr</tt><a name=
+"set the"></a>). We can set the environment variables and working
+directory that the external application will use. By default,
+communication with the process is asynchronous (non-blocking), but
+it is also possible to block on certain operations.</p>
+
+<p class="docText"><a name="and reading"></a>Networking and reading
+and writing XML are such substantial topics that we cover
+separately in their own dedicated chapters (<a class="docLink"
+href="ch15.html#ch15">Chapter 15</a> and <a class="docLink" href=
+"ch16.html#ch16">Chapter 16</a>).</p>
+<a name="ch12lev1sec1"></a>
+<h3 class="docSection1Title" id="-100000">Reading and Writing
+Binary Data</h3>
+
+<p class="docText"><a name="with Qt"></a>The simplest way to load
+and save binary data with Qt is to instantiate a
+<tt>QFile</tt><a name="access it"></a>, to open the file, and to
+access it through a <tt>QDataStream</tt> object.
+<tt>QDataStream</tt><a name="as"></a> provides a
+platform-independent storage format that supports basic C++ types
+such as <tt>int</tt> and <tt>double</tt>, and many Qt data types,
+including <tt>QByteArray</tt>, <tt>QFont</tt>, <tt>QImage</tt>,
+<tt>QPixmap</tt>, <tt>QString</tt>, and <tt>QVariant</tt><a name=
+"as"></a>, as well as Qt container classes such as
+<tt>QList&lt;T&gt;</tt> and <tt>QMap&lt;K, T&gt;</tt>.</p>
+
+<p class="docText">Here's how we would store an integer, a
+<tt>QImage</tt>, and a <tt>QMap&lt;QString, QColor&gt;</tt> in a
+file called <tt>facts.dat</tt>:</p>
+
+<div class="docText">
+<pre>
+QImage image("philip.png");
+
+QMap&lt;QString, QColor&gt; map;
+map.insert("red", Qt::red);
+map.insert("green", Qt::green);
+map.insert("blue", Qt::blue);
+
+QFile file("facts.dat");
+if (!file.open(QIODevice::WriteOnly)) {
+    std::cerr &lt;&lt; "Cannot open file for writing: "
+              &lt;&lt; qPrintable(file.errorString()) &lt;&lt; std::endl;
+    return;
+}
+
+QDataStream out(&amp;file);
+out.setVersion(QDataStream::Qt_4_3);
+
+out &lt;&lt; quint32(0x12345678) &lt;&lt; image &lt;&lt; map;
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="the user"></a>If we cannot open the
+file, we inform the user and return. The
+<tt>qPrintable()</tt><a name="a"></a> macro returns a <tt>const
+char *</tt> for a <tt>QString</tt>. (Another approach would have
+been to use <tt>QString::toStdString()</tt>, which returns a
+<tt>std::string</tt>, for which <tt>&lt;iostream&gt;</tt> has a
+<tt>&lt;&lt;</tt> overload.)</p>
+
+<p class="docText">If the file is opened successfully, we create a
+<tt>QDataStream</tt><a name="integer that"></a> and set its version
+number. The version number is an integer that influences the way Qt
+data types are represented (basic C++ data types are always
+represented the same way). In <a name="iddle1026"></a><a name=
+"iddle1038"></a><a name="iddle1314"></a><a name=
+"iddle1447"></a><a name="iddle2401"></a><a name=
+"iddle3593"></a><a name="iddle4878"></a><a name=
+"iddle4890"></a><a name="iddle4896"></a><a name=
+"iddle5005"></a><a name="iddle6094"></a><a name=
+"iddle7369"></a><a name="iddle8423"></a><a name="Qt"></a>Qt 4.3,
+the most comprehensive format is version 9. We can either hard-code
+the constant 9 or use the <tt>QDataStream::Qt_4_3</tt> symbolic
+name.</p>
+
+<p class="docText"><a name="that the"></a>To ensure that the number
+<tt>0x12345678</tt><a name="written as"></a> is written as an
+unsigned 32-bit integer on all platforms, we cast it to
+<tt>quint32</tt><a name="To ensure"></a>, a data type that is
+guaranteed to be exactly 32 bits. To ensure interoperability,
+<tt>QDataStream</tt><a name="be changed"></a> standardizes on
+big-endian by default; this can be changed by calling
+<tt>setByteOrder()</tt>.</p>
+
+<p class="docText"><a name="done automatically"></a>We don't need
+to explicitly close the file, since this is done automatically when
+the <tt>QFile</tt><a name="to verify"></a> variable goes out of
+scope. If we want to verify that the data has actually been
+written, we can call <tt>flush()</tt> and check its return value
+(<tt>true</tt> on success).</p>
+
+<p class="docText"><a name="mirrors the"></a>The code to read back
+the data mirrors the code we used to write it:</p>
+
+<div class="docText">
+<pre>
+quint32 n;
+QImage image;
+QMap&lt;QString, QColor&gt; map;
+
+QFile file("facts.dat");
+if (!file.open(QIODevice::ReadOnly)) {
+    std::cerr &lt;&lt; "Cannot open file for reading: "
+              &lt;&lt; qPrintable(file.errorString()) &lt;&lt; std::endl;
+    return;
+}
+
+QDataStream in(&amp;file);
+in.setVersion(QDataStream::Qt_4_3);
+
+in &gt;&gt; n &gt;&gt; image &gt;&gt; map;
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>QDataStream</tt><a name="use for"></a>
+version we use for reading is the same as the one we used for
+writing. This must always be the case. By hard-coding the version
+number, we guarantee that the application can always read and write
+the data (assuming it is compiled with Qt 4.3 or any later Qt
+version).</p>
+
+<p class="docText"><tt>QDataStream</tt><a name="read it"></a>
+stores data in such a way that we can read it back seamlessly. For
+example, a <tt>QByteArray</tt><a name="is represented"></a> is
+represented as a 32-bit byte count followed by the bytes
+themselves. <tt>QDataStream</tt><a name="be used"></a> can also be
+used to read and write raw bytes, without any byte count header,
+using <tt>readRawBytes()</tt> and <tt>writeRawBytes()</tt>.</p>
+
+<p class="docText"><a name="handling when"></a>Error handling when
+reading from a <tt>QDataStream</tt> is fairly easy. The stream has
+a <tt>status()</tt> value that can be <tt>QDataStream::Ok</tt>,
+<tt>QDataStream::ReadPastEnd</tt>, or
+<tt>QDataStream::ReadCorruptData</tt>. Once an error has occurred,
+the <tt>&gt;&gt;</tt><a name="we can"></a> operator always reads
+zero or empty values. This means that we can often simply read an
+entire file without worrying about potential errors and check the
+<tt>status()</tt><a name="see if"></a> value at the end to see if
+what we read was valid.</p>
+
+<p class="docText"><tt>QDataStream</tt><a name="list is"></a>
+handles a variety of C++ and Qt data types; the complete list is
+available at <a class="docLink" target="_blank" href=
+"http://doc.trolltech.com/4.3/datastreamformat.html">http://doc.trolltech.com/4.3/datastreamformat.html</a><a name="own custom"></a>.
+We can also add support for our own custom types by overloading the
+<tt>&lt;&lt;</tt> and <tt>&gt;&gt;</tt><a name="that can"></a>
+operators. Here's the definition of a custom data type that can be
+used with <tt>QDataStream</tt>:</p>
+
+<div class="docText">
+<pre>
+class Painting
+{
+public:
+    Painting() { myYear = 0; }
+    Painting(const QString &amp;title, const QString &amp;artist, int year) {
+        myTitle = title;
+        myArtist = artist;
+        myYear = year;
+    }
+
+    void setTitle(const QString &amp;title) { myTitle = title; }
+    QString title() const { return myTitle; }
+    ...
+
+private:
+    QString myTitle;
+    QString myArtist;
+    int myYear;
+};
+
+QDataStream &amp;operator&lt;&lt;(QDataStream &amp;out, const Painting &amp;painting);
+QDataStream &amp;operator&gt;&gt;(QDataStream &amp;in, Painting &amp;painting);
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle4172"></a><a name=
+"iddle4176"></a><a name="iddle4243"></a><a name=
+"would implement"></a>Here's how we would implement the
+<tt>&lt;&lt;</tt> operator:</p>
+
+<div class="docText">
+<pre>
+QDataStream &amp;operator&lt;&lt;(QDataStream &amp;out, const Painting &amp;painting)
+{
+    out &lt;&lt; painting.title() &lt;&lt; painting.artist()
+        &lt;&lt; quint32(painting.year());
+    return out;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">To output a <tt>Painting</tt>, we simply output
+two <tt>QString</tt>s and a <tt>quint32</tt><a name="is a"></a>. At
+the end of the function, we return the stream. This is a common C++
+idiom that allows us to use a chain of <tt>&lt;&lt;</tt><a name=
+"operators with"></a> operators with an output stream. For
+example:</p>
+
+<div class="docText">
+<pre>
+out &lt;&lt; painting1 &lt;&lt; painting2 &lt;&lt; painting3;
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="of"></a>The implementation of
+<tt>operator&gt;&gt;()</tt><a name="similar to"></a> is similar to
+that of <tt>operator&lt;&lt;()</tt>:</p>
+
+<div class="docText">
+<pre>
+QDataStream &amp;operator&gt;&gt;(QDataStream &amp;in, Painting &amp;painting)
+{
+    QString title;
+    QString artist;
+    quint32 year;
+
+    in &gt;&gt; title &gt;&gt; artist &gt;&gt; year;
+    painting = Painting(title, artist, year);
+    return in;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="custom data"></a>There are several
+benefits to providing streaming operators for custom data types.
+One of them is that it allows us to stream containers that use the
+custom type. For example:</p>
+
+<div class="docText">
+<pre>
+QList&lt;Painting&gt; paintings = ...;
+out &lt;&lt; paintings;
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle4891"></a><a name=
+"iddle4892"></a><a name="iddle4897"></a><a name=
+"iddle4899"></a><a name="iddle5681"></a><a name=
+"iddle5745"></a><a name="iddle6095"></a><a name=
+"iddle6780"></a><a name="iddle7370"></a><a name=
+"iddle8424"></a><a name="iddle8674"></a><a name="just as"></a>We
+can read in containers just as easily:</p>
+
+<div class="docText">
+<pre>
+QList&lt;Painting&gt; paintings;
+in &gt;&gt; paintings;
+</pre>
+</div>
+<br>
+
+<p class="docText">This would result in a compiler error if
+<tt>Painting</tt> didn't support <tt>&lt;&lt;</tt> or
+<tt>&gt;&gt;</tt><a name="is that"></a>. Another benefit of
+providing streaming operators for custom types is that we can store
+values of these types as <tt>QVariant</tt>s, which makes them more
+widely usable—for example, by <tt>QSettings</tt><a name=
+"type using"></a>. This works provided that we register the type
+using <tt>qRegisterMetaTypeStreamOperators&lt;T&gt;()</tt>
+beforehand, as explained in <a class="docLink" href=
+"ch11.html#ch11">Chapter 11</a> (p. <a class="docLink" href=
+"ch11lev1sec4.html#page_292">292</a>).</p>
+
+<p class="docText">When we use <tt>QDataStream</tt><a name=
+"each type"></a>, Qt takes care of reading and writing each type,
+including containers with an arbitrary number of items. This
+relieves us from the need to structure what we write and from
+performing any kind of parsing on what we read. Our only obligation
+is to ensure that we read all the types in exactly the same order
+as we wrote them, leaving Qt to handle all the details.</p>
+
+<p class="docText"><tt>QDataStream</tt><a name="both for"></a> is
+useful both for our own custom application file formats and for
+standard binary formats. We can read and write standard binary
+formats using the streaming operators on basic types (such as
+<tt>quint16</tt> or <tt>float</tt>) or using
+<tt>readRawBytes()</tt> and <tt>writeRawBytes()</tt>. If the
+<tt>QDataStream</tt><a name="data types"></a> is being used purely
+to read and write basic C++ data types, we don't even need to call
+<tt>setVersion()</tt>.</p>
+
+<p class="docText"><a name="So far"></a>So far, we loaded and saved
+data with the stream's version hard-coded as
+<tt>QDataStream::Qt_4_3</tt><a name="is simple"></a>. This approach
+is simple and safe, but it does have one small drawback: We cannot
+take advantage of new or updated formats. For example, if a later
+version of Qt added a new attribute to <tt>QFont</tt><a name=
+"to its"></a> (in addition to its point size, family, etc.) and we
+hard-coded the version number to <tt>Qt_4_3</tt><a name=
+"first approach"></a>, that attribute wouldn't be saved or loaded.
+There are two solutions. The first approach is to embed the
+<tt>QDataStream</tt> version number in the file:</p>
+
+<div class="docText">
+<pre>
+QDataStream out(&amp;file);
+out &lt;&lt; quint32(MagicNumber) &lt;&lt; quint16(out.version());
+</pre>
+</div>
+<br>
+
+<p class="docText">(<tt>MagicNumber</tt><a name=
+"identifies the"></a> is a constant that uniquely identifies the
+file type.) This approach ensures that we always write the data
+using the most recent version of <tt>QDataStream</tt><a name=
+"the file"></a>, whatever that happens to be. When we come to read
+the file, we read the stream version:</p>
+
+<div class="docText">
+<pre>
+quint32 magic;
+quint16 streamVersion;
+
+QDataStream in(&amp;file);
+in &gt;&gt; magic &gt;&gt; streamVersion;
+
+if (magic != MagicNumber) {
+    std::cerr &lt;&lt; "File is not recognized by this application"
+              &lt;&lt; std::endl;
+} else if (streamVersion &gt; in.version()) {
+    std::cerr &lt;&lt; "File is from a more recent version of the "
+              &lt;&lt; "application" &lt;&lt; std::endl;
+    return false;
+}
+
+in.setVersion(streamVersion);
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle5236"></a><a name=
+"iddle5241"></a><a name="iddle6756"></a><a name=
+"iddle8661"></a><a name="as the"></a>We can read the data as long
+as the stream version is less than or equal to the version used by
+the application; otherwise, we report an error.</p>
+
+<p class="docText"><a name="number of"></a>If the file format
+contains a version number of its own, we can use it to deduce the
+stream version number instead of storing it explicitly. For
+example, let's suppose that the file format is for version 1.3 of
+our application. We might then write the data as follows:</p>
+
+<div class="docText">
+<pre>
+QDataStream out(&amp;file);
+out.setVersion(QDataStream::Qt_4_3);
+out &lt;&lt; quint32(MagicNumber) &lt;&lt; quint16(0x0103);
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="read it"></a>When we read it back, we
+determine which <tt>QDataStream</tt> version to use based on the
+application's version number:</p>
+
+<div class="docText">
+<pre>
+QDataStream in(&amp;file);
+in &gt;&gt; magic &gt;&gt; appVersion;
+
+if (magic != MagicNumber) {
+    std::cerr &lt;&lt; "File is not recognized by this application"
+              &lt;&lt; std::endl;
+    return false;
+} else if (appVersion &gt; 0x0103) {
+    std::cerr &lt;&lt; "File is from a more recent version of the "
+              &lt;&lt; "application" &lt;&lt; std::endl;
+    return false;
+}
+
+if (appVersion &lt; 0x0103) {
+    in.setVersion(QDataStream::Qt_3_0);
+} else {
+    in.setVersion(QDataStream::Qt_4_3);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="versions prior"></a>In this example, we
+specify that any file saved with versions prior to 1.3 of the
+application uses data stream version 4 (<tt>Qt_3_0</tt><a name=
+"and that"></a>), and that files saved with version 1.3 of the
+application use data stream version 9 (<tt>Qt_4_3</tt>).</p>
+
+<p class="docText"><a name="are three"></a>In summary, there are
+three policies for handling <tt>QDataStream</tt><a name=
+"version number"></a> versions: hard-coding the version number,
+explicitly writing and reading the version number, and using
+different hard-coded version numbers depending on the application's
+version. Any of these policies can be used to ensure that data
+written by an old version of an application can be read by a new
+version, even if the new version links against a more recent
+version of Qt. Once we have chosen a policy for handling
+<tt>QDataStream</tt><a name="simple and"></a> versions, reading and
+writing binary data using Qt is both simple and reliable.</p>
+
+<p class="docText"><a name="or write"></a>If we want to read or
+write a file in one go, we can avoid using <tt>QDataStream</tt> and
+instead use <tt>QIODevice</tt>'s <tt>write()</tt> and
+<tt>readAll()</tt> functions. For example:</p>
+
+<div class="docText">
+<pre>
+bool copyFile(const QString &amp;source, const QString &amp;dest)
+{
+    QFile sourceFile(source);
+    if (!sourceFile.open(QIODevice::ReadOnly))
+        return false;
+
+    QFile destFile(dest);
+    if (!destFile.open(QIODevice::WriteOnly))
+        return false;
+
+    destFile.write(sourceFile.readAll());
+
+    return sourceFile.error() == QFile::NoError
+           &amp;&amp; destFile.error() == QFile::NoError;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1323"></a><a name=
+"iddle1531"></a><a name="iddle1728"></a><a name=
+"iddle1883"></a><a name="iddle2022"></a><a name=
+"iddle2386"></a><a name="iddle2452"></a><a name=
+"iddle2728"></a><a name="iddle3306"></a><a name=
+"iddle4048"></a><a name="iddle4293"></a><a name=
+"iddle4795"></a><a name="iddle4843"></a><a name=
+"iddle5007"></a><a name="iddle5009"></a><a name=
+"iddle5234"></a><a name="iddle5238"></a><a name=
+"iddle5240"></a><a name="iddle6164"></a><a name=
+"iddle6296"></a><a name="iddle6298"></a><a name=
+"iddle6437"></a><a name="iddle6742"></a><a name=
+"iddle7061"></a><a name="iddle7109"></a><a name=
+"iddle8012"></a><a name="iddle8022"></a><a name=
+"iddle8291"></a><a name="iddle8293"></a><a name="iddle8735"></a>In
+the line where <tt>readAll()</tt><a name="read into"></a> is
+called, the entire contents of the input file are read into a
+<tt>QByteArray</tt>, which is then passed to the
+<tt>write()</tt><a name="Having all"></a> function to be written to
+the output file. Having all the data in a
+<tt>QByteArray</tt><a name="but it"></a> requires more memory than
+reading item by item, but it offers some advantages. For example,
+we can then use <tt>qCompress()</tt> and
+<tt>qUncompress()</tt><a name="and uncompress"></a> to compress and
+uncompress the data. A less memory-hungry alternative to using
+<tt>qCompress()</tt> and <tt>qUncompress()</tt> is
+<tt>QtIOCompressor</tt> from Qt Solutions. A
+<tt>QtIOCompressor</tt><a name="it reads"></a> compresses the
+stream it writes and decompresses the stream it reads, without
+storing the entire file in memory.</p>
+
+<p class="docText"><a name="There are"></a>There are other
+scenarios in which accessing <tt>QIODevice</tt><a name=
+"more appropriate"></a> directly is more appropriate than using
+<tt>QDataStream</tt>. <tt>QIODevice</tt><a name="a"></a> provides a
+<tt>peek()</tt><a name="the device"></a> function that returns the
+next data bytes without moving the device position as well as an
+<tt>ungetChar()</tt><a name="both for"></a> function that "unreads"
+a byte. This works both for random-access devices (such as files)
+and for sequential devices (such as network sockets). There is also
+a <tt>seek()</tt><a name="random access"></a> function that sets
+the device position, for devices that support random access.</p>
+
+<p class="docText"><a name="and most"></a>Binary file formats
+provide the most versatile and most compact means of storing data,
+and <tt>QDataStream</tt><a name="the examples"></a> makes accessing
+binary data easy. In addition to the examples in this section, we
+already saw the use of <tt>QDataStream</tt> in <a class="docLink"
+href="ch04.html#ch04">Chapter 4</a><a name="and write"></a> to read
+and write Spreadsheet files, and we will see it again in <a class=
+"docLink" href="ch21.html#ch21">Chapter 21</a><a name=
+"cursor files"></a>, where we use it to read and write Windows
+cursor files.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch11lev1sec4.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch12lev1sec1.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

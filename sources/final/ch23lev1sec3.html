@@ -1,0 +1,545 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch23lev1sec3.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch23lev1sec3.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch23lev1sec3.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch23lev1sec3.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch23lev1sec2.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch24.html"><img src="images/next.gif" width="20" height="20"
+border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch23lev1sec3"></a>
+<h3 class="docSection1Title" id="-100000">Handling X11 Session
+Management</h3>
+
+<p class="docText"><a name="When we"></a>When we log out on X11,
+some window managers ask us whether we want to save the session. If
+we say yes, the applications that were running are automatically
+restarted the next time we log in, with the same screen positions
+and, ideally, with the same state as they had when we logged out.
+An example of this is shown in <a class="docLink" href=
+"#ch23fig07">Figure 23.7</a>.</p>
+<a name="ch23fig07"></a>
+<center>
+<h5 class="docFigureTitle"><a name="out on"></a>Figure 23.7.
+Logging out on KDE</h5>
+
+<p class="docText"><img border="0" id="" width="396" height="278"
+src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83cGpvaGcvZ3BvY2xzaXV0Lg--.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="iddle1714"></a><a name=
+"iddle2629"></a><a name="iddle3043"></a><a name=
+"iddle3625"></a><a name="iddle4720"></a><a name=
+"iddle4732"></a><a name="iddle7014"></a><a name=
+"iddle7443"></a><a name="iddle8062"></a><a name=
+"iddle8642"></a><a name="component that"></a>The X11-specific
+component that takes care of saving and restoring the session is
+called the <span class="docEmphasis">session manager</span><a name=
+"must reimplement"></a>. To make a Qt/X11 application aware of the
+session manager, we must reimplement
+<tt>QApplication::saveState()</tt> and save the application's state
+there.</p>
+
+<p class="docText"><a name="systems offer"></a>Microsoft Windows
+and some Unix systems offer a different mechanism called
+hibernation. When the user puts the computer into hibernation, the
+operating system simply dumps the computer's memory onto disk and
+reloads it when it wakes up. Applications do not need to do
+anything or even be aware that this happens.</p>
+
+<p class="docText"><a name="just before"></a>When the user
+initiates a shutdown, we can take control just before the shutdown
+occurs by reimplementing
+<tt>QApplication::commitData()</tt><a name="data and"></a>. This
+allows us to save any unsaved data and to interact with the user if
+required. This part of session management is supported on both X11
+and Windows.</p>
+
+<p class="docText"><a name="of the"></a>We will explore session
+management by going through the code of the session-aware
+Tic-Tac-Toe application shown in <a class="docLink" href=
+"#ch23fig08">Figure 23.8</a>. First, let's look at the
+<tt>main()</tt> function:</p>
+
+<div class="docText">
+<pre>
+int main(int argc, char *argv[])
+{
+    Application app(argc, argv);
+    TicTacToe toe;
+    toe.setObjectName("toe");
+    app.setTicTacToe(&amp;toe);
+    toe.show();
+    return app.exec();
+}
+</pre>
+</div>
+<br>
+<a name="ch23fig08"></a>
+<center>
+<h5 class="docFigureTitle">Figure 23.8. The Tic-Tac-Toe
+application</h5>
+
+<p class="docText"><img border="0" id="" width="208" height="228"
+src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83cG9paGdjZWouL3N0aWN0YXBjdA--.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText">We create an <tt>Application</tt> object. The
+<tt>Application</tt><a name="from"></a> class is derived from
+<tt>QApplication</tt><a name="both"></a> and reimplements both
+<tt>commitData()</tt><a name="and"></a> and
+<tt>saveState()</tt><a name="session management"></a> to support
+session management.</p>
+
+<p class="docText"><a name="iddle1187"></a><a name=
+"iddle4100"></a><a name="iddle4712"></a><a name=
+"iddle4733"></a><a name="iddle5739"></a><a name=
+"iddle7015"></a><a name="iddle7197"></a><a name=
+"iddle7826"></a><a name="iddle8569"></a><a name=
+"create a"></a>Next, we create a <tt>TicTacToe</tt> widget, make
+the <tt>Application</tt> object aware of it, and show it. We have
+called the <tt>TicTacToe</tt><a name="if we"></a> widget "toe". We
+must give unique object names to top-level widgets if we want the
+session manager to restore the windows' sizes and positions.</p>
+
+<p class="docText">Here's the definition of the
+<tt>Application</tt> class:</p>
+
+<div class="docText">
+<pre>
+class Application : public QApplication
+{
+    Q_OBJECT
+
+public:
+    Application(int &amp;argc, char *argv[]);
+
+    void setTicTacToe(TicTacToe *toe);
+    void saveState(QSessionManager &amp;sessionManager);
+    void commitData(QSessionManager &amp;sessionManager);
+
+private:
+    TicTacToe *ticTacToe;
+};
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>Application</tt><a name="the"></a> class
+keeps a pointer to the <tt>TicTacToe</tt> widget as a private
+variable.</p>
+
+<div class="docText">
+<pre>
+void Application::saveState(QSessionManager &amp;sessionManager)
+{
+    QString fileName = ticTacToe-&gt;saveState();
+
+    QStringList discardCommand;
+    discardCommand &lt;&lt; "rm" &lt;&lt; fileName;
+    sessionManager.setDiscardCommand(discardCommand);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1208"></a><a name=
+"iddle1715"></a><a name="iddle2163"></a><a name=
+"iddle2435"></a><a name="iddle3134"></a><a name=
+"iddle4283"></a><a name="iddle4721"></a><a name=
+"iddle5735"></a><a name="iddle6917"></a><a name="iddle7115"></a>On
+X11, the <tt>saveState()</tt><a name="application to"></a> function
+is called when the session manager wants the application to save
+its state. The function is available on other platforms as well,
+but it is never called. The <tt>QSessionManager</tt><a name=
+"session manager"></a> parameter allows us to communicate with the
+session manager.</p>
+
+<p class="docText">We start by asking the
+<tt>TicTacToe</tt><a name="the session"></a> widget to save its
+state to a file. Then we set the session manager's discard command.
+A <span class="docEmphasis">discard command</span><a name=
+"that the"></a> is a command that the session manager must execute
+to delete any stored information regarding the current state. For
+this example, we set it to</p>
+
+<div class="docText">
+<pre>
+rm <span class="docEmphasis">sessionfile</span>
+</pre>
+</div>
+<br>
+
+<p class="docText">where <span class=
+"docEmphasis"><tt>sessionfile</tt></span><a name="name of"></a> is
+the name of the file that contains the saved state for the session,
+and <tt>rm</tt><a name="is the"></a> is the standard Unix command
+to remove files.</p>
+
+<p class="docText"><a name="manager also"></a>The session manager
+also has a <span class="docEmphasis">restart command</span><a name=
+"is the"></a>. This is the command that the session manager must
+execute to restart the application. By default, Qt provides the
+following restart command:</p>
+
+<div class="docText">
+<pre>
+<span class="docEmphasis">appname</span> -session <span class=
+"docEmphasis">id_key</span>
+</pre>
+</div>
+<br>
+
+<p class="docText">The first part, <span class=
+"docEmphasis"><tt>appname</tt></span>, is derived from
+<tt>argv[0]</tt>. The <span class=
+"docEmphasis"><tt>id</tt></span><a name="it is"></a> part is the
+session ID provided by the session manager; it is guaranteed to be
+unique among different applications and among different runs of the
+same application. The <span class=
+"docEmphasis"><tt>key</tt></span><a name="identify the"></a> part
+is added to uniquely identify the time at which the state was
+saved. For various reasons, the session manager can call
+<tt>saveState()</tt><a name="must be"></a> multiple times during
+the same session, and the different states must be
+distinguished.</p>
+
+<p class="docText"><a name="must ensure"></a>Because of limitations
+in existing session managers, we must ensure that the application's
+directory is in the <tt>PATH</tt><a name="if you"></a> environment
+variable if we want the application to restart correctly. In
+particular, if you want to try out the Tic-Tac-Toe example for
+yourself, you must install it in, say,
+<tt>/usr/local/bin</tt><a name="as"></a> and invoke it as
+<tt>tictactoe</tt>.</p>
+
+<p class="docText"><a name="including Tic"></a>For simple
+applications, including Tic-Tac-Toe, we could save the state as an
+additional command-line argument to the restart command. For
+example:</p>
+
+<div class="docText">
+<pre>
+tictactoe -state OX-XO-X-O
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="This would"></a>This would save us from
+storing the data in a file and providing a discard command to
+remove the file.</p>
+
+<div class="docText">
+<pre>
+void Application::commitData(QSessionManager &amp;sessionManager)
+{
+    if (ticTacToe-&gt;gameInProgress()
+            &amp;&amp; sessionManager.allowsInteraction()) {
+        int r = QMessageBox::warning(ticTacToe, tr("Tic-Tac-Toe"),
+                        tr("The game hasn't finished.\n"
+                           "Do you really want to quit?"),
+                        QMessageBox::Yes | QMessageBox::No);
+        if (r == QMessageBox::Yes) {
+            sessionManager.release();
+        } else {
+            sessionManager.cancel();
+        }
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1471"></a><a name=
+"iddle2499"></a><a name="iddle3626"></a><a name=
+"iddle5736"></a><a name="iddle5738"></a><a name=
+"iddle6509"></a><a name="iddle6848"></a><a name=
+"iddle7444"></a><a name="iddle8056"></a>The
+<tt>commitData()</tt><a name="called when"></a> function is called
+when the user logs out. We can reimplement it to pop up a message
+box warning the user about potential data loss. The default
+implementation closes all top-level widgets, which results in the
+same behavior as when the user closes the windows one after another
+by clicking the close button in their title bars. In <a class=
+"docLink" href="ch03.html#ch03">Chapter 3</a><a name=
+"saw how"></a>, we saw how to reimplement <tt>closeEvent()</tt> to
+catch this and pop up a message box.</p>
+
+<p class="docText">For the purposes of this example, we reimplement
+<tt>commitData()</tt><a name="to confirm"></a> and pop up a message
+box asking the user to confirm the logout if a game is in progress
+and if the session manager allows us to interact with the user (see
+<a class="docLink" href="#ch23fig09">Figure 23.9</a>). If the user
+clicks <span class="docEmphRomanAlt">Yes</span>, we call
+<tt>release()</tt><a name="to continue"></a> to tell the session
+manager to continue logging out; if the user clicks <span class=
+"docEmphRomanAlt">No</span>, we call <tt>cancel()</tt> to cancel
+the logout.</p>
+<a name="ch23fig09"></a>
+<center>
+<h5 class="docFigureTitle">Figure 23.9. "Do you really want to
+quit?"</h5>
+
+<p class="docText"><img border="0" id="" width="244" height="127"
+src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83dHBvaWhpY2VxLy1zdGljdGF1LmpjZ3B0.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText">Now let's look at the <tt>TicTacToe</tt>
+class:</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+class TicTacToe : public QWidget
+{
+    Q_OBJECT
+
+public:
+    TicTacToe(QWidget *parent = 0);
+
+    bool gameInProgress() const;
+    QString saveState() const;
+    QSize sizeHint() const;
+
+protected:
+    void paintEvent(QPaintEvent *event);
+    void mousePressEvent(QMouseEvent *event);
+
+private:
+    enum { Empty = '-', Cross = 'X', Nought = 'O' };
+
+    void clearBoard();
+    void restoreState();
+    QString sessionFileName() const;
+    QRect cellRect(int row, int column) const;
+    int cellWidth() const { return width() / 3; }
+    int cellHeight() const { return height() / 3; }
+    bool threeInARow(int row1, int col1, int row3, int col3) const;
+    char board[3][3];
+    int turnNumber;
+};
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1608"></a><a name=
+"iddle3335"></a><a name="iddle4725"></a><a name=
+"iddle4734"></a><a name="iddle4735"></a><a name=
+"iddle7019"></a><a name="iddle7116"></a><a name=
+"iddle7117"></a><a name="iddle7118"></a><a name=
+"iddle7119"></a><a name="iddle8057"></a><a name=
+"iddle8058"></a><a name="iddle8060"></a><a name="iddle8061"></a>The
+<tt>TicTacToe</tt> class is derived from <tt>QWidget</tt> and
+reimplements <tt>sizeHint()</tt>, <tt>paintEvent()</tt>, and
+<tt>mousePressEvent()</tt>. It also provides the
+<tt>gameInProgress()</tt> and <tt>saveState()</tt> functions that
+we used in our <tt>Application</tt> class.</p>
+
+<div class="docText">
+<pre>
+TicTacToe::TicTacToe(QWidget *parent)
+    : QWidget(parent)
+{
+    clearBoard();
+    if (qApp-&gt;isSessionRestored())
+        restoreState();
+    setWindowTitle(tr("Tic-Tac-Toe"));
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="was invoked"></a>In the constructor, we
+clear the board, and if the application was invoked with the
+<tt>-session</tt> option, we call the private function
+<tt>restoreState()</tt> to reload the old session.</p>
+
+<div class="docText">
+<pre>
+void TicTacToe::clearBoard()
+{
+    for (int row = 0; row &lt; 3; ++row) {
+        for (int column = 0; column &lt; 3; ++column) {
+            board[row][column] = Empty;
+        }
+    }
+    turnNumber = 0;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">In <tt>clearBoard()</tt>, we clear all the cells
+and set <tt>turnNumber</tt> to 0.</p>
+
+<div class="docText">
+<pre>
+QString TicTacToe::saveState() const
+{
+    QFile file(sessionFileName());
+    if (file.open(QIODevice::WriteOnly)) {
+        QTextStream out(&amp;file);
+        for (int row = 0; row &lt; 3; ++row) {
+            for (int column = 0; column &lt; 3; ++column)
+                out &lt;&lt; board[row][column];
+        }
+    }
+    return file.fileName();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">In <tt>saveState()</tt><a name="to disk"></a>,
+we write the state of the board to disk. The format is
+straightforward, with 'X' for crosses, 'O' for noughts, and '-' for
+empty cells.</p>
+
+<div class="docText">
+<pre>
+QString TicTacToe::sessionFileName() const
+{
+    return QDir::homePath() + "/.tictactoe_" + qApp-&gt;sessionId() + "_"
+           + qApp-&gt;sessionKey();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle3336"></a><a name=
+"iddle4726"></a><a name="iddle6926"></a><a name=
+"iddle8059"></a><a name="iddle8731"></a>The
+<tt>sessionFileName()</tt><a name="ID and"></a> private function
+returns the file name for the current session ID and session key.
+This function is used for both <tt>saveState()</tt> and
+<tt>restoreState()</tt><a name="is derived"></a>. The file name is
+derived from the session ID and session key.</p>
+
+<div class="docText">
+<pre>
+void TicTacToe::restoreState()
+{
+    QFile file(sessionFileName());
+    if (file.open(QIODevice::ReadOnly)) {
+        QTextStream in(&amp;file);
+        for (int row = 0; row &lt; 3; ++row) {
+            for (int column = 0; column &lt; 3; ++column) {
+                in &gt;&gt; board[row][column];
+                if (board[row][column] != Empty)
+                    ++turnNumber;
+            }
+        }
+    }
+    update();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">In <tt>restoreState()</tt><a name=
+"the file"></a>, we load the file that corresponds to the restored
+session and fill the board with that information. We deduce the
+value of <tt>turnNumber</tt><a name="from the"></a> from the number
+of <span class="docEmphRomanAlt">X</span>'s and <span class=
+"docEmphRomanAlt">O</span>'s on the board.</p>
+
+<p class="docText">In the <tt>TicTacToe</tt> constructor, we called
+<tt>restoreState()</tt> if
+<tt>QApplication::isSessionRestored()</tt> returned <tt>true</tt>.
+In that case, <tt>sessionId()</tt> and
+<tt>sessionKey()</tt><a name="same values"></a> return the same
+values as when the application's state was saved, and so
+<tt>sessionFileName()</tt><a name="the file"></a> returns the file
+name for that session.</p>
+
+<p class="docText"><a name="need to"></a>Testing and debugging
+session management can be frustrating, because we need to log in
+and out all the time. One way to avoid this is to use the standard
+<tt>xsm</tt><a name="time we"></a> utility provided with X11. The
+first time we invoke <tt>xsm</tt><a name="The applications"></a>,
+it pops up a session manager window and a terminal. The
+applications we start from that terminal will all use
+<tt>xsm</tt><a name="session manager"></a> as their session manager
+instead of the usual, system-wide session manager. We can then use
+<tt>xsm</tt><a name="behaves as"></a>'s window to end, restart, or
+discard a session, and see whether our application behaves as it
+should. For details about how to do this, see <a class="docLink"
+target="_blank" href=
+"http://doc.trolltech.com/4.3/session.html">http://doc.trolltech.com/4.3/session.html</a>.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch23lev1sec2.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch24.html"><img src="images/next.gif" width="20" height="20"
+border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

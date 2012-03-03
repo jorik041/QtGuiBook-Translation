@@ -1,0 +1,364 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch02lev1sec2.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch02lev1sec2.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch02lev1sec2.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch02lev1sec2.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch02lev1sec1.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch02lev1sec3.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch02lev1sec2"></a>
+<h3 class="docSection1Title" id="-100000">Signals and Slots in
+Depth</h3>
+
+<p class="docText"><a name="The signals"></a>The signals and slots
+mechanism is fundamental to Qt programming. It enables the
+application programmer to bind objects together without the objects
+knowing anything about each other. We have already connected some
+signals and slots together, declared our own signals and slots,
+implemented our own slots, and emitted our own signals. Let's take
+a moment to look at the mechanism more closely.</p>
+
+<p class="docText"><a name="almost identical"></a>Slots are almost
+identical to ordinary C++ member functions. They can be virtual;
+they can be overloaded; they can be public, protected, or private;
+they can be directly invoked like any other C++ member functions;
+and their parameters can be of any types. The difference is that a
+slot can also be connected to a signal, in which case it is
+automatically called each time the signal is emitted.</p>
+
+<p class="docText">The <tt>connect()</tt><a name="looks like"></a>
+statement looks like this:</p>
+
+<div class="docText">
+<pre>
+connect(<span class=
+"docEmphasis">sender</span>, SIGNAL(<span class="docEmphasis">signal</span>), <span class="docEmphasis">receiver</span>, SLOT(<span class="docEmphasis">slot</span>));
+</pre>
+</div>
+<br>
+
+<p class="docText">where <span class=
+"docEmphasis"><tt>sender</tt></span> and <span class=
+"docEmphasis"><tt>receiver</tt></span> are pointers to
+<tt>QObject</tt>s and where <span class=
+"docEmphasis"><tt>signal</tt></span> and <span class=
+"docEmphasis"><tt>slot</tt></span> are function signatures without
+parameter names. The <tt>SIGNAL()</tt> and <tt>SLOT()</tt> macros
+essentially convert their argument to a string.</p>
+
+<p class="docText"><a name="always connected"></a>In the examples
+we have seen so far, we have always connected different signals to
+different slots. There are other possibilities to consider.</p>
+
+<ul>
+<li>
+<p class="docList"><span class="docEmphStrong"><a name=
+"to many"></a>One signal can be connected to many slots:</span>
+</p>
+
+<div class="docText">
+<pre>
+connect(slider, SIGNAL(valueChanged(int)),
+        spinBox, SLOT(setValue(int)));
+connect(slider, SIGNAL(valueChanged(int)),
+        this, SLOT(updateStatusBarIndicator(int)));
+</pre>
+</div>
+
+<p class="docList"><a name="after the"></a>When the signal is
+emitted, the slots are called one after the other, in an
+unspecified order.</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphStrong"><a name=
+"the same"></a>Many signals can be connected to the same
+slot:</span>
+</p>
+
+<div class="docText">
+<pre>
+connect(lcd, SIGNAL(overflow()),
+        this, SLOT(handleMathError()));
+connect(calculator, SIGNAL(divisionByZero()),
+        this, SLOT(handleMathError()));
+</pre>
+</div>
+
+<p class="docList">When either signal is emitted, the slot is
+called.</p>
+</li>
+
+<li>
+<p class="docList"><a name="iddle2043"></a><a name=
+"iddle2164"></a><a name="iddle2373"></a><a name=
+"iddle4604"></a><a name="iddle5433"></a><a name=
+"iddle5441"></a><a name="iddle5451"></a><a name=
+"iddle7453"></a><a name="iddle7458"></a><a name=
+"iddle7467"></a><a name="iddle7476"></a><a name=
+"iddle7531"></a><a name="iddle7539"></a><a name=
+"iddle7547"></a><a name="iddle7853"></a><a name=
+"iddle8520"></a><span class="docEmphStrong">A signal can be
+connected to another signal:</span>
+</p>
+
+<div class="docText">
+<pre>
+connect(lineEdit, SIGNAL(textChanged(const QString &amp;)),
+        this, SIGNAL(updateRecord(const QString &amp;)));
+</pre>
+</div>
+
+<p class="docList"><a name="is emitted"></a>When the first signal
+is emitted, the second signal is emitted as well. Apart from that,
+signal–signal connections are indistinguishable from signal–slot
+connections.</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphStrong"><a name=
+"can be"></a>Connections can be removed:</span>
+</p>
+
+<div class="docText">
+<pre>
+disconnect(lcd, SIGNAL(overflow()),
+           this, SLOT(handleMathError()));
+</pre>
+</div>
+
+<p class="docList"><a name="an object"></a>This is rarely needed,
+because Qt automatically removes all connections involving an
+object when that object is deleted.</p>
+</li>
+</ul>
+
+<p class="docText"><a name="To successfully"></a>To successfully
+connect a signal to a slot (or to another signal), they must have
+the same parameter types in the same order:</p>
+
+<div class="docText">
+<pre>
+connect(ftp, SIGNAL(rawCommandReply(int, const QString &amp;)),
+        this, SLOT(processReply(int, const QString &amp;)));
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="signal has"></a>Exceptionally, if a
+signal has more parameters than the slot it is connected to, the
+additional parameters are simply ignored:</p>
+
+<div class="docText">
+<pre>
+connect(ftp, SIGNAL(rawCommandReply(int, const QString &amp;)),
+        this, SLOT(checkErrorCode(int)));
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="the parameter"></a>If the parameter
+types are incompatible, or if the signal or the slot doesn't exist,
+Qt will issue a warning at run-time if the application is built in
+debug mode. Similarly, Qt will give a warning if parameter names
+are included in the signal or slot signatures.</p>
+
+<p class="docText"><a name="But the"></a>So far, we have only used
+signals and slots with widgets. But the mechanism itself is
+implemented in <tt>QObject</tt><a name="mechanism can"></a> and
+isn't limited to GUI programming. The mechanism can be used by any
+<tt>QObject</tt> subclass:</p>
+
+<div class="docText">
+<pre>
+class Employee : public QObject
+{
+    Q_OBJECT
+
+public:
+    Employee() { mySalary = 0; }
+
+    int salary() const { return mySalary; }
+
+public slots:
+    void setSalary(int newSalary);
+
+signals:
+    void salaryChanged(int newSalary);
+
+private:
+    int mySalary;
+};
+</pre>
+</div>
+<br>
+
+<p class="docText">
+</p>
+<a name="ch02sb01"></a>
+<table cellspacing="0" width="90%" border="1" cellpadding="5">
+<tr>
+<td>
+<h2 class="docSidebarTitle">Qt's Meta-Object System</h2>
+
+<p class="docText"><a name="iddle1998"></a><a name=
+"iddle2165"></a><a name="iddle2328"></a><a name=
+"iddle3279"></a><a name="iddle3802"></a><a name=
+"iddle3804"></a><a name="iddle3810"></a><a name=
+"iddle3856"></a><a name="iddle4089"></a><a name=
+"iddle4095"></a><a name="iddle4103"></a><a name=
+"iddle4541"></a><a name="iddle4601"></a><a name=
+"iddle5336"></a><a name="iddle5452"></a><a name=
+"iddle5463"></a><a name="iddle5466"></a><a name=
+"iddle5478"></a><a name="iddle6144"></a><a name=
+"iddle6157"></a><a name="iddle7463"></a><a name=
+"iddle7535"></a><a name="iddle8155"></a><a name=
+"iddle8556"></a><a name="iddle8577"></a><a name="with a"></a>One of
+Qt's major achievements has been the extension of C++ with a
+mechanism for creating independent software components that can be
+bound together without any component knowing anything about the
+other components it is connected to.</p>
+
+<p class="docText">The mechanism is called the <span class=
+"docEmphasis">meta-object system</span><a name=
+"The introspection"></a>, and it provides two key services:
+signals–slots and introspection. The introspection functionality is
+necessary for implementing signals and slots, and allows
+application programmers to obtain "meta-information" about
+<tt>QObject</tt><a name="slots supported"></a> subclasses at
+run-time, including the list of signals and slots supported by the
+object and its class name. The mechanism also supports properties
+(used extensively by <span class="docEmphasis">Qt
+Designer</span><a name="text translation"></a>) and text
+translation (for internationalization), and it lays the foundation
+for the <span class="docEmphasis">QtScript</span><a name=
+"see in"></a> module. From Qt 4.2, properties can be added
+dynamically, a feature we will see in action in <a class="docLink"
+href="ch19.html#ch19">Chapters 19</a><a name="and"></a> and
+<a class="docLink" href="ch22.html#ch22">22</a>.</p>
+
+<p class="docText"><a name="support for"></a>Standard C++ doesn't
+provide support for the dynamic meta-information needed by Qt's
+meta-object system. Qt solves this problem by providing a separate
+tool, <tt>moc</tt><a name="parses"></a>, that parses
+<tt>Q_OBJECT</tt> class definitions and makes the information
+available through C++ functions. Since <tt>moc</tt><a name=
+"any C"></a> implements all its functionality using pure C++, Qt's
+meta-object system works with any C++ compiler.</p>
+
+<p class="docText">The mechanism works as follows:</p>
+
+<ul>
+<li>
+<p class="docList">The <tt>Q_OBJECT</tt><a name="that must"></a>
+macro declares some introspection functions that must be
+implemented in every <tt>QObject</tt> subclass:
+<tt>metaObject()</tt>, <tt>tr()</tt>, <tt>qt_metacall()</tt>, and a
+few more.</p>
+</li>
+
+<li>
+<p class="docList">Qt's <tt>moc</tt> tool generates implementations
+for the functions declared by <tt>Q_OBJECT</tt> and for all the
+signals.</p>
+</li>
+
+<li>
+<p class="docList"><tt>QObject</tt> member functions such as
+<tt>connect()</tt> and <tt>disconnect()</tt> use the introspection
+functions to do their work.</p>
+</li>
+</ul>
+
+<p class="docText">All of this is handled automatically by
+<tt>qmake</tt>, <tt>moc</tt>, and <tt>QObject</tt><a name=
+"you are"></a>, so you rarely need to think about it. But if you
+are curious, you can read the <tt>QMetaObject</tt><a name=
+"at the"></a> class documentation and have a look at the C++ source
+files generated by <tt>moc</tt> to see how the implementation
+works.</p>
+</td>
+</tr>
+</table>
+<br>
+
+<div class="docText">
+<pre>
+void Employee::setSalary(int newSalary)
+{
+    if (newSalary != mySalary) {
+        mySalary = newSalary;
+        emit salaryChanged(mySalary);
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">Notice how the <tt>setSalary()</tt> slot is
+implemented. We emit the <tt>salaryChanged()</tt> signal only if
+<tt>newSalary != mySalary</tt>. This ensures that cyclic
+connections don't lead to infinite loops.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch02lev1sec1.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch02lev1sec3.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

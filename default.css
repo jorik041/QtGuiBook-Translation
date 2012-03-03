@@ -1,0 +1,16 @@
+a:link,a:active,a:visited,a.postlink {color:#008000;text-decoration:none;}
+a:hover {color:#9ECBA6;}
+.chitemsel { background-color:#D1EDD6; color: black; padding:2px; }
+body {
+	background-color: #FFFFFF;
+	font-family: Tahoma, Arial;
+	text-align : justify;
+	line-height: 1.5em;
+	scrollbar-3dlight-color: #9ECBA6; 
+	scrollbar-arrow-color: #9ECBA6; scrollbar-base-color: #9ECBA6; 
+	scrollbar-darkshadow-color: #9ECBA6; scrollbar-face-color: #D1EDD6; 
+	scrollbar-highlight-color: #D1EDD6; scrollbar-shadow-color: #D1EDD6; 
+	scrollbar-track-color : #F2F2F2;}
+body, table { font-size: 10pt; }
+h1,h2,h3,h4 { color: #008000 }
+

@@ -1,0 +1,213 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch03lev1sec3.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch03lev1sec3.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch03lev1sec3.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch03lev1sec3.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch03lev1sec2.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch03lev1sec4.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch03lev1sec3"></a>
+<h3 class="docSection1Title" id="-100000">Setting Up the Status
+Bar</h3>
+
+<p class="docText"><a name="With the"></a>With the menus and
+toolbars complete, we are ready to tackle the Spreadsheet
+application's status bar. In its normal state, the status bar
+contains two indicators: the current cell's location and the
+current cell's formula. The status bar is also used to display
+status tips and other temporary messages. <a class="docLink" href=
+"#ch03fig08">Figure 3.8</a><a name="status bar"></a> shows the
+status bar in each state.</p>
+<a name="ch03fig08"></a>
+<center>
+<h5 class="docFigureTitle"><a name="The Spreadsheet"></a>Figure
+3.8. The Spreadsheet application's status bar</h5>
+
+<p class="docText"><img border="0" id="" width="400" height="129"
+src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzcGlqZmlzaC9nOHAzZ2MwLjA-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText">The <tt>MainWindow</tt> constructor calls
+<tt>createStatusBar()</tt> to set up the status bar:</p>
+
+<div class="docText">
+<pre>
+void MainWindow::createStatusBar()
+{
+    locationLabel = new QLabel(" W999 ");
+    locationLabel-&gt;setAlignment(Qt::AlignHCenter);
+    locationLabel-&gt;setMinimumSize(locationLabel-&gt;sizeHint());
+
+    formulaLabel = new QLabel;
+    formulaLabel-&gt;setIndent(3);
+
+    statusBar()-&gt;addWidget(locationLabel);
+    statusBar()-&gt;addWidget(formulaLabel, 1);
+
+    connect(spreadsheet, SIGNAL(currentCellChanged(int, int, int, int)),
+            this, SLOT(updateStatusBar()));
+    connect(spreadsheet, SIGNAL(modified()),
+            this, SLOT(spreadsheetModified()));
+    updateStatusBar();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1116"></a><a name=
+"iddle1133"></a><a name="iddle1135"></a><a name=
+"iddle3512"></a><a name="iddle3727"></a><a name=
+"iddle3731"></a><a name="iddle3841"></a><a name=
+"iddle3876"></a><a name="iddle4114"></a><a name=
+"iddle5254"></a><a name="iddle5333"></a><a name=
+"iddle5894"></a><a name="iddle5895"></a><a name=
+"iddle6021"></a><a name="iddle6490"></a><a name=
+"iddle6596"></a><a name="iddle6611"></a><a name=
+"iddle6625"></a><a name="iddle6877"></a><a name=
+"iddle7264"></a><a name="iddle7350"></a><a name=
+"iddle7384"></a><a name="iddle7495"></a><a name=
+"iddle7504"></a><a name="iddle7667"></a><a name=
+"iddle7732"></a><a name="iddle7781"></a><a name=
+"iddle8346"></a><a name="iddle8587"></a><a name=
+"iddle8591"></a><a name="iddle8620"></a>The
+<tt>QMainWindow::statusBar()</tt><a name="is created"></a> function
+returns a pointer to the status bar. (The status bar is created the
+first time <tt>statusBar()</tt><a name="simply"></a> is called.)
+The status indicators are simply <tt>QLabel</tt><a name=
+"an indent"></a>s whose text we change whenever necessary. We have
+added an indent to the <tt>formulaLabel</tt><a name="it is"></a> so
+that the text shown in it is offset slightly from the left edge.
+When the <tt>QLabel</tt><a name="automatically reparented"></a>s
+are added to the status bar, they are automatically reparented to
+make them children of the status bar.</p>
+
+<p class="docText"><a class="docLink" href="#ch03fig08">Figure
+3.8</a><a name="that the"></a> shows that the two labels have
+different space requirements. The cell location indicator requires
+very little space, and when the window is resized, any extra space
+should go to the cell formula indicator on the right. This is
+achieved by specifying a stretch factor of 1 in the formula label's
+<tt>QStatusBar::addWidget()</tt><a name="that it"></a> call. The
+location indicator has the default stretch factor of 0, meaning
+that it prefers not to be stretched.</p>
+
+<p class="docText"><a name="When"></a>When
+<tt>QStatusBar</tt><a name="indicator widgets"></a> lays out
+indicator widgets, it tries to respect each widget's ideal size as
+given by <tt>QWidget::sizeHint()</tt><a name="then stretches"></a>
+and then stretches any stretchable widgets to fill the available
+space. A widget's ideal size is itself dependent on the widget's
+contents and varies as we change the contents. To avoid constant
+resizing of the location indicator, we set its minimum size to be
+wide enough to contain the largest possible text ("W999"), with a
+little extra space. We also set its alignment to
+<tt>Qt::AlignHCenter</tt> to horizontally center the text.</p>
+
+<p class="docText">Near the end of the function, we connect two of
+<tt>Spreadsheet</tt>'s signals to two of <tt>MainWindow</tt>'s
+slots: <tt>updateStatusBar()</tt> and
+<tt>spreadsheetModified()</tt>.</p>
+
+<div class="docText">
+<pre>
+void MainWindow::updateStatusBar()
+{
+    locationLabel-&gt;setText(spreadsheet-&gt;currentLocation());
+    formulaLabel-&gt;setText(spreadsheet-&gt;currentFormula());
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>updateStatusBar()</tt><a name=
+"It is"></a> slot updates the cell location and the cell formula
+indicators. It is called whenever the user moves the cell cursor to
+a new cell. The slot is also used as an ordinary function at the
+end of <tt>createStatusBar()</tt><a name="necessary because"></a>
+to initialize the indicators. This is necessary because
+<tt>Spreadsheet</tt> doesn't emit the <tt>currentCellChanged()</tt>
+signal at startup.</p>
+
+<div class="docText">
+<pre>
+void MainWindow::spreadsheetModified()
+{
+    setWindowModified(true);
+    updateStatusBar();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>spreadsheetModified()</tt> slot sets the
+<tt>windowModified</tt> property to <tt>true</tt><a name=
+"and formula"></a>, updating the title bar. The function also
+updates the location and formula indicators so that they reflect
+the current state of affairs.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch03lev1sec2.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch03lev1sec4.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

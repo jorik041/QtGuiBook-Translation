@@ -1,0 +1,635 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>app03lev1sec3.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/app03lev1sec3.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fapp03lev1sec3.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fapp03lev1sec3.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"app03lev1sec2.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"app04.html"><img src="images/next.gif" width="20" height="20"
+border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="app03lev1sec3"></a>
+<h3 class="docSection1Title" id="-100000">Integrating C++
+Components with Qt Jambi</h3>
+
+<p class="docText"><a name="iddle1331"></a><a name=
+"iddle2604"></a><a name="iddle2892"></a><a name=
+"iddle3380"></a><a name="iddle4327"></a><a name=
+"iddle4335"></a><a name="iddle6141"></a><a name=
+"iddle8704"></a><a name="Qt Jambi"></a>Qt Jambi lets C++
+programmers easily integrate their Qt code with Java. To make our
+own custom C++ components available to Qt Jambi, we can use the Qt
+Jambi Generator, which takes a set of C++ header files and an XML
+file that provides some information about the C++ classes that we
+want to wrap and produces Java bindings for our C++ components. The
+Qt Jambi API itself is created using the generator.</p>
+
+<p class="docText"><a class="docLink" href="#app03fig04">Figure
+C.4</a><a name="After running"></a> illustrates the process. After
+running the generator, we obtain some Java files that we must
+compile using the Java compiler, and some <tt>.h</tt> and
+<tt>.cpp</tt><a name="that we"></a> files that we must compile into
+a C++ shared library.</p>
+<a name="app03fig04"></a>
+<center>
+<h5 class="docFigureTitle">Figure C.4. Making C++ classes available
+in Qt Jambi</h5>
+
+<p class="docText"><img border="0" id="" width="500" height="433"
+src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83aXBpcGhncDQvZzBhc2NpX2MuZl9m.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText">To illustrate the process, we will provide
+bindings for the data-only <tt>PlotSettings</tt> class and for the
+<tt>Plotter</tt> widget that we developed in <a class="docLink"
+href="ch05.html#ch05">Chapter 5</a> (p. <a class="docLink" href=
+"ch05lev1sec4.html#ch05lev1sec4">121</a>). We will then use the
+bindings in a Java application. <a class="docLink" href=
+"#app03fig05">Figure C.5</a> shows the application running.</p>
+<a name="app03fig05"></a>
+<center>
+<h5 class="docFigureTitle">Figure C.5. The Jambi Plotter
+application</h5>
+
+<p class="docText"><img border="0" id="" width="500" height="360"
+src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83anBvYWgubWUvdHRqc2NpYmlycGdwbA--.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="files that"></a>The header file we need
+must define (or include header files that define) all the classes
+necessary for the library we will build:</p>
+
+<div class="docText">
+<pre>
+#include &lt;QtGui&gt;
+
+#include "../plotter/plotter.h"
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle4086"></a><a name=
+"iddle4357"></a><a name="iddle8401"></a><a name=
+"example code"></a>We assume that the Plotter example code lies in
+a directory parallel to the Qt Jambi wrapper. We also need an XML
+file to tell the generator what to wrap and how to wrap it. The
+file is called <tt>jambiplotter.xml</tt>:</p>
+
+<div class="docText">
+<pre>
+&lt;typesystem package="com.softwareinc.plotter"
+            default-superclass="com.trolltech.qt.QtJambiObject"&gt;
+    &lt;load-typesystem name=":/trolltech/generator/typesystem_core.txt"
+                     generate="no" /&gt;
+    &lt;load-typesystem name=":/trolltech/generator/typesystem_gui.txt"
+                     generate="no" /&gt;
+    &lt;object-type name="Plotter" /&gt;
+    &lt;value-type name="PlotSettings" /&gt;
+&lt;/typesystem&gt;
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="of"></a>In the outer tag, we specify a
+Java package name of <tt>com.softwareinc.plotter</tt> for the
+Plotter component. The <tt>&lt;load-typesystem&gt;</tt> tags import
+the information concerning the <span class=
+"docEmphasis">QtCore</span> and <span class=
+"docEmphasis">QtGui</span> modules.</p>
+
+<p class="docText">The <tt>&lt;object-type&gt;</tt> and
+<tt>&lt;value-type&gt;</tt><a name="to make"></a> tags specify the
+two C++ classes we want to make available. We have specified that
+the <tt>Plotter</tt><a name="be copied"></a> class is a C++ "object
+type"; this is suitable for objects that cannot be copied, such as
+widgets. In contrast, the <tt>PlotSettings</tt><a name="as a"></a>
+class is treated as a C++ "value type".</p>
+
+<p class="docText"><a name="Jambi users"></a>To Qt Jambi users,
+there is no obvious difference between the two. The distinction is
+important when the generator maps C++ APIs to Java APIs. For
+example, if a "value type" is returned from a method, the generator
+will ensure that a new independent object is returned (to avoid
+side effects), but if the returned type is an object type, a
+reference to the original object is returned.</p>
+
+<p class="docText"><a name="iddle1597"></a><a name=
+"iddle2428"></a><a name="We will"></a>We will need two environment
+variables, one specifying the path to Qt Jambi, the other to Java.
+Here is how we set them on Unix systems (using the Bash shell):</p>
+
+<div class="docText">
+<pre>
+export JAMBIPATH=$HOME/qtjambi-linux32-gpl-4.3.2_01
+export JAVA=/usr/java/jdk1.6.0_02
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="would write"></a>On Windows, we would
+write</p>
+
+<div class="docText">
+<pre>
+set JAMBIPATH=C:\QtJambi
+set JAVA="C:\Program Files\Java\jdk1.6.0_02"
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="version numbers"></a>Naturally, the
+version numbers and directories may be different for your system.
+From now on, we will assume that <tt>JAMBIPATH</tt> and
+<tt>JAVA</tt><a name="can run"></a> are available. Once we have the
+header and XML files, we can run the generator in a console:</p>
+
+<div class="docText">
+<pre>
+$JAMBIPATH/bin/generator jambiplotter.h jambiplotter.xml
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="installed locally"></a>If Qt Jambi has
+been installed locally rather than system-wide, this may fail on
+some systems. The solution is to provide a suitable path to Qt
+Jambi's libraries:</p>
+
+<div class="docText">
+<pre>
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$JAMBIPATH/lib
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="relevant environment"></a>Again, we
+have used the Bash shell's syntax. On Mac OS X, the relevant
+environment variable is called <tt>DYLD_LIBRARY_PATH</tt><a name=
+"to the"></a>. On Windows, the equivalent is achieved by adding to
+the <tt>PATH</tt>:</p>
+
+<div class="docText">
+<pre>
+set PATH=%PATH%;%JAMBIPATH%\lib
+</pre>
+</div>
+<br>
+
+<p class="docText">Now, on Windows, we can run the generator like
+this:</p>
+
+<div class="docText">
+<pre>
+%JAMBIPATH%\bin\generator jambiplotter.h jambiplotter.xml
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="information on"></a>The code generation
+takes a few moments, and outputs some summary information on the
+console. For our example, the generator produced the following
+files, in two parallel directories:</p>
+
+<div class="docText">
+<pre>
+../com/softwareinc/plotter/PlotSettings.java
+../com/softwareinc/plotter/Plotter.java
+../com/softwareinc/plotter/QtJambi_LibraryInitializer.java
+
+../cpp/com_softwareinc_plotter/com_softwareinc_plotter.pri
+../cpp/com_softwareinc_plotter/metainfo.cpp
+../cpp/com_softwareinc_plotter/metainfo.h
+../cpp/com_softwareinc_plotter/qtjambi_libraryinitializer.cpp
+../cpp/com_softwareinc_plotter/qtjambishell_PlotSettings.cpp
+../cpp/com_softwareinc_plotter/qtjambishell_PlotSettings.h
+../cpp/com_softwareinc_plotter/qtjambishell_Plotter.cpp
+../cpp/com_softwareinc_plotter/qtjambishell_Plotter.h
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="compile both"></a>We must now compile
+both the Java and the C++ files, but before we do this we should
+make sure that the <tt>CLASSPATH</tt><a name="is set"></a>
+environment variable is set correctly. For example, if we are using
+the Bash shell, we might do this:</p>
+
+<div class="docText">
+<pre>
+export CLASSPATH=$CLASSPATH:$JAMBIPATH/qtjambi.jar:$PWD:$PWD/..
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle2182"></a><a name=
+"iddle3195"></a><a name="iddle3202"></a><a name=
+"iddle3383"></a><a name="iddle3538"></a><a name=
+"iddle3544"></a><a name="iddle4476"></a><a name=
+"iddle5341"></a><a name="iddle7934"></a><a name=
+"iddle7960"></a><a name="Here we"></a>Here we have extended the
+existing <tt>CLASSPATH</tt><a name="Qt Jambi"></a> with the Qt
+Jambi <tt>.jar</tt><a name="the current"></a> file, with the
+current directory, and with the current directory's parent
+directory. We need the parent directory so that we can access the
+parallel <tt>com</tt> directory. On Windows, the syntax would
+be</p>
+
+<div class="docText">
+<pre>
+set CLASSPATH=%CLASSPATH%;%JAMBIPATH%\qtjambi.jar;%CD%;%CD%\..
+</pre>
+</div>
+<br>
+
+<p class="docText">We can now compile the <tt>.java</tt> files into
+<tt>.class</tt> files:</p>
+
+<div class="docText">
+<pre>
+cd ../com/softwareinc/plotter
+javac *.java
+</pre>
+</div>
+<br>
+
+<p class="docText">After compiling the <tt>.java</tt> files, we
+must return to the <tt>jambiplotter</tt><a name=
+"that provides"></a> directory. Here, the next step is to create
+the C++ shared library that provides the C++ code for
+<tt>Plotter</tt> and <tt>PlotSettings</tt><a name=
+"code produced"></a>, as well as the C++ wrapper code produced by
+the generator. We begin by creating a <tt>.pro</tt> file:</p>
+
+<div class="docText">
+<pre>
+TEMPLATE      = lib
+TARGET        = com_softwareinc_plotter
+DLLDESTDIR    = .
+HEADERS       = ../plotter/plotter.h
+SOURCES       = ../plotter/plotter.cpp
+RESOURCES     = ../plotter/plotter.qrc
+INCLUDEPATH  += ../plotter \
+                $$(JAMBIPATH)/include \
+                $$(JAVA)/include
+unix {
+    INCLUDEPATH  += $$(JAVA)/include/linux
+}
+win32 {
+    INCLUDEPATH  += $$(JAVA)/include/win32
+}
+LIBS  += -L$$(JAMBIPATH)/lib -lqtjambi
+
+include(../cpp/com_softwareinc_plotter/com_softwareinc_plotter.pri)
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>TEMPLATE</tt> variable must be set to
+<tt>lib</tt><a name="than an"></a> since we want to create a shared
+library rather than an application. The <tt>TARGET</tt><a name=
+"package but"></a> variable specifies the name of the Java package
+but with underscores used instead of periods, and
+<tt>DLLDESTDIR</tt> specifies where the shared library (or DLL)
+should be put. The <tt>INCLUDEPATH</tt><a name="is not"></a>
+variable must be extended to include the source directory (since it
+is not the current directory in this case), the Qt Jambi include
+path, the Java SDK's include path, and the Java SDK's
+platform-specific include path. (We cover the <tt>unix</tt> and
+<tt>win32</tt> syntaxes in <a class="docLink" href=
+"app02.html#app02">Appendix B</a><a name="include the"></a>.) We
+must also include the Qt Jambi library itself, which we do in the
+<tt>LIBS</tt> entry. The <tt>include()</tt><a name="the end"></a>
+directive at the end is used to access the C++ files the generator
+produced. Once we have the <tt>.pro</tt><a name="we can"></a> file,
+we can run <tt>qmake</tt> and <tt>make</tt><a name="to build"></a>
+as usual to build the library.</p>
+
+<p class="docText"><a name="that we"></a>Now that we have the
+shared library and suitable Java wrapper code, we are ready to make
+use of them in an application. The Jambi Plotter application
+creates a <tt>PlotSettings</tt> and a <tt>Plotter</tt> object and
+uses them to display some random <a name="iddle1811"></a><a name=
+"iddle3192"></a><a name="iddle3379"></a><a name=
+"iddle6472"></a><a name="like any"></a>data. The important point is
+that they are used just like any other Java or Qt Jambi class. The
+whole application is quite small, so we will show it in full:</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+import java.lang.Math;
+import java.util.ArrayList;
+import com.trolltech.qt.core.*;
+import com.trolltech.qt.gui.*;
+import com.softwareinc.plotter.Plotter;
+import com.softwareinc.plotter.PlotSettings;
+
+public class JambiPlotter {
+    public static void main(String[] args) {
+        QApplication.initialize(args);
+
+        PlotSettings settings = new PlotSettings();
+        settings.setMinX(0.0);
+        settings.setMaxX(100.0);
+        settings.setMinY(0.0);
+        settings.setMaxY(100.0);
+
+        int numPoints = 100;
+        ArrayList&lt;QPointF&gt; points0 = new ArrayList&lt;QPointF&gt;();
+        ArrayList&lt;QPointF&gt; points1 = new ArrayList&lt;QPointF&gt;();
+        for (int x = 0; x &lt; numPoints; ++x) {
+            points0.add(new QPointF(x, Math.random() * 100));
+            points1.add(new QPointF(x, Math.random() * 100));
+        }
+
+        Plotter plotter = new Plotter();
+        plotter.setWindowTitle(plotter.tr("Jambi Plotter"));
+        plotter.setPlotSettings(settings);
+        plotter.setCurveData(0, points0);
+        plotter.setCurveData(1, points1);
+        plotter.show();
+
+        QApplication.exec();
+    }
+}
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="standard libraries"></a>We import a
+couple of Java's standard libraries and the Qt Jambi libraries that
+we need, as well as the <tt>PlotSettings</tt> and <tt>Plotter</tt>
+classes. We could just as easily have written <tt>import
+com.softwareinc.plotter.*</tt>.</p>
+
+<p class="docText">After initializing the <tt>QApplication</tt>
+object, we create a <tt>PlotSettings</tt><a name="this class"></a>
+object and set some of its values. The C++ version of this class
+has <tt>minX</tt>, <tt>maxX</tt>, <tt>minY</tt>, and
+<tt>maxY</tt><a name="generator produces"></a> as public variables.
+Unless told otherwise, the Qt Jambi generator produces accessor
+methods for such variables, using the Qt naming convention (e.g.,
+<tt>minX()</tt> and <tt>setMinX()</tt><a name="curve data"></a>).
+Once we have suitable plot settings, we generate two lots of curve
+data, with 100 random points each. In C++/Qt, the points of each
+curve are held as a <tt>QVector&lt;QPointF&gt;</tt><a name=
+"pass an"></a>; in Qt Jambi, we pass an
+<tt>ArrayList&lt;QPointF&gt;</tt><a name="Qt Jambi"></a> instead,
+relying on Qt Jambi to transform from one to the other as
+needed.</p>
+
+<p class="docText"><a name="With the"></a>With the settings and
+curve data ready, we create a new <tt>Plotter</tt><a name=
+"no parent"></a> object with no parent (to make it a top-level
+window). Then we give the plotter the plot <a name=
+"iddle1598"></a><a name="iddle1812"></a><a name=
+"iddle2315"></a><a name="iddle2429"></a><a name=
+"iddle2430"></a><a name="iddle2432"></a><a name=
+"iddle2437"></a><a name="iddle2440"></a><a name=
+"iddle3526"></a><a name="iddle3949"></a><a name=
+"iddle4182"></a><a name="iddle4285"></a><a name=
+"iddle6151"></a><a name="the data"></a>settings, and the data for
+two curves, and call <tt>show()</tt> to make the plotter visible.
+Finally, we call <tt>QApplication.exec()</tt> to start off the
+event loop.</p>
+
+<p class="docText"><a name="include not"></a>When we compile the
+application, we must be careful to include not only the normal
+<tt>CLASSPATH</tt><a name="the"></a> but also the path to the
+<tt>com.softwareinc.plotter</tt><a name="couple of"></a> package.
+To run the application, we must also set up a couple of additional
+environment variables, to ensure that the loader will find Qt Jambi
+and our bindings. On Windows, we must set <tt>PATH</tt> as
+follows:</p>
+
+<div class="docText">
+<pre>
+set PATH=%PATH%;%JAMBIPATH%\bin;%CD%
+</pre>
+</div>
+<br>
+
+<p class="docText">On Unix, we must set
+<tt>LD_LIBRARY_PATH</tt>:</p>
+
+<div class="docText">
+<pre>
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$JAMBIPATH/lib:$PWD
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="called"></a>On Mac OS X, the
+environment variable is called <tt>DYLD_LIBRARY_PATH</tt>. Also, on
+all three platforms, we must set <tt>QT_PLUGIN_PATH</tt> to include
+Qt Jambi's <tt>plugins</tt> directory. For example:</p>
+
+<div class="docText">
+<pre>
+set QT_PLUGIN_PATH=%QT_PLUGIN_PATH%;%JAMBIPATH%\plugins
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="our additions"></a>To compile and run
+Jambi Plotter on all platforms, thanks to our additions to the
+<tt>CLASSPATH</tt><a name="type this"></a>, we can simply type
+this:</p>
+
+<div class="docText">
+<pre>
+javac JambiPlotter.java
+java JambiPlotter
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="now completed"></a>We have now
+completed the example, and shown how to make use of C++ components
+in Qt Jambi applications. In fact, the Qt Jambi generator that is
+the basis of making C++ components available to Java offers many
+more features than this brief introduction has shown. Although the
+generator supports only a subset of C++, this subset comprises all
+of the most common C++ constructs, including multiple inheritance
+and operator overloading. The generator is documented in full at
+<tt>http://doc.trolltech.com/qtjambi-4.3.2_01/com/trolltech/
+qt/qtjambi-generator.html</tt><a name="We will"></a>. We will
+briefly mention just a few features we didn't need in the example,
+to give a flavor of what's available.</p>
+
+<p class="docText"><a name="to influencing"></a>The key to
+influencing how the generator works is what we put in the XML file
+we give it. For example, if we have multiple inheritance in C++,
+one straightforward way to handle this in Qt Jambi is to identify
+just one of the classes concerned as an "object type" or "value
+type" in the type system, and identify all the others as "interface
+types".</p>
+
+<p class="docText"><a name="is also"></a>It is also possible to
+provide more natural method signatures. For example, instead of
+using an <tt>ArrayList&lt;QPointF&gt;</tt><a name="nicer to"></a>
+to pass the points for a curve, it would be nicer to pass a
+<tt>QPointF</tt><a name="method and"></a> array. This involves
+hiding the original C++ method and replacing it with a Java method
+that accepts a <tt>QPointF[]</tt><a name="achieve this"></a> and
+calls the original C++ method behind the scenes. We can achieve
+this by modifying the <tt>jambiplotter.xml</tt> file. We originally
+declared the C++ <tt>Plotter</tt> type with an entry like this:</p>
+
+<div class="docText">
+<pre>
+&lt;object-type name="Plotter" /&gt;
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle3193"></a><a name=
+"iddle5432"></a><a name="a more"></a>We will replace the preceding
+line with a more sophisticated version:</p>
+
+<div class="docText">
+<pre>
+&lt;object-type name="Plotter"&gt;
+    &lt;modify-function
+        signature="setCurveData(int,const QVector&amp;lt;QPointF&amp;gt;&amp;amp;)"&gt;
+        &lt;access modifier="private" /&gt;
+        &lt;rename to="setCurveData_private" /&gt;
+    &lt;/modify-function&gt;
+    &lt;inject-code&gt;
+        public final void setCurveData(int id,
+                               com.trolltech.qt.core.QPointF points[]) {
+            setCurveData_private(id, java.util.Arrays.asList(points));
+        }
+    &lt;/inject-code&gt;
+&lt;/object-type&gt;
+</pre>
+</div>
+<br>
+
+<p class="docText">In the <tt>&lt;modify-function&gt;</tt> element,
+we rename the C++ <tt>setCurveData()</tt> method to be
+<tt>setCurveData_private()</tt> and change its access specifier to
+<tt>private</tt><a name="that we"></a>, thereby preventing access
+to it from outside the class's own methods. Notice that we must
+escape XML's special characters '&lt;', '&gt;', and '&amp;' in the
+<tt>signature</tt> attribute.</p>
+
+<p class="docText">In the <tt>&lt;inject-code&gt;</tt><a name=
+"custom"></a> element, we implement a custom
+<tt>setCurveData()</tt><a name="This method"></a> method in Java.
+This method accepts a <tt>QPointF[]</tt><a name="argument and"></a>
+argument and simply calls the private
+<tt>setCurveData_private()</tt><a name="array to"></a> method,
+converting the array to the list that the C++ method expects.</p>
+
+<p class="docText"><a name="we can"></a>Now we can create and
+populate <tt>QPointF</tt> arrays in a more natural manner:</p>
+
+<div class="docText">
+<pre>
+QPointF[] points0 = new QPointF[numPoints];
+QPointF[] points1 = new QPointF[numPoints];
+for (int x = 0; x &lt; numPoints; ++x) {
+    points0[x] = new QPointF(x, Math.random() * 100);
+    points1[x] = new QPointF(x, Math.random() * 100);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The rest of the code is the same as before.</p>
+
+<p class="docText"><a name="that uses"></a>In some cases, when
+classes are wrapped, the generator produces code that uses
+<tt>QNativePointer</tt><a name="for C"></a>. This type is a wrapper
+for C++ "value type" pointers and works for both pointers and
+arrays. The file <tt>mjb_nativepointer_api.log</tt> specifies any
+generated code that uses <tt>QNativePointer</tt><a name=
+"uses"></a>. The Qt Jambi documentation recommends replacing any
+code that uses <tt>QNativePointer</tt> and provides step-by-step
+instructions for how to do this.</p>
+
+<p class="docText">Sometimes we will need to include additional
+<tt>import</tt> declarations in the generated <tt>.java</tt> files.
+This is easily achieved using the <tt>&lt;extra-includes&gt;</tt>
+tag, and is fully described in
+<tt>http://doc.trolltech.com/qtjambi-4.3.2_01/com/trolltech/qt/
+qtjambi-typesystem.html</tt>.</p>
+
+<p class="docText"><a name="and versatile"></a>The Qt Jambi
+generator is a powerful and versatile tool for making C++/Qt
+classes seamlessly available to Java programmers, and makes it
+possible to combine the strengths of C++ and Java in a single
+project.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"app03lev1sec2.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"app04.html"><img src="images/next.gif" width="20" height="20"
+border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

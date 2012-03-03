@@ -1,0 +1,1240 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch21.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch21.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch21.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch21.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch20lev1sec3.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch21lev1sec1.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch21"></a>
+<h2 id="title-ID0ETEPM" class="docChapterTitle">21. Creating
+Plugins</h2>
+
+<p class="docText"><img border="0" id="" width="180" height="131"
+src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83ZXBwdDFocF9lcl8vMmlzY2Nob25lYS5wZ3Jq.jpg"
+alt="">
+</p>
+
+<ul>
+<li>
+<p class="docList"><a name="iddle2183"></a><a name=
+"iddle2321"></a><a name="iddle3200"></a><a name=
+"iddle3539"></a><a name="iddle3542"></a><a name=
+"iddle4465"></a><a name="iddle4493"></a><a name=
+"iddle5263"></a><a name="iddle7421"></a><span class=
+"docEmphasis"><a class="docLink" href=
+"ch21lev1sec1.html#ch21lev1sec1">Extending Qt with
+Plugins</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch21lev1sec2.html#ch21lev1sec2">Making Applications
+Plugin-Aware</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch21lev1sec3.html#ch21lev1sec3">Writing Application
+Plugins</a></span>
+</p>
+</li>
+</ul>
+
+<p class="docText"><a name="Dynamic libraries"></a>Dynamic
+libraries (also called shared libraries or DLLs) are independent
+modules that are stored in a separate file on disk and can be
+accessed by multiple applications. Programs usually specify which
+dynamic libraries they need at link time, in which case the
+libraries are automatically loaded when the application starts.
+This approach usually involves adding the library and possibly its
+include path to the application's <tt>.pro</tt><a name=
+"including the"></a> file and including the relevant headers in the
+source files. For example:</p>
+
+<div class="docText">
+<pre>
+LIBS        += -ldb_cxx
+INCLUDEPATH += /usr/local/BerkeleyDB.4.2/include
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="alternative is"></a>The alternative is
+to dynamically load the library when it is required, and then
+resolve the symbols that we want to use from it. Qt provides the
+<tt>QLibrary</tt><a name="of a"></a> class to achieve this in a
+platform-independent manner. Given the stem of a library's name,
+<tt>QLibrary</tt><a name="the library"></a> searches the platform's
+standard locations for the library, looking for an appropriate
+file. For example, given the name <tt>mimetype</tt>, it will look
+for <tt>mimetype.dll</tt> on Windows, <tt>mimetype.so</tt> on
+Linux, and <tt>mimetype.dylib</tt> on Mac OS X.</p>
+
+<p class="docText"><a name="use of"></a>Modern GUI applications can
+often be extended by the use of plugins. A plugin is a dynamic
+library that implements a particular interface to provide optional
+extra functionality. For example, in <a class="docLink" href=
+"ch05.html#ch05">Chapter 5</a><a name="custom widget"></a>, we
+created a plugin to integrate a custom widget with <span class=
+"docEmphasis">Qt Designer</span> (p. <a class="docLink" href=
+"ch05lev1sec3.html#ch05lev1sec3">117</a>).</p>
+
+<p class="docText"><a name="including image"></a>Qt recognizes its
+own set of plugin interfaces for various domains, including image
+formats, database drivers, widget styles, text encodings, and
+accessibility. This chapter's first section explains how to extend
+Qt with Qt plugins.</p>
+
+<p class="docText"><a name="possible to"></a>It is also possible to
+create application-specific plugins for particular Qt applications.
+Qt makes writing such plugins easy through its plugin framework,
+which adds crash safety and convenience to
+<tt>QLibrary</tt><a name="last two"></a>. In the last two sections
+of this chapter, we show how to make an application support plugins
+and how to create a custom plugin for an application.</p>
+<a name="ch21lev1sec1"></a>
+<h3 class="docSection1Title" id="-100000">Extending Qt with
+Plugins</h3>
+
+<p class="docText"><a name="iddle1380"></a><a name=
+"iddle1394"></a><a name="iddle1397"></a><a name=
+"iddle2570"></a><a name="iddle4361"></a><a name=
+"iddle4616"></a><a name="iddle4680"></a><a name=
+"iddle4681"></a><a name="iddle4682"></a><a name=
+"iddle4683"></a><a name="iddle4911"></a><a name=
+"iddle4913"></a><a name="iddle5034"></a><a name=
+"iddle5185"></a><a name="iddle5186"></a><a name=
+"iddle5202"></a><a name="iddle5209"></a><a name=
+"iddle5215"></a><a name="iddle5216"></a><a name=
+"iddle5246"></a><a name="iddle5408"></a><a name=
+"iddle5583"></a><a name="iddle5687"></a><a name=
+"iddle5689"></a><a name="iddle5709"></a><a name=
+"iddle5821"></a><a name="iddle5822"></a><a name=
+"iddle5972"></a><a name="iddle6003"></a><a name=
+"iddle6271"></a><a name="iddle6278"></a><a name=
+"iddle6676"></a><a name="iddle6680"></a><a name=
+"iddle7859"></a><a name="Qt can"></a>Qt can be extended with a
+variety of plugin types, the most common being database drivers,
+image formats, styles, and text codecs. For each type of plugin, we
+normally need at least two classes: a plugin wrapper class that
+implements the generic plugin API functions, and one or more
+handler classes that each implement the API for a particular type
+of plugin. The handlers are accessed through the wrapper class.
+These classes are shown in <a class="docLink" href=
+"#ch21fig01">Figure 21.1</a>.</p>
+<a name="ch21fig01"></a>
+<h5 class="docTableTitle"><a name="plugin and"></a>Figure 21.1. Qt
+plugin and handler classes</h5>
+
+<table cellspacing="0" class="allBorders" border="1">
+<colgroup align="left" span="2">
+<col width="180">
+<col width="200">
+</colgroup>
+
+<thead>
+<tr>
+<th scope="col" class="docTableCell thead" align="center" valign=
+"top" style="background-color:#E6E6E6">Plugin Class</th>
+<th scope="col" class="docTableCell thead" align="center" valign=
+"top" style="background-color:#E6E6E6"><a name=
+"Base Class"></a>Handler Base Class</th>
+</tr>
+</thead>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">QAccessibleBridgePlugin</span>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">QAccessibleBridge</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">QAccessiblePlugin</span>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">QAccessibleInterface</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">QDecorationPlugin<sup class=
+"docFootnote"><a class="docLink" href=
+"#ch21tn01">[*]</a></sup></span>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">QDecoration<sup class="docFootnote"><a class=
+"docLink" href="#ch21tn01">[*]</a></sup></span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">QFontEnginePlugin</span>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">QAbstractFontEngine</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">QIconEnginePluginV2</span>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">QIconEngineV2</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">QImageIOPlugin</span>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">QImageIOHandler</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">QInputContextPlugin</span>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">QInputContext</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">QKbdDriverPlugin<sup class=
+"docFootnote"><a class="docLink" href=
+"#ch21tn01">[*]</a></sup></span>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">QWSKeyboardHandler<sup class=
+"docFootnote"><a class="docLink" href=
+"#ch21tn01">[*]</a></sup></span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">QMouseDriverPlugin<sup class=
+"docFootnote"><a class="docLink" href=
+"#ch21tn01">[*]</a></sup></span>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">QWSMouseHandler<sup class="docFootnote"><a class=
+"docLink" href="#ch21tn01">[*]</a></sup></span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">QPictureFormatPlugin</span>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">N/A</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">QScreenDriverPlugin<sup class=
+"docFootnote"><a class="docLink" href=
+"#ch21tn01">[*]</a></sup></span>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">QScreen<sup class="docFootnote"><a class=
+"docLink" href="#ch21tn01">[*]</a></sup></span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">QScriptExtensionPlugin</span>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">N/A</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">QSqlDriverPlugin</span>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">QSqlDriver</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">QStylePlugin</span>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">QStyle</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">QTextCodecPlugin</span>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">QTextCodec</span>
+</td>
+</tr>
+</table>
+<br>
+
+<blockquote>
+<p class="docFootnote"><sup><a name="ch21tn01">[*]</a></sup>
+Available only in Qt/Embedded Linux.</p>
+</blockquote>
+
+<p class="docText"><a name="implement two"></a>To demonstrate how
+to extend Qt with plugins, we will implement two plugins in this
+section. The first is a very simple <tt>QStyle</tt><a name=
+"we developed"></a> plugin for the Bronze style we developed in
+<a class="docLink" href="ch19.html#ch19">Chapter 19</a><a name=
+"Windows cursor"></a>. The second is a plugin that can read
+monochrome Windows cursor files.</p>
+
+<p class="docText">Creating a <tt>QStyle</tt><a name=
+"developed the"></a> plugin is very easy, provided we have already
+developed the style itself. All we need are three files: a
+<tt>.pro</tt><a name="seen before"></a> file that is rather
+different from the ones we have seen before, and small <tt>.h</tt>
+and <tt>.cpp</tt><a name="a"></a> files to provide a
+<tt>QStylePlugin</tt><a name="acts as"></a> subclass that acts as a
+wrapper for the style. We will begin with the <tt>.h</tt> file:</p>
+
+<div class="docText">
+<pre>
+class BronzeStylePlugin : public QStylePlugin
+{
+public:
+    QStringList keys() const;
+    QStyle *create(const QString &amp;key);
+};
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1395"></a><a name=
+"iddle1396"></a><a name="iddle1891"></a><a name=
+"iddle2687"></a><a name="iddle3461"></a><a name=
+"iddle4480"></a><a name="iddle4596"></a><a name=
+"iddle7932"></a><a name="page_493"></a><a name=
+"All plugins"></a>All plugins at least provide a
+<tt>keys()</tt><a name="a"></a> function and a <tt>create()</tt>
+function. The <tt>keys()</tt><a name="returns a"></a> function
+returns a list of the objects that the plugin can create. For style
+plugins, the keys are case-insensitive, so "mystyle" and "MyStyle"
+are treated the same. The <tt>create()</tt><a name="be the"></a>
+function returns an object given a key; the key must be the same as
+one of those in the list returned by <tt>keys()</tt>.</p>
+
+<p class="docText">The <tt>.cpp</tt><a name="and simple"></a> file
+is almost as small and simple as the <tt>.h</tt> file.</p>
+
+<div class="docText">
+<pre>
+QStringList BronzeStylePlugin::keys() const
+{
+    return QStringList() &lt;&lt; "Bronze";
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>keys()</tt><a name="we offer"></a>
+function returns a list of styles provided by the plugin. Here, we
+offer only one style, called "Bronze".</p>
+
+<div class="docText">
+<pre>
+QStyle *BronzeStylePlugin::create(const QString &amp;key)
+{
+    if (key.toLower() == "bronze")
+        return new BronzeStyle;
+    return 0;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="a"></a>If the key is "Bronze"
+(regardless of case), we create a <tt>BronzeStyle</tt> object and
+return it.</p>
+
+<p class="docText">At the end of the <tt>.cpp</tt> file, we must
+add the following macro to export the style properly:</p>
+
+<div class="docText">
+<pre>
+Q_EXPORT_PLUGIN2(bronzestyleplugin, BronzeStylePlugin)
+</pre>
+</div>
+<br>
+
+<p class="docText">The first argument to
+<tt>Q_EXPORT_PLUGIN2()</tt><a name="version number"></a> is the
+base name of the target library, excluding any extension, prefix,
+or version number. By default, <tt>qmake</tt><a name="of the"></a>
+uses the name of the current directory as the base name; this can
+be overriden using the <tt>TARGET</tt><a name="the"></a> entry in
+the <tt>.pro</tt><a name="The second"></a> file. The second
+argument to <tt>Q_EXPORT_PLUGIN2()</tt><a name="class name"></a> is
+the plugin's class name.</p>
+
+<p class="docText">The <tt>.pro</tt><a name="is different"></a>
+file is different for plugins than for applications, so we will
+finish by looking at the Bronze style's <tt>.pro</tt> file:</p>
+
+<div class="docText">
+<pre>
+TEMPLATE      = lib
+CONFIG       += plugin
+HEADERS       = ../bronze/bronzestyle.h \
+                bronzestyleplugin.h
+SOURCES       = ../bronze/bronzestyle.cpp \
+                bronzestyleplugin.cpp
+RESOURCES     = ../bronze/bronze.qrc
+DESTDIR       = $$[QT_INSTALL_PLUGINS]/styles
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1098"></a><a name=
+"iddle1733"></a><a name="iddle1932"></a><a name=
+"iddle1969"></a><a name="iddle1973"></a><a name=
+"iddle2044"></a><a name="iddle2104"></a><a name=
+"iddle2439"></a><a name="iddle2578"></a><a name=
+"iddle3175"></a><a name="iddle3304"></a><a name=
+"iddle4463"></a><a name="iddle4741"></a><a name=
+"iddle4853"></a><a name="iddle5210"></a><a name=
+"iddle5214"></a><a name="iddle5415"></a><a name=
+"iddle6118"></a><a name="iddle6150"></a><a name=
+"iddle6851"></a><a name="iddle7336"></a><a name=
+"iddle7806"></a><a name="iddle7846"></a>By default, <tt>.pro</tt>
+files use the <tt>app</tt> template, but here we must specify the
+<tt>lib</tt> template because a plugin is a library, not a
+stand-alone application. The <tt>CONFIG</tt><a name="is not"></a>
+line is used to tell Qt that the library is not just a plain
+library, but a plugin library. The <tt>DESTDIR</tt><a name=
+"plugin should"></a> specifies the directory where the plugin
+should go. All Qt plugins must go in the appropriate
+<tt>plugins</tt> subdirectory where Qt was installed; this path is
+built into <tt>qmake</tt> and available from the
+<tt>$$[QT_INSTALL_PLUGINS]</tt><a name="in Qt"></a> variable. Since
+our plugin provides a new style, we put it in Qt's
+<tt>plugins/styles</tt><a name="types is"></a> directory. The list
+of directory names and plugin types is available at <a class=
+"docLink" target="_blank" href=
+"http://doc.trolltech.com/4.3/plugins-howto.html">http://doc.trolltech.com/4.3/plugins-howto.html</a>.</p>
+
+<p class="docText"><a name="are different"></a>Plugins built for Qt
+in release mode and debug mode are different, so if both versions
+of Qt are installed, it is wise to specify which one to use in the
+<tt>.pro</tt> file—for example, by adding the line</p>
+
+<div class="docText">
+<pre>
+CONFIG += release
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="style plugin"></a>Once the Bronze style
+plugin is built, it is ready for use. Applications can use the
+style by specifying it in code. For example:</p>
+
+<div class="docText">
+<pre>
+QApplication::setStyle("Bronze");
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="also use"></a>We can also use the style
+without changing the application's source code at all, simply by
+running the application with the <tt>-style</tt><a name=
+"For example"></a> option. For example:</p>
+
+<div class="docText">
+<pre>
+./spreadsheet -style bronze
+</pre>
+</div>
+<br>
+
+<p class="docText">When <span class="docEmphasis">Qt
+Designer</span><a name="automatically looks"></a> is run, it
+automatically looks for plugins. If it finds a style plugin, it
+will offer the option to preview using the style in its
+<span class="docEmphRomanAlt">Form|Preview in</span> submenu.</p>
+
+<p class="docText"><a name="that use"></a>Applications that use Qt
+plugins must be deployed with the plugins they are intended to use.
+Qt plugins must be placed in specific subdirectories (e.g.,
+<tt>plugins/styles</tt> for custom styles). Qt applications search
+for plugins in the <tt>plugins</tt><a name="want to"></a> directory
+in the directory where the application's executable resides. If we
+want to deploy Qt plugins in a different directory, the plugins
+search path can be augmented by calling
+<tt>QCoreApplication::addLibraryPath()</tt><a name="the"></a> at
+startup or by setting the <tt>QT_PLUGIN_PATH</tt> environment
+variable before launching the application.</p>
+
+<p class="docText"><a name="will tackle"></a>Now that we have seen
+a very simple plugin, we will tackle one that is a bit more
+challenging: an image format plugin for Windows cursor
+(<tt>.cur</tt>) files. (The format is shown in <a class="docLink"
+href="#ch21fig02">Figure 21.2</a><a name="of the"></a>.) Windows
+cursor files can hold several images of the same cursor at
+different sizes. Once the cursor plugin is built and installed, Qt
+will be able to read <tt>.cur</tt> files and access individual
+cursors (e.g., through <tt>QImage</tt>, <tt>QImageReader</tt>, or
+<tt>QMovie</tt><a name="any of"></a>), and will be able to write
+the cursors out in any of Qt's other image file formats, such as
+BMP, JPEG, and PNG.</p>
+<a name="ch21fig02"></a>
+<center>
+<h5 class="docFigureTitle">Figure 21.2. The <tt>.cur</tt> file
+format</h5>
+
+<p class="docText"><img border="0" id="" width="498" height="233"
+src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83cC4xaGZpZmcvaXMyaWNnMDI-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="plugin wrappers"></a>New image format
+plugin wrappers must subclass <tt>QImageIOPlugin</tt><a name=
+"a few"></a> and reimplement a few virtual functions:</p>
+
+<div class="docText">
+<pre>
+class CursorPlugin : public QImageIOPlugin
+{
+public:
+    QStringList keys() const;
+    Capabilities capabilities(QIODevice *device,
+                              const QByteArray &amp;format) const;
+    QImageIOHandler *create(QIODevice *device,
+                            const QByteArray &amp;format) const;
+};
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1475"></a><a name=
+"iddle1892"></a><a name="iddle1970"></a><a name=
+"iddle1971"></a><a name="iddle1972"></a><a name=
+"iddle3462"></a><a name="iddle5211"></a><a name=
+"iddle5212"></a><a name="iddle5213"></a><a name="The"></a>The
+<tt>keys()</tt><a name="a list"></a> function returns a list of the
+image formats the plugin supports. The <tt>format</tt><a name=
+"of the"></a> parameter of the <tt>capabilities()</tt> and
+<tt>create()</tt><a name="that list"></a> functions can be assumed
+to have a value from that list.</p>
+
+<div class="docText">
+<pre>
+QStringList CursorPlugin::keys() const
+{
+    return QStringList() &lt;&lt; "cur";
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="image format"></a>Our plugin supports
+only one image format, so it returns a list with just one name.
+Ideally, the name should be the file extension used by the format.
+When dealing with formats with several extensions (such as
+<tt>.jpg</tt> and <tt>.jpeg</tt><a name="for the"></a> for JPEG),
+we can return a list with several entries for the same format, one
+for each extension.</p>
+
+<div class="docText">
+<pre>
+QImageIOPlugin::Capabilities
+CursorPlugin::capabilities(QIODevice *device,
+                           const QByteArray &amp;format) const
+{
+    if (format == "cur")
+        return CanRead;
+
+    if (format.isEmpty()) {
+        CursorHandler handler;
+        handler.setDevice(device);
+        if (handler.canRead())
+            return CanRead;
+    }
+
+    return 0;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>capabilities()</tt><a name=
+"capable of"></a> function returns what the image handler is
+capable of doing with the given image format. There are three
+capabilities (<tt>CanRead</tt>, <tt>CanWrite</tt>, and
+<tt>CanReadIncremental</tt><a name="that apply"></a>), and the
+return value is a bitwise OR of those that apply.</p>
+
+<p class="docText"><a name="is"></a>If the format is "cur", our
+implementation returns <tt>CanRead</tt><a name="format is"></a>. If
+no format is given, we create a cursor handler and check whether it
+is capable of reading the data from the given device. The
+<tt>canRead()</tt><a name="function only"></a> function only peeks
+at the data, seeing whether it recognizes the file, without
+changing the file pointer. A capability of 0 means that the file
+cannot be read or written by this handler.</p>
+
+<div class="docText">
+<pre>
+QImageIOHandler *CursorPlugin::create(QIODevice *device,
+                                      const QByteArray &amp;format) const
+{
+    CursorHandler *handler = new CursorHandler;
+    handler-&gt;setDevice(device);
+    handler-&gt;setFormat(format);
+    return handler;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1959"></a><a name=
+"iddle1960"></a><a name="iddle2688"></a><a name=
+"iddle3959"></a><a name="iddle4597"></a><a name=
+"iddle5203"></a><a name="iddle7845"></a><a name=
+"cursor file"></a>When a cursor file is opened (e.g., by
+<tt>QImageReader</tt><a name="plugin wrapper"></a>), the plugin
+wrapper's <tt>create()</tt><a name="with"></a> function will be
+called with the device pointer and with "cur" as the format. We
+create a <tt>CursorHandler</tt><a name="with the"></a> instance and
+set it up with the specified device and format. The caller takes
+ownership of the handler and will delete it when it is no longer
+required. If multiple files are to be read, a fresh handler will be
+created for each one.</p>
+
+<div class="docText">
+<pre>
+Q_EXPORT_PLUGIN2(cursorplugin, CursorPlugin)
+</pre>
+</div>
+<br>
+
+<p class="docText">At the end of the <tt>.cpp</tt> file, we use the
+<tt>Q_EXPORT_PLUGIN2()</tt><a name="parameter is"></a> macro to
+ensure that Qt recognizes the plugin. The first parameter is an
+arbitrary name that we want to give to the plugin. The second
+parameter is the plugin class name.</p>
+
+<p class="docText">Subclassing <tt>QImageIOPlugin</tt><a name=
+"is done"></a> is straightforward. The real work of the plugin is
+done in the handler. Image format handlers must subclass
+<tt>QImageIOHandler</tt><a name="the header"></a> and reimplement
+some or all of its public functions. Let's start with the
+header:</p>
+
+<div class="docText">
+<pre>
+class CursorHandler : public QImageIOHandler
+{
+public:
+    CursorHandler();
+
+    bool canRead() const;
+    bool read(QImage *image);
+    bool jumpToNextImage();
+    int currentImageNumber() const;
+    int imageCount() const;
+
+private:
+    enum State { BeforeHeader, BeforeImage, AfterLastImage, Error };
+
+    void readHeaderIfNecessary() const;
+    QBitArray readBitmap(int width, int height, QDataStream &amp;in) const;
+    void enterErrorState() const;
+
+    mutable State state;
+    mutable int currentImageNo;
+    mutable int numImages;
+};
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="all the"></a>The signatures of all the
+public functions are fixed. We have omitted several functions that
+we don't need to reimplement for a read-only handler, in particular
+<tt>write()</tt><a name="variables are"></a>. The member variables
+are declared with the <tt>mutable</tt><a name=
+"keyword because"></a> keyword because they are modified inside
+const functions.</p>
+
+<div class="docText">
+<pre>
+CursorHandler::CursorHandler()
+{
+    state = BeforeHeader;
+    currentImageNo = 0;
+    numImages = 0;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1468"></a><a name=
+"iddle1947"></a><a name="iddle1961"></a><a name=
+"iddle1962"></a><a name="iddle1964"></a><a name=
+"iddle1966"></a><a name="iddle3156"></a><a name=
+"iddle4294"></a><a name="iddle5204"></a><a name=
+"iddle5205"></a><a name="iddle5206"></a><a name=
+"iddle5208"></a><a name="iddle5235"></a><a name=
+"iddle6751"></a><a name="handler is"></a>When the handler is
+constructed, we begin by setting its state. We set the current
+cursor image number to the first cursor, but since we set
+<tt>numImages</tt><a name="it is"></a> to 0 it is clear that we
+have no images yet.</p>
+
+<div class="docText">
+<pre>
+bool CursorHandler::canRead() const
+{
+    if (state == BeforeHeader) {
+        return device()-&gt;peek(4) == QByteArray("\0\0\2\0", 4);
+    } else {
+        return state != Error;
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>canRead()</tt><a name="whether the"></a>
+function can be called at any time to determine whether the image
+handler can read more data from the device. If the function is
+called before we have read any data, while we are still in the
+<tt>BeforeHeader</tt><a name="signature that"></a> state, we check
+for the particular signature that identifies Windows cursor files.
+The <tt>QIODevice::peek()</tt> call reads the first four bytes
+<span class="docEmphasis">without</span> changing the device's file
+pointer. If <tt>canRead()</tt> is called later on, we return
+<tt>true</tt> unless an error has occurred.</p>
+
+<div class="docText">
+<pre>
+int CursorHandler::currentImageNumber() const
+{
+    return currentImageNo;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="at which"></a>This trivial function
+returns the number of the cursor at which the device file pointer
+is positioned.</p>
+
+<p class="docText"><a name="for the"></a>Once the handler is
+constructed, it is possible for the user to call any of its public
+functions, in any order. This is a potential problem since we must
+assume that we can only read serially, so we need to read the file
+header once before doing anything else. We solve the problem by
+calling the <tt>readHeaderIfNecessary()</tt><a name=
+"been read"></a> function in those functions that depend on the
+header having been read.</p>
+
+<div class="docText">
+<pre>
+int CursorHandler::imageCount() const
+{
+    readHeaderIfNecessary();
+    return numImages;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="the number"></a>This function returns
+the number of images in the file. For a valid file where no reading
+errors have occurred, it will return a count of at least 1.</p>
+
+<p class="docText"><a name="function is"></a>The next function is
+quite involved, so we will review it in pieces:</p>
+
+<div class="docText">
+<pre>
+bool CursorHandler::read(QImage *image)
+{
+    readHeaderIfNecessary();
+
+    if (state != BeforeImage)
+        return false;
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="The"></a>The <tt>read()</tt><a name=
+"the data"></a> function reads the data for whichever image begins
+at the current device pointer position. If the file's header is
+read successfully, or after an image <a name=
+"iddle1449"></a><a name="iddle1933"></a><a name=
+"iddle2403"></a><a name="iddle4879"></a><a name=
+"iddle4893"></a><a name="iddle4898"></a><a name=
+"iddle7136"></a><a name="iddle7515"></a><a name=
+"iddle8425"></a><a name="been read"></a>has been read and the
+device pointer is at the start of another image, we can read the
+next image.</p>
+
+<div class="docText">
+<pre>
+    quint32 size;
+    quint32 width;
+    quint32 height;
+    quint16 numPlanes;
+    quint16 bitsPerPixel;
+    quint32 compression;
+
+    QDataStream in(device());
+    in.setByteOrder(QDataStream::LittleEndian);
+    in &gt;&gt; size;
+    if (size != 40) {
+        enterErrorState();
+        return false;
+    }
+    in &gt;&gt; width &gt;&gt; height &gt;&gt; numPlanes &gt;&gt; bitsPerPixel &gt;&gt; compression;
+    height /= 2;
+
+    if (numPlanes != 1 || bitsPerPixel != 1 || compression != 0) {
+        enterErrorState();
+        return false;
+    }
+
+    in.skipRawData((size - 20) + 8);
+</pre>
+</div>
+<br>
+
+<p class="docText">We create a <tt>QDataStream</tt><a name=
+"to match"></a> to read the device. We must set the byte order to
+match that specified by the <tt>.cur</tt><a name="need to"></a>
+file format specification. There is no need to set a
+<tt>QDataStream</tt><a name="does not"></a> version number since
+the format of integers and floating-point numbers does not vary
+between data stream versions. Next, we read in various items of
+cursor header data, and we skip the irrelevant parts of the header
+and the 8-byte color table using
+<tt>QDataStream::skipRawData()</tt>.</p>
+
+<p class="docText"><a name="iddle1206"></a><a name=
+"iddle1333"></a><a name="iddle1800"></a><a name=
+"iddle4782"></a><a name="iddle4785"></a><a name="the height"></a>We
+must account for all the format's idiosyncrasies—for example,
+halving the height because the <tt>.cur</tt><a name=
+"the actual"></a> format gives a height that is twice as high as
+the actual image's height. The <tt>bitsPerPixel</tt> and
+<tt>compression</tt><a name="and"></a> values are always 1 and 0 in
+a monochrome <tt>.cur</tt><a name="have any"></a> file. If we have
+any problems, we call <tt>enterErrorState()</tt><a name=
+"and return"></a> and return <tt>false</tt>.</p>
+
+<div class="docText">
+<pre>
+    QBitArray xorBitmap = readBitmap(width, height, in);
+    QBitArray andBitmap = readBitmap(width, height, in);
+
+    if (in.status() != QDataStream::Ok) {
+        enterErrorState();
+        return false;
+    }
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="items in"></a>The next items in the
+file are two bitmaps, one an XOR mask and the other an AND mask. We
+read these into <tt>QBitArray</tt><a name="rather than"></a>s
+rather than into <tt>QBitmap</tt>s. A <tt>QBitmap</tt><a name=
+"painted on"></a> is a class designed to be drawn on and painted
+on-screen, but what we need here is a plain array of bits.</p>
+
+<p class="docText"><a name="reading the"></a>When we are done with
+reading the file, we check the <tt>QDataStream</tt>'s status. This
+works because if a <tt>QDataStream</tt><a name="can only"></a>
+enters an error state, it stays in that state and can only return
+zeros. For example, if reading fails on the first bit array, the
+attempt to read the second will result in an empty
+<tt>QBitArray</tt>.</p>
+
+<div class="docText">
+<pre>
+    *image = QImage(width, height, QImage::Format_ARGB32);
+
+    for (int i = 0; i &lt; int(height); ++i) {
+        for (int j = 0; j &lt; int(width); ++j) {
+            QRgb color;
+            int bit = (i * width) + j;
+
+            if (andBitmap.testBit(bit)) {
+                if (xorBitmap.testBit(bit)) {
+                    color = 0x7F7F7F7F;
+                } else {
+                    color = 0x00FFFFFF;
+                }
+            } else {
+                if (xorBitmap.testBit(bit)) {
+                    color = 0xFFFFFFFF;
+                } else {
+                    color = 0xFF000000;
+                }
+            }
+            image-&gt;setPixel(j, i, color);
+        }
+    }
+</pre>
+</div>
+<br>
+
+<p class="docText">We construct a new <tt>QImage</tt><a name=
+"to"></a> of the correct size and assign it to
+<tt>*image</tt><a name="AND bit"></a>. Then we iterate over every
+pixel in the XOR and AND bit arrays and convert them into 32-bit
+ARGB color specifications. The AND and XOR bit arrays are used as
+shown in the following table to obtain the color of each cursor
+pixel:</p>
+
+<table cellspacing="0" class="allBorders" border="1">
+<colgroup align="left" span="3">
+<col width="50">
+<col width="50">
+<col width="180">
+</colgroup>
+
+<thead>
+<tr>
+<th scope="col" class="docTableCell thead" align="center" valign=
+"top" style="background-color:#E6E6E6"><a name=
+"iddle1965"></a><a name="iddle1968"></a><a name=
+"iddle3407"></a><a name="iddle5207"></a><a name=
+"iddle6769"></a>AND</th>
+<th scope="col" class="docTableCell thead" align="center" valign=
+"top" style="background-color:#E6E6E6">XOR</th>
+<th scope="col" class="docTableCell thead" align="left" valign=
+"top" style="background-color:#E6E6E6">Result</th>
+</tr>
+</thead>
+
+<tr>
+<td class="docTableCell" align="center" valign="top"><span class=
+"docEmphRomanAlt">1</span>
+</td>
+<td class="docTableCell" align="center" valign="top"><span class=
+"docEmphRomanAlt">1</span>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Inverted background pixel</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="center" valign="top"><span class=
+"docEmphRomanAlt">1</span>
+</td>
+<td class="docTableCell" align="center" valign="top"><span class=
+"docEmphRomanAlt">0</span>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Transparent pixel</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="center" valign="top"><span class=
+"docEmphRomanAlt">0</span>
+</td>
+<td class="docTableCell" align="center" valign="top"><span class=
+"docEmphRomanAlt">1</span>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">White pixel</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="center" valign="top"><span class=
+"docEmphRomanAlt">0</span>
+</td>
+<td class="docTableCell" align="center" valign="top"><span class=
+"docEmphRomanAlt">0</span>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Black pixel</span>
+</td>
+</tr>
+</table>
+<br>
+
+<p class="docText"><a name="are no"></a>Black, white, and
+transparent pixels are no problem, but there is no way to obtain an
+inverted background pixel using an ARGB color specification without
+knowing the color of the original background pixel. As a
+substitute, we use a semi-transparent gray color
+(<tt>0x7F7F7F7F</tt>).</p>
+
+<div class="docText">
+<pre>
+    ++currentImageNo;
+    if (currentImageNo == numImages)
+        state = AfterLastImage;
+    return true;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="have finished"></a>Once we have
+finished reading the image, we update the current image number and
+update the state if we have reached the last image. At that point,
+the device will be positioned at the next image or at the end of
+the file.</p>
+
+<div class="docText">
+<pre>
+bool CursorHandler::jumpToNextImage()
+{
+    QImage image;
+    return read(&amp;image);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="The"></a>The
+<tt>jumpToNextImage()</tt><a name="used to"></a> function is used
+to skip an image. For simplicity, we simply call
+<tt>read()</tt><a name="ignore the"></a> and ignore the resulting
+<tt>QImage</tt><a name="in the"></a>. A more efficient
+implementation would use the information stored in the
+<tt>.cur</tt><a name="to the"></a> file header to skip directly to
+the appropriate offset in the file.</p>
+
+<div class="docText">
+<pre>
+void CursorHandler::readHeaderIfNecessary() const
+{
+    if (state != BeforeHeader)
+        return;
+
+    quint16 reserved;
+    quint16 type;
+    quint16 count;
+
+    QDataStream in(device());
+    in.setByteOrder(QDataStream::LittleEndian);
+
+    in &gt;&gt; reserved &gt;&gt; type &gt;&gt; count;
+    in.skipRawData(16 * count);
+
+    if (in.status() != QDataStream::Ok || reserved != 0
+            || type != 2 || count == 0) {
+        enterErrorState();
+        return;
+    }
+        state = BeforeImage;
+        currentImageNo = 0;
+        numImages = int(count);
+    }
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1963"></a><a name=
+"iddle1967"></a><a name="iddle2412"></a><a name=
+"iddle4783"></a><a name="iddle6759"></a><a name="iddle7133"></a>The
+<tt>readHeaderIfNecessary()</tt> private function is called from
+<tt>imageCount()</tt> and <tt>read()</tt><a name="not"></a>. If the
+file's header has already been read, the state is not
+<tt>BeforeHeader</tt><a name="stream on"></a> and we return
+immediately. Otherwise, we open a data stream on the device, read
+in some generic data (including the number of cursors in the file),
+and set the state to <tt>BeforeImage</tt>. At the end, the device's
+file pointer is positioned before the first image.</p>
+
+<div class="docText">
+<pre>
+void CursorHandler::enterErrorState() const
+{
+    state = Error;
+    currentImageNo = 0;
+    numImages = 0;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="images and"></a>If an error occurs, we
+assume that there are no valid images and set the state to
+<tt>Error</tt>. Once in the <tt>Error</tt> state, the handler's
+state cannot change.</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+QBitArray CursorHandler::readBitmap(int width, int height,
+                                    QDataStream &amp;in) const
+{
+    QBitArray bitmap(width * height);
+    quint32 word = 0;
+    quint8 byte;
+
+    for (int i = 0; i &lt; height; ++i) {
+        for (int j = 0; j &lt; width; ++j) {
+            if ((j % 32) == 0) {
+                word = 0;
+                for (int k = 0; k &lt; 4; ++k) {
+                    in &gt;&gt; byte;
+                    word = (word &lt;&lt; 8) | byte;
+                }
+            }
+
+            bitmap.setBit(((height - i - 1) * width) + j,
+                          word &amp; 0x80000000);
+            word &lt;&lt;= 1;
+        }
+    }
+    return bitmap;
+}
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>readBitmap()</tt><a name="to read"></a>
+function is used to read a cursor's AND and XOR masks. These masks
+have two unusual features. First, they store the rows from bottom
+to top, instead of the more common top-to-bottom approach. Second,
+the endianness of the data appears to be reversed from that used
+everywhere else in <tt>.cur</tt><a name="of this"></a> files. In
+view of this, we must invert the <span class=
+"docEmphasis">y</span><a name="in the"></a>-coordinate in the
+<tt>setBit()</tt><a name="read in"></a> call, and we read in the
+mask values one byte at a time, bit-shifting and masking to extract
+their correct values.</p>
+
+<p class="docText"><a name="iddle2113"></a><a name=
+"iddle2627"></a><a name="iddle3257"></a><a name=
+"iddle4362"></a><a name="iddle4481"></a><a name=
+"iddle4566"></a><a name="iddle4583"></a><a name=
+"iddle8001"></a><a name="iddle8003"></a><a name=
+"iddle8453"></a><a name="iddle8458"></a><a name="build the"></a>To
+build the plugin, we must use a <tt>.pro</tt><a name=
+"used for"></a> file that is very similar to the one we used for
+the Bronze style plugin shown earlier (p. <a class="docLink" href=
+"#page_493">493</a>):</p>
+
+<div class="docText">
+<pre>
+TEMPLATE      = lib
+CONFIG       += plugin
+HEADERS       = cursorhandler.h \
+                cursorplugin.h
+SOURCES       = cursorhandler.cpp \
+                cursorplugin.cpp
+DESTDIR       = $$[QT_INSTALL_PLUGINS]/imageformats
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="Plugins for"></a>This completes the
+Windows cursor plugin. Plugins for other image formats would follow
+the same pattern, although some might implement more of the
+<tt>QImageIOHandler</tt><a name="other kinds"></a> API, in
+particular the functions used for writing images. Plugins of other
+kinds follow the pattern of having a plugin wrapper that exports
+one or several handlers that provide the underlying
+functionality.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch20lev1sec3.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch21lev1sec1.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

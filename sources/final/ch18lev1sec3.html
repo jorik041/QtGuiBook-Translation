@@ -1,0 +1,528 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch18lev1sec3.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch18lev1sec3.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch18lev1sec3.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch18lev1sec3.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch18lev1sec2.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch18lev1sec4.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch18lev1sec3"></a>
+<h3 class="docSection1Title" id="-100000">Dynamic Language
+Switching</h3>
+
+<p class="docText"><a name="For most"></a>For most applications,
+detecting the user's preferred language in <tt>main()</tt><a name=
+"the appropriate"></a> and loading the appropriate
+<tt>.qm</tt><a name="there is"></a> files there is perfectly
+satisfactory. But there are some situations where users might need
+the ability to switch languages dynamically. An application that is
+used continuously by different people in shifts may need to change
+languages without having to be restarted. For example, applications
+used by call center operators, by simultaneous translators, and by
+computerized cash register operators often require this
+capability.</p>
+
+<p class="docText"><a name="a little"></a>Making an application
+able to switch languages dynamically requires a little more work
+than loading a single translation at startup, but it is not
+difficult. Here is what must be done:</p>
+
+<ul>
+<li>
+<p class="docList"><a name="the user"></a>Provide a means by which
+the user can switch language.</p>
+</li>
+
+<li>
+<p class="docList"><a name="iddle1898"></a><a name=
+"iddle3475"></a><a name="iddle3687"></a><a name=
+"iddle3695"></a><a name="strings in"></a>For every widget or
+dialog, set all of its translatable strings in a separate function
+(often called <tt>retranslateUi()</tt>) and call this function when
+the language changes.</p>
+</li>
+</ul>
+
+<p class="docText"><a name="The application"></a>Let's review the
+relevant parts of a "call center" application's source code. The
+application provides a <span class=
+"docEmphRomanAlt">Language</span> menu (shown in <a class="docLink"
+href="#ch18fig01">Figure 18.1</a><a name="default language"></a>),
+to allow the user to set the language at run-time. The default
+language is English.</p>
+<a name="ch18fig01"></a>
+<center>
+<h5 class="docFigureTitle">Figure 18.1. A dynamic <span class=
+"docEmphRomanAlt">Language</span> menu</h5>
+
+<p class="docText"><img border="0" id="" width="126" height="145"
+src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83LnBlYWh1bi1lL21zbGljZ3VuanBhZ2c-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="which language"></a>Since we don't know
+which language the user will want to use when the application is
+started, we no longer load translations in the
+<tt>main()</tt><a name="load them"></a> function. Instead, we will
+load them dynamically when they are needed, so all the code that we
+need to handle translations must go in the main window and dialog
+classes.</p>
+
+<p class="docText"><a name="have a"></a>Let's have a look at the
+application's <tt>QMainWindow</tt> subclass.</p>
+
+<div class="docText">
+<pre>
+MainWindow::MainWindow()
+{
+    journalView = new JournalView;
+    setCentralWidget(journalView);
+
+    qApp-&gt;installTranslator(&amp;appTranslator);
+    qApp-&gt;installTranslator(&amp;qtTranslator);
+
+    createActions();
+    createMenus();
+
+    retranslateUi();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="we set"></a>In the constructor, we set
+the central widget to be a <tt>JournalView</tt>, a
+<tt>QTableWidget</tt><a name="we install"></a> subclass. Then we
+install two <tt>QTranslator</tt> objects on the
+<tt>QApplication</tt>: The <tt>appTranslator</tt> object stores the
+current application's translation, and the <tt>qtTranslator</tt>
+object stores Qt's translation. At the end, we call the
+<tt>createActions()</tt> and <tt>createMenus()</tt> private
+functions to create the menu system, and we call
+<tt>retranslateUi()</tt> (also a private function) to set the
+user-visible strings for the first time.</p>
+
+<div class="docText">
+<pre>
+void MainWindow::createActions()
+{
+    newAction = new QAction(this);
+    newAction-&gt;setShortcut(QKeySequence::New);
+    connect(newAction, SIGNAL(triggered()), this, SLOT(newFile()));
+    ...
+    exitAction = new QAction(this);
+    connect(exitAction, SIGNAL(triggered()), this, SLOT(close()));
+    ...
+    aboutQtAction = new QAction(this);
+    connect(aboutQtAction, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1915"></a><a name=
+"iddle3700"></a><a name="iddle3720"></a><a name="iddle6930"></a>The
+<tt>createActions()</tt> function creates the
+<tt>QAction</tt><a name="will be"></a> objects as usual, but
+without setting any of the texts. These will be done in
+<tt>retranslateUi()</tt><a name="we can"></a>. For actions that
+have standardized shortcuts, we can set the shortcut here using the
+appropriate enum, and rely on Qt to translate as necessary. For
+actions that have custom shortcuts, such as the <span class=
+"docEmphRomanAlt">Exit</span> action, we set the shortcut in the
+<tt>retranslateUi()</tt> function, along with the text.</p>
+
+<div class="docText">
+<pre>
+void MainWindow::createMenus()
+{
+    fileMenu = new QMenu(this);
+    fileMenu-&gt;addAction(newAction);
+    fileMenu-&gt;addAction(openAction);
+    fileMenu-&gt;addAction(saveAction);
+    fileMenu-&gt;addAction(exitAction);
+
+    editMenu = new QMenu(this);
+    ...
+    createLanguageMenu();
+
+    helpMenu = new QMenu(this);
+    helpMenu-&gt;addAction(aboutAction);
+    helpMenu-&gt;addAction(aboutQtAction);
+
+    menuBar()-&gt;addMenu(fileMenu);
+    menuBar()-&gt;addMenu(editMenu);
+    menuBar()-&gt;addMenu(reportsMenu);
+    menuBar()-&gt;addMenu(languageMenu);
+    menuBar()-&gt;addMenu(helpMenu);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>createMenus()</tt><a name="will be"></a>
+function creates menus, but does not give them any titles. Again,
+this will be done in <tt>retranslateUi()</tt>.</p>
+
+<p class="docText">In the middle of the function, we call
+<tt>createLanguageMenu()</tt> to fill the <span class=
+"docEmphRomanAlt">Language</span><a name="will review"></a> menu
+with the list of supported languages. We will review its source
+code in a moment. First, let's look at
+<tt>retranslateUi()</tt>:</p>
+
+<div class="docText">
+<pre>
+void MainWindow::retranslateUi()
+{
+    newAction-&gt;setText(tr("&amp;New"));
+    newAction-&gt;setStatusTip(tr("Create a new journal"));
+    ...
+    exitAction-&gt;setText(tr("E&amp;xit"));
+    exitAction-&gt;setShortcut(tr("Ctrl+Q"));
+    ...
+    aboutQtAction-&gt;setText(tr("About &amp;Qt"));
+    aboutQtAction-&gt;setStatusTip(tr("Show the Qt library's About box"));
+
+    fileMenu-&gt;setTitle(tr("&amp;File"));
+    editMenu-&gt;setTitle(tr("&amp;Edit"));
+    reportsMenu-&gt;setTitle(tr("&amp;Reports"));
+    languageMenu-&gt;setTitle(tr("&amp;Language"));
+    helpMenu-&gt;setTitle(tr("&amp;Help"));
+
+    setWindowTitle(tr("Call Center"));
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1910"></a><a name=
+"iddle3476"></a><a name="iddle3697"></a><a name=
+"iddle5483"></a><a name="iddle8160"></a>The
+<tt>retranslateUi()</tt> function is where all the <tt>tr()</tt>
+calls for the <tt>MainWindow</tt> class occur. It is called at the
+end of the <tt>MainWindow</tt><a name="the"></a> constructor and
+every time a user changes the application's language using the
+<span class="docEmphRomanAlt">Language</span> menu.</p>
+
+<p class="docText">We set each <tt>QAction</tt><a name=
+"and the"></a>'s text and status tip, and the shortcuts for those
+actions that have non-standardized shortcuts. We also set each
+<tt>QMenu</tt><a name="as the"></a>'s title, as well as the window
+title.</p>
+
+<p class="docText"><a name="The"></a>The
+<tt>createMenus()</tt><a name="earlier called"></a> function
+presented earlier called <tt>createLanguageMenu()</tt><a name=
+"populate the"></a> to populate the <span class=
+"docEmphRomanAlt">Language</span> menu with a list of
+languages:</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+void MainWindow::createLanguageMenu()
+{
+    languageMenu = new QMenu(this);
+
+    languageActionGroup = new QActionGroup(this);
+    connect(languageActionGroup, SIGNAL(triggered(QAction *)),
+            this, SLOT(switchLanguage(QAction *)));
+
+    QDir qmDir = directoryOf("translations");
+    QStringList fileNames =
+            qmDir.entryList(QStringList("callcenter_*.qm"));
+
+    for (int i = 0; i &lt; fileNames.size(); ++i) {
+        QString locale = fileNames[i];
+        locale.remove(0, locale.indexOf('_') + 1);
+        locale.chop(3);
+
+        QTranslator translator;
+        translator.load(fileNames[i], qmDir.absolutePath());
+        QString language = translator.translate("MainWindow",
+                                                "English");
+
+        QAction *action = new QAction(tr("&amp;%1 %2")
+                                      .arg(i + 1).arg(language), this);
+        action-&gt;setCheckable(true);
+        action-&gt;setData(locale);
+
+        languageMenu-&gt;addAction(action);
+        languageActionGroup-&gt;addAction(action);
+
+        if (language == "English")
+            action-&gt;setChecked(true);
+    }
+}
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1522"></a><a name=
+"iddle1606"></a><a name="iddle2525"></a><a name=
+"iddle3598"></a><a name="iddle3615"></a><a name=
+"iddle3729"></a><a name="iddle4687"></a><a name=
+"iddle4705"></a><a name="iddle5308"></a><a name=
+"iddle6392"></a><a name="iddle6499"></a><a name=
+"iddle7897"></a><a name="iddle8224"></a><a name=
+"one menu"></a>Instead of hard-coding the languages supported by
+the application, we create one menu entry for each <tt>.qm</tt>
+file located in the application's <tt>translations</tt> directory.
+The <tt>directoryOf()</tt><a name="the one"></a> function is the
+same as the one we used in <a class="docLink" href=
+"ch17.html#ch17">Chapter 17</a> (p. <a class="docLink" href=
+"ch17lev1sec2.html#page_410">410</a>).</p>
+
+<p class="docText">For simplicity, we assume that English also has
+a <tt>.qm</tt> file. An alternative would have been to call
+<tt>clear()</tt> on the <tt>QTranslator</tt> objects when the user
+chooses English.</p>
+
+<p class="docText"><a name="for the"></a>One particular difficulty
+is to present a nice name for the language provided by each
+<tt>.qm</tt><a name="the name"></a> file. Just showing "en" for
+"English" or "de" for "Deutsch", based on the name of the
+<tt>.qm</tt> file, looks crude and will confuse some users. The
+solution used in <tt>createLanguageMenu()</tt><a name=
+"That string"></a> is to check the translation of the string
+"English" in the "MainWindow" context. That string should be
+translated to "Deutsch" in a German translation, to "Français" in a
+French translation, and to "<img border="0" id="" width="45"
+height="17" src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83cDEzaDMuanAvaXM0ZmNpZ2cw.jpg"
+alt="">" in a Japanese translation.</p>
+
+<p class="docText"><a name="checkable"></a>We create one checkable
+<tt>QAction</tt><a name="language and"></a> for each language and
+store the locale name in the action's "data" item. We add them to a
+<tt>QActionGroup</tt><a name="object to"></a> object to ensure that
+only one <span class="docEmphRomanAlt">Language</span><a name=
+"is checked"></a> menu item is checked at a time. When the user
+chooses an action from the group, the <tt>QActionGroup</tt><a name=
+"the"></a> emits the <tt>triggered(QAction *)</tt> signal, which is
+connected to <tt>switchLanguage()</tt>.</p>
+
+<div class="docText">
+<pre>
+void MainWindow::switchLanguage(QAction *action)
+{
+    QString locale = action-&gt;data().toString();
+    QString qmPath = directoryOf("translations").absolutePath();
+
+    appTranslator.load("callcenter_" + locale, qmPath);
+    qtTranslator.load("qt_" + locale, qmPath);
+    retranslateUi();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>switchLanguage()</tt><a name=
+"from the"></a> slot is called when the user chooses a language
+from the <span class="docEmphRomanAlt">Language</span><a name=
+"files for"></a> menu. We load the relevant translation files for
+the application and for Qt, and we call <tt>retranslateUi()</tt> to
+retranslate all the strings for the main window.</p>
+
+<p class="docText">On Windows, an alternative to providing a
+<span class="docEmphRomanAlt">Language</span> menu is to respond to
+<tt>LocaleChange</tt><a name="detects a"></a> events, a type of
+event emitted by Qt when it detects a change in the environment's
+locale. The event type exists on all platforms supported by Qt, but
+is only actually generated on Windows, when the user changes the
+system's locale settings (in the Control Panel's <span class=
+"docEmphRomanAlt">Regional and Language Options</span> section). To
+handle <tt>LocaleChange</tt> events, we can reimplement
+<tt>QWidget::changeEvent()</tt> as follows:</p>
+
+<div class="docText">
+<pre>
+void MainWindow::changeEvent(QEvent *event)
+{
+    if (event-&gt;type() == QEvent::LocaleChange) {
+        QString qmPath = directoryOf("translations").absolutePath();
+        appTranslator.load("callcenter_"
+                           + QLocale::system().name(), qmPath);
+        qtTranslator.load("qt_" + QLocale::system().name(), qmPath);
+        retranslateUi();
+    }
+    QMainWindow::changeEvent(event);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1523"></a><a name=
+"iddle2523"></a><a name="iddle3400"></a><a name=
+"iddle3474"></a><a name="iddle3599"></a><a name=
+"iddle6393"></a><a name="iddle6500"></a><a name=
+"iddle6929"></a><a name="application is"></a>If the user switches
+locale while the application is being run, we attempt to load the
+correct translation files for the new locale and call
+<tt>retranslateUi()</tt><a name="to the"></a> to update the user
+interface. In all cases, we pass the event to the base class's
+<tt>changeEvent()</tt><a name="class may"></a> function, since the
+base class may also be interested in <tt>LocaleChange</tt><a name=
+"change events"></a> or other change events.</p>
+
+<p class="docText"><a name="We have"></a>We have now finished our
+review of the <tt>MainWindow</tt><a name="will look"></a> code.
+Next we will look at the code for one of the application's widget
+classes, the <tt>JournalView</tt><a name="see what"></a> class, to
+see what changes are needed to make it support dynamic
+translation.</p>
+
+<div class="docText">
+<pre>
+JournalView::JournalView(QWidget *parent)
+    : QTableWidget(parent)
+{
+    ...
+    retranslateUi();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>JournalView</tt> class is a
+<tt>QTableWidget</tt><a name="function"></a> subclass. At the end
+of the constructor, we call the private function
+<tt>retranslateUi()</tt><a name="similar to"></a> to set the
+widget's strings. This is similar to what we did for
+<tt>MainWindow</tt>.</p>
+
+<div class="docText">
+<pre>
+void JournalView::changeEvent(QEvent *event)
+{
+    if (event-&gt;type() == QEvent::LanguageChange)
+        retranslateUi();
+    QTableWidget::changeEvent(event);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">We also reimplement the <tt>changeEvent()</tt>
+function to call <tt>retranslateUi()</tt> on
+<tt>LanguageChange</tt> events. Qt generates a
+<tt>LanguageChange</tt> event when the contents of a
+<tt>QTranslator</tt> currently installed on
+<tt>QCoreApplication</tt> changes. In our application, this occurs
+when we call <tt>load()</tt> on <tt>appTranslator</tt> or
+<tt>qtTranslator</tt>, either from
+<tt>MainWindow::switchLanguage()</tt> or from
+<tt>MainWindow::changeEvent()</tt>.</p>
+
+<p class="docText"><tt>LanguageChange</tt> events should not be
+confused with <tt>LocaleChange</tt> events.
+<tt>LocaleChange</tt><a name="you should"></a> events are generated
+by the system and tell the application, "Maybe you should load a
+new translation." <tt>LanguageChange</tt><a name=
+"the application"></a> events are generated by Qt and tell the
+application's widgets, "Maybe you should retranslate all your
+strings."</p>
+
+<p class="docText">When we implemented <tt>MainWindow</tt>, we
+didn't need to respond to <tt>LanguageChange</tt>. Instead, we
+simply called <tt>retranslateUi()</tt> whenever we called
+<tt>load()</tt> on a <tt>QTranslator</tt>.</p>
+
+<div class="docText">
+<pre>
+void JournalView::retranslateUi()
+{
+    QStringList labels;
+    labels &lt;&lt; tr("Time") &lt;&lt; tr("Priority") &lt;&lt; tr("Phone Number")
+           &lt;&lt; tr("Subject");
+    setHorizontalHeaderLabels(labels);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle3632"></a><a name=
+"iddle3637"></a><a name="iddle4474"></a><a name=
+"iddle5309"></a><a name="iddle6143"></a><a name=
+"iddle6931"></a><a name="iddle8203"></a><a name=
+"iddle8204"></a><a name="iddle8245"></a><a name=
+"iddle8283"></a><a name="iddle8366"></a><a name="iddle8708"></a>The
+<tt>retranslateUi()</tt><a name="code of"></a> function updates the
+column headers with newly translated texts, completing the
+translation-related code of a hand-written widget. For widgets and
+dialogs developed with <span class="docEmphasis">Qt
+Designer</span>, the <tt>uic</tt><a name="a function"></a> tool
+automatically generates a function similar to our
+<tt>retranslateUi()</tt><a name="is automatically"></a> function
+that is automatically called in response to <tt>LanguageChange</tt>
+events.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch18lev1sec2.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch18lev1sec4.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

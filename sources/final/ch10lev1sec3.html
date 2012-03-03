@@ -1,0 +1,1232 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch10lev1sec3.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch10lev1sec3.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch10lev1sec3.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch10lev1sec3.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch10lev1sec2.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch10lev1sec4.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch10lev1sec3"></a>
+<h3 class="docSection1Title" id="-100000">Implementing Custom
+Models</h3>
+
+<p class="docText"><a name="predefined models"></a>Qt's predefined
+models offer a convenient means of handling and viewing data.
+However, some data sources cannot be used efficiently using the
+predefined models, and for these situations it is necessary to
+create custom models optimized for the underlying data source.</p>
+
+<p class="docText"><a name="embark on"></a>Before we embark on
+creating custom models, let's first review the key concepts used in
+Qt's model/view architecture. Every data element in a model has a
+model index and a set of attributes, called <span class=
+"docEmphasis">roles</span><a name="can take"></a>, that can take
+arbitrary values. We saw earlier in the chapter that the most
+commonly used roles are <tt>Qt::DisplayRole</tt> and
+<tt>Qt::EditRole</tt>. Other roles are used for supplementary data
+(e.g., <tt>Qt::ToolTipRole</tt>, <tt>Qt::StatusTipRole</tt>, and
+<tt>Qt::WhatsThisRole</tt>), and yet others for controlling basic
+display attributes (such as <tt>Qt::FontRole</tt>,
+<tt>Qt::TextAlignmentRole</tt>, <tt>Qt::TextColorRole</tt>, and
+<tt>Qt::BackgroundColorRole</tt>).</p>
+
+<p class="docText"><a name="the row"></a>For a list model, the only
+relevant index component is the row number, accessible from
+<tt>QModelIndex::row()</tt><a name="index components"></a>. For a
+table model, the relevant index components are the row and column
+numbers, accessible from <tt>QModelIndex::row()</tt> and
+<tt>QModelIndex::column()</tt><a name="which is"></a>. For both
+list and table models, every item's parent is the root, which is
+represented by an invalid <tt>QModelIndex</tt><a name=
+"show how"></a>. The first two examples in this section show how to
+implement custom table models.</p>
+
+<p class="docText"><a name="table model"></a>A tree model is
+similar to a table model, with the following differences. Like a
+table model, the parent of top-level items is the root (an invalid
+<tt>QModelIndex</tt><a name="other item"></a>), but every other
+item's parent is some other item in the hierarchy. Parents are
+accessible from <tt>QModelIndex::parent()</tt><a name=
+"each an"></a>. Every item has its role data, and zero or more
+children, each an item in its own right. Since items can have other
+items as children, it is possible to represent recursive
+(tree-like) data structures, as the final example in this section
+will show. <a class="docLink" href="#ch10fig09">Figure
+10.9</a><a name="shows a"></a> shows a schematic of the different
+models.</p>
+<a name="ch10fig09"></a>
+<center>
+<h5 class="docFigureTitle"><a name="view of"></a>Figure 10.9.
+Schematic view of Qt's models</h5>
+
+<p class="docText"><img border="0" id="" width="490" height="226"
+src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZmlncGNmaDlnMTAvaTBpcy4-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="first example"></a>The first example in
+this section is a read-only table model that shows currency values
+in relation to each other. The application is shown in <a class=
+"docLink" href="#ch10fig10">Figure 10.10</a>.</p>
+<a name="ch10fig10"></a>
+<center>
+<h5 class="docFigureTitle">Figure 10.10. The Currencies
+application</h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzcC50cmVpcF9jaGNjZXUvbnJzc2FpZ2ps.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="199" src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZ3JlaXBjLmhjZWN1L3Juc3NqaXA-.jpg"
+alt="">
+</center>
+<br>
+
+<p class="docText"><a name="iddle1937"></a><a name=
+"we want"></a>The application could be implemented using a simple
+table, but we want to use a custom model to take advantage of
+certain properties of the data to minimize storage. If we were to
+store the 162 currently traded currencies in a table, we would need
+to store 162 x 162 = 26244 values; with the custom
+<tt>CurrencyModel</tt><a name="to store"></a> shown in this
+section, we need to store only 162 values (the value of each
+currency in relation to the U.S. dollar).</p>
+
+<p class="docText">The <tt>CurrencyModel</tt> class will be used
+with a standard <tt>QTableView</tt>. The <tt>CurrencyModel</tt> is
+populated with a <tt>QMap&lt;QString, double&gt;</tt><a name=
+"is the"></a>; each key is a currency code and each value is the
+value of the currency in U.S. dollars. Here's a code snippet that
+shows how the map is populated and how the model is used:</p>
+
+<div class="docText">
+<pre>
+    QMap&lt;QString, double&gt; currencyMap;
+    currencyMap.insert("AUD", 1.3259);
+    currencyMap.insert("CHF", 1.2970);
+    ...
+    currencyMap.insert("SGD", 1.6901);
+    currencyMap.insert("USD", 1.0000);
+
+    CurrencyModel currencyModel;
+    currencyModel.setCurrencyMap(currencyMap);
+
+    QTableView tableView;
+    tableView.setModel(&amp;currencyModel);
+    tableView.setAlternatingRowColors(true);
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1685"></a><a name=
+"iddle1936"></a><a name="iddle1938"></a><a name=
+"iddle1939"></a><a name="iddle1943"></a><a name=
+"iddle3866"></a><a name="iddle4624"></a><a name=
+"iddle4626"></a><a name="iddle4645"></a><a name=
+"iddle4671"></a><a name="iddle4678"></a><a name=
+"iddle6977"></a><a name="iddle7824"></a><a name="of the"></a>Now we
+can look at the implementation of the model, starting with its
+header:</p>
+
+<div class="docText">
+<pre>
+class CurrencyModel : public QAbstractTableModel
+{
+public:
+    CurrencyModel(QObject *parent = 0);
+
+    void setCurrencyMap(const QMap&lt;QString, double&gt; &amp;map);
+    int rowCount(const QModelIndex &amp;parent) const;
+    int columnCount(const QModelIndex &amp;parent) const;
+    QVariant data(const QModelIndex &amp;index, int role) const;
+    QVariant headerData(int section, Qt::Orientation orientation,
+                        int role) const;
+private:
+    QString currencyAt(int offset) const;
+
+    QMap&lt;QString, double&gt; currencyMap;
+};
+</pre>
+</div>
+<br>
+
+<p class="docText">We have chosen to subclass
+<tt>QAbstractTableModel</tt><a name="matches our"></a> for our
+model since that most closely matches our data source. Qt provides
+several model base classes, including <tt>QAbstractListModel</tt>,
+<tt>QAbstractTableModel</tt>, and <tt>QAbstractItemModel</tt>; see
+<a class="docLink" href="#ch10fig11">Figure 10.11</a>. The
+<tt>QAbstractItemModel</tt><a name="used to"></a> class is used to
+support a wide variety of models, including those that are based on
+recursive data structures, while the <tt>QAbstractListModel</tt>
+and <tt>QAbstractTableModel</tt> classes are provided for
+convenience when using one-dimensional or two-dimensional data
+sets.</p>
+<a name="ch10fig11"></a>
+<center>
+<h5 class="docFigureTitle">Figure 10.11. Inheritance tree for the
+abstract model classes</h5>
+
+<p class="docText"><img border="0" id="" width="281" height="82"
+src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZmlncGNmaDBnMTAvaTFpcy4-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText">For a read-only table model, we must reimplement
+three functions: <tt>rowCount()</tt>, <tt>columnCount()</tt>, and
+<tt>data()</tt>. In this case, we have also reimplemented
+<tt>headerData()</tt>, and we provide a function to initialize the
+data (<tt>setCurrencyMap()</tt>).</p>
+
+<div class="docText">
+<pre>
+CurrencyModel::CurrencyModel(QObject *parent)
+    : QAbstractTableModel(parent)
+{
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="except pass"></a>We do not need to do
+anything in the constructor, except pass the
+<tt>parent</tt><a name="parameter to"></a> parameter to the base
+class.</p>
+
+<div class="docText">
+<pre>
+int CurrencyModel::rowCount(const QModelIndex &amp; /* parent */) const
+{
+    return currencyMap.count();
+}
+int CurrencyModel::columnCount(const QModelIndex &amp; /* parent */) const
+{
+    return currencyMap.count();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1138"></a><a name=
+"iddle1680"></a><a name="iddle1941"></a><a name=
+"iddle2008"></a><a name="iddle2009"></a><a name=
+"iddle2177"></a><a name="iddle4630"></a><a name=
+"iddle5400"></a><a name="iddle5404"></a><a name=
+"iddle6037"></a><a name="iddle6075"></a><a name=
+"iddle6972"></a><a name="iddle7995"></a><a name=
+"table model"></a>For this table model, the row and column counts
+are the number of currencies in the currency map. The
+<tt>parent</tt><a name="has no"></a> parameter has no meaning for a
+table model; it is there because <tt>rowCount()</tt> and
+<tt>columnCount()</tt> are inherited from the more generic
+<tt>QAbstractItemModel</tt> base class, which supports
+hierarchies.</p>
+
+<div class="docText">
+<pre>
+QVariant CurrencyModel::data(const QModelIndex &amp;index, int role) const
+{
+    if (!index.isValid())
+        return QVariant();
+
+    if (role == Qt::TextAlignmentRole) {
+        return int(Qt::AlignRight | Qt::AlignVCenter);
+    } else if (role == Qt::DisplayRole) {
+        QString rowCurrency = currencyAt(index.row());
+        QString columnCurrency = currencyAt(index.column());
+
+        if (currencyMap.value(rowCurrency) == 0.0)
+            return "####";
+
+        double amount = currencyMap.value(columnCurrency)
+                        / currencyMap.value(rowCurrency);
+
+        return QString("%1").arg(amount, 0, 'f', 4);
+    }
+    return QVariant();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>data()</tt><a name="item is"></a>
+function returns the value of any of an item's roles. The item is
+specified as a <tt>QModelIndex</tt><a name="components of"></a>.
+For a table model, the interesting components of a
+<tt>QModelIndex</tt> are its row and column number, available using
+<tt>row()</tt> and <tt>column()</tt>.</p>
+
+<p class="docText">If the role is
+<tt>Qt::TextAlignmentRole</tt><a name="role is"></a>, we return an
+alignment suitable for numbers. If the display role is
+<tt>Qt::DisplayRole</tt><a name="currency and"></a>, we look up the
+value for each currency and calculate the exchange rate.</p>
+
+<p class="docText"><a name="a"></a>We could return the calculated
+value as a <tt>double</tt><a name="we would"></a>, but then we
+would have no control over how many decimal places were shown
+(unless we use a custom delegate). Instead, we return the value as
+a string, formatted as we want.</p>
+
+<div class="docText">
+<pre>
+QVariant CurrencyModel::headerData(int section,
+                                   Qt::Orientation /* orientation */,
+                                   int role) const
+{
+    if (role != Qt::DisplayRole)
+        return QVariant();
+    return currencyAt(section);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1303"></a><a name=
+"iddle1570"></a><a name="iddle1576"></a><a name=
+"iddle1935"></a><a name="iddle1940"></a><a name=
+"iddle1942"></a><a name="iddle1944"></a><a name=
+"iddle2573"></a><a name="iddle3000"></a><a name=
+"iddle3006"></a><a name="iddle3417"></a><a name=
+"iddle4636"></a><a name="iddle4642"></a><a name=
+"iddle6886"></a><a name="iddle7164"></a>The
+<tt>headerData()</tt><a name="horizontal and"></a> function is
+called by the view to populate its horizontal and vertical headers.
+The <tt>section</tt><a name="parameter is"></a> parameter is the
+row or column number (depending on the orientation). Since the rows
+and columns have the same currency codes, we do not care about the
+orientation and simply return the code of the currency for the
+given section number.</p>
+
+<div class="docText">
+<pre>
+void CurrencyModel::setCurrencyMap(const QMap&lt;QString, double&gt; &amp;map)
+{
+    currencyMap = map;
+    reset();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="can change"></a>The caller can change
+the currency map using <tt>setCurrencyMap()</tt>. The
+<tt>QAbstractItemModel::reset()</tt><a name="tells any"></a> call
+tells any views that are using the model that all their data is
+invalid; this forces them to request fresh data for the items that
+are visible.</p>
+
+<div class="docText">
+<pre>
+QString CurrencyModel::currencyAt(int offset) const
+{
+    return (currencyMap.begin() + offset).key();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>currencyAt()</tt><a name="in the"></a>
+function returns the key (the currency code) at the given offset in
+the currency map. We use an STL-style iterator to find the item and
+call <tt>key()</tt> on it.</p>
+
+<p class="docText"><a name="is not"></a>As we have just seen, it is
+not difficult to create read-only models, and depending on the
+nature of the underlying data, there are potential savings in
+memory and speed with a well-designed model. The next example, the
+Cities application shown in <a class="docLink" href=
+"#ch10fig12">Figure 10.12</a><a name="entered by"></a>, is also
+table-based, but this time all the data is entered by the user.</p>
+<a name="ch10fig12"></a>
+<center>
+<h5 class="docFigureTitle">Figure 10.12. The Cities
+application</h5>
+
+<p class="docText"><img border="0" id="" width="500" height="252"
+src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzdHBpcGNoLmVjaS9pc3Nnag--.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="indicating the"></a>This application is
+used to store values indicating the distance between any two
+cities. Like the previous example, we could simply use a
+<tt>QTableWidget</tt><a name="a custom"></a> and store one item for
+every city pair. However, a custom model could be more efficient,
+because the distance from any city <span class=
+"docEmphasis">A</span><a name="different city"></a> to any
+different city <span class="docEmphasis">B</span> is the same
+whether traveling from <span class="docEmphasis">A</span> to
+<span class="docEmphasis">B</span> or from <span class=
+"docEmphasis">B</span> to <span class="docEmphasis">A</span>, so
+the items are mirrored along the main diagonal.</p>
+
+<p class="docText"><a name="simple table"></a>To see how a custom
+model compares with a simple table, let us assume that we have
+three cities, <span class="docEmphasis">A</span>, <span class=
+"docEmphasis">B</span><a name="and"></a>, and <span class=
+"docEmphasis">C</span><a name="store a"></a>. If we store a value
+for every combination, we would need to store nine values. A
+carefully designed model would require only the three items
+(<span class="docEmphasis">A</span>, <span class=
+"docEmphasis">B</span>), (<span class="docEmphasis">A</span>,
+<span class="docEmphasis">C</span>), and (<span class=
+"docEmphasis">B</span>, <span class="docEmphasis">C</span>).</p>
+
+<p class="docText"><a name="we set"></a>Here's how we set up and
+use the model:</p>
+
+<div class="docText">
+<pre>
+    QStringList cities;
+    cities &lt;&lt; "Arvika" &lt;&lt; "Boden" &lt;&lt; "Eskilstuna" &lt;&lt; "Falun"
+           &lt;&lt; "Filipstad" &lt;&lt; "Halmstad" &lt;&lt; "Helsingborg" &lt;&lt; "Karlstad"
+           &lt;&lt; "Kiruna" &lt;&lt; "Kramfors" &lt;&lt; "Motala" &lt;&lt; "Sandviken"
+           &lt;&lt; "Skara" &lt;&lt; "Stockholm" &lt;&lt; "Sundsvall" &lt;&lt; "Trelleborg";
+
+    CityModel cityModel;
+    cityModel.setCities(cities);
+
+    QTableView tableView;
+    tableView.setModel(&amp;cityModel);
+    tableView.setAlternatingRowColors(true);
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1575"></a><a name=
+"iddle4679"></a><a name="iddle7825"></a><a name="for the"></a>We
+must reimplement the same functions as we did for the previous
+example. In addition, we must also reimplement <tt>setData()</tt>
+and <tt>flags()</tt><a name="is the"></a> to make the model
+editable. Here is the class definition:</p>
+
+<div class="docText">
+<pre>
+class CityModel : public QAbstractTableModel
+{
+    Q_OBJECT
+
+public:
+    CityModel(QObject *parent = 0);
+
+    void setCities(const QStringList &amp;cityNames);
+    int rowCount(const QModelIndex &amp;parent) const;
+    int columnCount(const QModelIndex &amp;parent) const;
+    QVariant data(const QModelIndex &amp;index, int role) const;
+    bool setData(const QModelIndex &amp;index, const QVariant &amp;value,
+                 int role);
+    QVariant headerData(int section, Qt::Orientation orientation,
+                        int role) const;
+    Qt::ItemFlags flags(const QModelIndex &amp;index) const;
+
+private:
+    int offsetOf(int row, int column) const;
+
+    QStringList cities;
+    QVector&lt;int&gt; distances;
+};
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1577"></a><a name=
+"iddle1578"></a><a name="iddle1579"></a><a name=
+"iddle1581"></a><a name="iddle1583"></a><a name=
+"iddle1684"></a><a name="iddle2007"></a><a name=
+"iddle2010"></a><a name="iddle2999"></a><a name=
+"iddle4627"></a><a name="iddle4631"></a><a name=
+"iddle4637"></a><a name="iddle4646"></a><a name="iddle6976"></a>For
+this model, we are using two data structures: <tt>cities</tt> of
+type <tt>QStringList</tt> to hold the city names, and
+<tt>distances</tt> of type <tt>QVector&lt;int&gt;</tt> to hold the
+distance between each unique pair of cities.</p>
+
+<div class="docText">
+<pre>
+CityModel::CityModel(QObject *parent)
+    : QAbstractTableModel(parent)
+{
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The constructor does nothing beyond passing on
+the <tt>parent</tt> parameter to the base class.</p>
+
+<div class="docText">
+<pre>
+int CityModel::rowCount(const QModelIndex &amp; /* parent */) const
+{
+    return cities.count();
+}
+int CityModel::columnCount(const QModelIndex &amp; /* parent */) const
+{
+    return cities.count();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="of rows"></a>Since we have a square
+grid of cities, the number of rows and columns is the number of
+cities in our list.</p>
+
+<div class="docText">
+<pre>
+QVariant CityModel::data(const QModelIndex &amp;index, int role) const
+{
+    if (!index.isValid())
+        return QVariant();
+
+    if (role == Qt::TextAlignmentRole) {
+        return int(Qt::AlignRight | Qt::AlignVCenter);
+    } else if (role == Qt::DisplayRole) {
+        if (index.row() == index.column())
+            return 0;
+        int offset = offsetOf(index.row(), index.column());
+        return distances[offset];
+    }
+    return QVariant();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>data()</tt><a name="in"></a> function is
+similar to what we did in <tt>CurrencyModel</tt><a name=
+"are the"></a>. It returns 0 if the row and column are the same,
+because that corresponds to the case where the two cities are the
+same; otherwise, it finds the entry for the given row and column in
+the <tt>distances</tt><a name="returns the"></a> vector and returns
+the distance for that particular pair of cities.</p>
+
+<div class="docText">
+<pre>
+QVariant CityModel::headerData(int section,
+                               Qt::Orientation /* orientation */,
+                               int role) const
+{
+    if (role == Qt::DisplayRole)
+        return cities[section];
+    return QVariant();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1580"></a><a name=
+"iddle1585"></a><a name="iddle1909"></a><a name=
+"iddle2020"></a><a name="iddle2341"></a><a name=
+"iddle2778"></a><a name="iddle3007"></a><a name=
+"iddle3357"></a><a name="iddle3358"></a><a name=
+"iddle3359"></a><a name="iddle4629"></a><a name=
+"iddle4634"></a><a name="iddle4635"></a><a name=
+"iddle4648"></a><a name="iddle6044"></a><a name=
+"iddle6055"></a><a name="iddle6056"></a><a name=
+"iddle6057"></a><a name="iddle7179"></a><a name="iddle7180"></a>The
+<tt>headerData()</tt><a name="with every"></a> function is simple
+because we have a square table with every row having an identical
+column header. We simply return the name of the city at the given
+offset in the <tt>cities</tt><a name="string list"></a> string
+list.</p>
+
+<div class="docText">
+<pre>
+bool CityModel::setData(const QModelIndex &amp;index,
+                        const QVariant &amp;value, int role)
+{
+    if (index.isValid() &amp;&amp; index.row() != index.column()
+            &amp;&amp; role == Qt::EditRole) {
+        int offset = offsetOf(index.row(), index.column());
+        distances[offset] = value.toInt();
+
+        QModelIndex transposedIndex = createIndex(index.column(),
+                                                  index.row());
+        emit dataChanged(index, index);
+        emit dataChanged(transposedIndex, transposedIndex);
+        return true;
+    }
+    return false;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>setData()</tt><a name="called when"></a>
+function is called when the user edits an item. Providing the model
+index is valid, the two cities are different, and the data element
+to modify is the <tt>Qt::EditRole</tt><a name=
+"function stores"></a>, the function stores the value the user
+entered in the <tt>distances</tt> vector.</p>
+
+<p class="docText">The <tt>createIndex()</tt><a name="it to"></a>
+function is used to generate a model index. We need it to get the
+model index of the item on the other side of the main diagonal that
+corresponds with the item being set, since both items must show the
+same data. The <tt>createIndex()</tt><a name="the column"></a>
+function takes the row before the column; here we invert the
+parameters to get the model index of the diagonally opposite item
+to the one specified by <tt>index</tt>.</p>
+
+<p class="docText">We emit the <tt>dataChanged()</tt><a name=
+"was changed"></a> signal with the model index of the item that was
+changed. This signal takes two model indexes because it is possible
+for a change to affect a rectangular region of more than one row
+and column, so the indexes passed are the index of the top-left and
+bottom-right items of those that have changed. We also emit the
+<tt>dataChanged()</tt><a name="that the"></a> signal for the
+transposed index to ensure that the view will refresh the item.
+Finally, we return <tt>true</tt> or <tt>false</tt> to indicate
+whether the edit succeeded.</p>
+
+<div class="docText">
+<pre>
+Qt::ItemFlags CityModel::flags(const QModelIndex &amp;index) const
+{
+    Qt::ItemFlags flags = QAbstractItemModel::flags(index);
+    if (index.row() != index.column())
+        flags |= Qt::ItemIsEditable;
+    return flags;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The model uses the <tt>flags()</tt><a name=
+"with an"></a> function to communicate what can be done with an
+item (e.g., whether it is editable). The default implementation
+from <tt>QAbstractTableModel</tt> returns <tt>Qt::ItemIsSelectable
+| Qt::ItemIsEnabled</tt><a name="the"></a>. We add the
+<tt>Qt::ItemIsEditable</tt> <a name="iddle1345"></a><a name=
+"iddle1360"></a><a name="iddle1582"></a><a name=
+"iddle1584"></a><a name="iddle2567"></a><a name=
+"iddle4125"></a><a name="iddle4643"></a><a name=
+"iddle6008"></a><a name="iddle6887"></a><a name=
+"iddle7140"></a><a name="diagonals"></a>flag for all items except
+those lying on the diagonals (which are always 0).</p>
+
+<div class="docText">
+<pre>
+void CityModel::setCities(const QStringList &amp;cityNames)
+{
+    cities = cityNames;
+    distances.resize(cities.count() * (cities.count() - 1) / 2);
+    distances.fill(0);
+    reset();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="If a"></a>If a new list of cities is
+given, we set the private <tt>QStringList</tt><a name=
+"new list"></a> to the new list, resize and clear the
+<tt>distances</tt><a name="call"></a> vector, and call
+<tt>QAbstractItemModel::reset()</tt><a name="be refetched"></a> to
+notify any views that their visible items must be refetched.</p>
+
+<div class="docText">
+<pre>
+int CityModel::offsetOf(int row, int column) const
+{
+    if (row &lt; column)
+        qSwap(row, column);
+    return (row * (row - 1) / 2) + column;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>offsetOf()</tt><a name="of a"></a>
+private function computes the index of a given city pair in the
+<tt>distances</tt> vector. For example, if we had cities
+<span class="docEmphasis">A</span>, <span class=
+"docEmphasis">B</span>, <span class="docEmphasis">C</span>, and
+<span class="docEmphasis">D</span>, and the user updated row 3,
+column 1 (<span class="docEmphasis">B</span> to <span class=
+"docEmphasis">D</span><a name="updated row"></a>), the offset would
+be 3 x (3 - 1)/2 + 1 = 4. If the user had instead updated row 1,
+column 3 (<span class="docEmphasis">D</span> to <span class=
+"docEmphasis">B</span>), thanks to the <tt>qSwap()</tt><a name=
+"and an"></a> call, exactly the same calculation would be performed
+and an identical offset would be returned. <a class="docLink" href=
+"#ch10fig13">Figure 10.13</a><a name="table model"></a> illustrates
+the relationships between cities, distances, and the corresponding
+table model.</p>
+<a name="ch10fig13"></a>
+<center>
+<h5 class="docFigureTitle">Figure 10.13. The <tt>cities</tt> and
+<tt>distances</tt><a name="and the"></a> data structures and the
+table model</h5>
+
+<p class="docText"><img border="0" id="" width="488" height="116"
+src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZmlncGNmaDNnMTAvaTFpcy4-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="that shows"></a>The last example in
+this section is a model that shows the parse tree for a given
+Boolean expression. A Boolean expression is either a simple
+alphanumeric identifier, such as "bravo", a complex expression
+built from simpler expressions using the "&amp;&amp;", "||", or "!"
+operators, or a parenthesized expression. For example, "a || (b
+&amp;&amp; !c)" is a Boolean expression.</p>
+
+<p class="docText"><a name="The Boolean"></a>The Boolean Parser
+application, shown in <a class="docLink" href="#ch10fig14">Figure
+10.14</a><a name="four classes"></a>, consists of four classes:</p>
+
+<ul>
+<li>
+<p class="docList"><tt>BooleanWindow</tt><a name="a window"></a> is
+a window that lets the user enter a Boolean expression and shows
+the corresponding parse tree.</p>
+</li>
+
+<li>
+<p class="docList"><a name="iddle1358"></a><a name=
+"iddle4027"></a><a name="iddle4029"></a><tt>BooleanParser</tt>
+generates a parse tree from a Boolean expression.</p>
+</li>
+
+<li>
+<p class="docList"><tt>BooleanModel</tt> is a tree model that
+encapsulates a parse tree.</p>
+</li>
+
+<li>
+<p class="docList"><tt>Node</tt> represents an item in a parse
+tree.</p>
+</li>
+</ul>
+<a name="ch10fig14"></a>
+<center>
+<h5 class="docFigureTitle">Figure 10.14. The Boolean Parser
+application</h5>
+
+<p class="docText"><img border="0" id="" width="451" height="348"
+src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZ2oub2FpcHNjaG5iZW8vYWxzcmVwcHI-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText">Let's start with the <tt>Node</tt> class:</p>
+
+<div class="docText">
+<pre>
+class Node
+{
+public:
+    enum Type { Root, OrExpression, AndExpression, NotExpression, Atom,
+                Identifier, Operator, Punctuator };
+
+    Node(Type type, const QString &amp;str = "");
+    ~Node();
+
+    Type type;
+    QString str;
+    Node *parent;
+    QList&lt;Node *&gt; children;
+};
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="parent"></a>Every node has a type, a
+string (which may be empty), a parent (which may be null), and a
+list of child nodes (which may be empty).</p>
+
+<div class="docText">
+<pre>
+Node::Node(Type type, const QString &amp;str)
+{
+    this-&gt;type = type;
+    this-&gt;str = str;
+    parent = 0;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1346"></a><a name=
+"iddle1347"></a><a name="iddle1603"></a><a name=
+"iddle2086"></a><a name="iddle3051"></a><a name=
+"iddle4031"></a><a name="iddle4625"></a><a name=
+"iddle4916"></a><a name="iddle7823"></a><a name="type and"></a>The
+constructor simply initializes the node's type and string, and sets
+the parent to null (no parent). Because all the data is public,
+code that uses <tt>Node</tt> can manipulate the type, string,
+parent, and children directly.</p>
+
+<div class="docText">
+<pre>
+Node::~Node()
+{
+    qDeleteAll(children);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>qDeleteAll()</tt> function iterates over
+a container of pointers and calls <tt>delete</tt><a name=
+"so if"></a> on each one. It does not set the pointers to null, so
+if it is used outside of a destructor it is common to follow it
+with a call to <tt>clear()</tt> on the container that holds the
+pointers.</p>
+
+<p class="docText"><a name="items"></a>Now that we have defined our
+data items (each represented by a <tt>Node</tt>), we are ready to
+create a model:</p>
+
+<div class="docText">
+<pre>
+class BooleanModel : public QAbstractItemModel
+{
+public:
+    BooleanModel(QObject *parent = 0);
+    ~BooleanModel();
+
+    void setRootNode(Node *node);
+
+    QModelIndex index(int row, int column,
+                      const QModelIndex &amp;parent) const;
+    QModelIndex parent(const QModelIndex &amp;child) const;
+
+    int rowCount(const QModelIndex &amp;parent) const;
+    int columnCount(const QModelIndex &amp;parent) const;
+    QVariant data(const QModelIndex &amp;index, int role) const;
+    QVariant headerData(int section, Qt::Orientation orientation,
+                        int role) const;
+private:
+    Node *nodeFromIndex(const QModelIndex &amp;index) const;
+
+    Node *rootNode;
+};
+</pre>
+</div>
+<br>
+
+<p class="docText">This time we have used
+<tt>QAbstractItemModel</tt><a name="convenience subclass"></a> as
+the base class rather than its convenience subclass
+<tt>QAbstractTableModel</tt><a name="want to"></a>, because we want
+to create a hierarchical model. The essential functions that we
+must reimplement remain the same, except that we must also
+implement <tt>index()</tt> and <tt>parent()</tt>. To set the
+model's data, we have a <tt>setRootNode()</tt> function that must
+be called with a parse tree's root node.</p>
+
+<div class="docText">
+<pre>
+BooleanModel::BooleanModel(QObject *parent)
+    : QAbstractItemModel(parent)
+{
+    rootNode = 0;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1348"></a><a name=
+"iddle1353"></a><a name="iddle1354"></a><a name=
+"iddle1357"></a><a name="iddle3205"></a><a name=
+"iddle3286"></a><a name="iddle4043"></a><a name=
+"iddle4639"></a><a name="iddle4644"></a><a name=
+"iddle6888"></a><a name="iddle7307"></a><a name=
+"iddle8479"></a><a name="node to"></a>In the model's constructor,
+we just need to set the root node to a safe null value and pass on
+the <tt>parent</tt><a name="to the"></a> to the base class.</p>
+
+<div class="docText">
+<pre>
+BooleanModel::~BooleanModel()
+{
+    delete rootNode;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="we delete"></a>In the destructor, we
+delete the root node. If the root node has children, each of these
+is deleted, and so on recursively, by the <tt>Node</tt>
+destructor.</p>
+
+<div class="docText">
+<pre>
+void BooleanModel::setRootNode(Node *node)
+{
+    delete rootNode;
+    rootNode = node;
+    reset();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="a new"></a>When a new root node is set,
+we begin by deleting any previous root node (and all of its
+children). Then we set the new root node and call
+<tt>reset()</tt><a name="data for"></a> to notify any views that
+they must refetch the data for any visible items.</p>
+
+<div class="docText">
+<pre>
+QModelIndex BooleanModel::index(int row, int column,
+                                const QModelIndex &amp;parent) const
+{
+    if (!rootNode || row &lt; 0 || column &lt; 0)
+        return QModelIndex();
+    Node *parentNode = nodeFromIndex(parent);
+    Node *childNode = parentNode-&gt;children.value(row);
+    if (!childNode)
+        return QModelIndex();
+    return createIndex(row, column, childNode);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>index()</tt> function is reimplemented
+from <tt>QAbstractItemModel</tt><a name="model or"></a>. It is
+called whenever the model or the view needs to create a
+<tt>QModelIndex</tt> for a particular child item (or a top-level
+item if <tt>parent</tt> is an invalid <tt>QModelIndex</tt><a name=
+"because"></a>). For table and list models, we don't need to
+reimplement this function, because <tt>QAbstractListModel</tt>'s
+and <tt>QAbstractTableModel</tt>'s default implementations normally
+suffice.</p>
+
+<p class="docText">In our <tt>index()</tt><a name="an invalid"></a>
+implementation, if no parse tree is set, we return an invalid
+<tt>QModelIndex</tt>. Otherwise, we create a
+<tt>QModelIndex</tt><a name="with a"></a> with the given row and
+column and with a <tt>Node *</tt><a name="requested child"></a> for
+the requested child. For hierarchical models, knowing the row and
+column of an item relative to its parent is not enough to uniquely
+identify it; we must also know <span class=
+"docEmphasis">who</span><a name="to the"></a> its parent is. To
+solve this, we can store a pointer to the internal node in the
+<tt>QModelIndex</tt>. <tt>QModelIndex</tt><a name="gives us"></a>
+gives us the option of storing a <tt>void *</tt> or an
+<tt>int</tt><a name="to the"></a> in addition to the row and column
+numbers.</p>
+
+<p class="docText">The <tt>Node *</tt><a name="the child"></a> for
+the child is obtained through the parent node's <tt>children</tt>
+list. The parent node is extracted from the <tt>parent</tt> model
+index using the <tt>nodeFromIndex()</tt> private function:</p>
+
+<div class="docText">
+<pre>
+Node *BooleanModel::nodeFromIndex(const QModelIndex &amp;index) const
+{
+    if (index.isValid()) {
+        return static_cast&lt;Node *&gt;(index.internalPointer());
+    } else {
+        return rootNode;
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1350"></a><a name=
+"iddle1351"></a><a name="iddle1355"></a><a name=
+"iddle1356"></a><a name="iddle1683"></a><a name=
+"iddle2005"></a><a name="iddle2011"></a><a name=
+"iddle3262"></a><a name="iddle4255"></a><a name=
+"iddle4264"></a><a name="iddle4628"></a><a name=
+"iddle4632"></a><a name="iddle4640"></a><a name=
+"iddle4647"></a><a name="iddle5401"></a><a name="iddle6975"></a>The
+<tt>nodeFromIndex()</tt> function casts the given index's <tt>void
+*</tt> to a <tt>Node *</tt><a name="since an"></a>, or returns the
+root node if the index is invalid, since an invalid model index is
+used to represent the root in a model.</p>
+
+<div class="docText">
+<pre>
+int BooleanModel::rowCount(const QModelIndex &amp;parent) const
+{
+    if (parent.column() &gt; 0)
+        return 0;
+    Node *parentNode = nodeFromIndex(parent);
+    if (!parentNode)
+        return 0;
+    return parentNode-&gt;children.count();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="a given"></a>The number of rows for a
+given item is simply how many children it has.</p>
+
+<div class="docText">
+<pre>
+int BooleanModel::columnCount(const QModelIndex &amp; /* parent */) const
+{
+    return 2;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="column holds"></a>The number of columns
+is fixed at 2. The first column holds the node types; the second
+column holds the node values.</p>
+
+<div class="docText">
+<pre>
+QModelIndex BooleanModel::parent(const QModelIndex &amp;child) const
+{
+    Node *node = nodeFromIndex(child);
+    if (!node)
+        return QModelIndex();
+    Node *parentNode = node-&gt;parent;
+    if (!parentNode)
+        return QModelIndex();
+    Node *grandparentNode = parentNode-&gt;parent;
+    if (!grandparentNode)
+        return QModelIndex();
+
+    int row = grandparentNode-&gt;children.indexOf(parentNode);
+    return createIndex(row, 0, parentNode);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">Retrieving the parent
+<tt>QModelIndex</tt><a name="work than"></a> from a child is a bit
+more work than finding a parent's child. We can easily retrieve the
+parent node using <tt>nodeFromIndex()</tt> and going up using the
+<tt>Node</tt><a name="position of"></a>'s parent pointer, but to
+obtain the row number (the position of the parent among its
+siblings), we need to go back to the grandparent and find the
+parent's index position in its parent's (i.e., the child's
+grandparent's) list of children.</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+QVariant BooleanModel::data(const QModelIndex &amp;index, int role) const
+{
+    if (role != Qt::DisplayRole)
+        return QVariant();
+
+    Node *node = nodeFromIndex(index);
+    if (!node)
+        return QVariant();
+
+    if (index.column() == 0) {
+        switch (node-&gt;type) {
+        case Node::Root:
+             return tr("Root");
+        case Node::OrExpression:
+            return tr("OR Expression");
+        case Node::AndExpression:
+            return tr("AND Expression");
+        case Node::NotExpression:
+            return tr("NOT Expression");
+        case Node::Atom:
+            return tr("Atom");
+        case Node::Identifier:
+            return tr("Identifier");
+        case Node::Operator:
+            return tr("Operator");
+        case Node::Punctuator:
+            return tr("Punctuator");
+        default:
+            return tr("Unknown");
+        }
+    } else if (index.column() == 1) {
+        return node-&gt;str;
+    }
+    return QVariant();
+}
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1352"></a><a name=
+"iddle2178"></a><a name="iddle2998"></a><a name=
+"iddle4638"></a><a name="iddle6038"></a>In <tt>data()</tt><a name=
+"the"></a>, we retrieve the <tt>Node *</tt><a name=
+"access the"></a> for the requested item and we use it to access
+the underlying data. If the caller wants a value for any role
+except <tt>Qt::DisplayRole</tt><a name="or if"></a> or if we cannot
+retrieve a <tt>Node</tt><a name="given model"></a> for the given
+model index, we return an invalid <tt>QVariant</tt><a name=
+"the column"></a>. If the column is 0, we return the name of the
+node's type; if the column is 1, we return the node's value (its
+string).</p>
+
+<div class="docText">
+<pre>
+QVariant BooleanModel::headerData(int section,
+                                  Qt::Orientation orientation,
+                                  int role) const
+{
+    if (orientation == Qt::Horizontal &amp;&amp; role == Qt::DisplayRole) {
+        if (section == 0) {
+            return tr("Node");
+        } else if (section == 1) {
+            return tr("Value");
+        }
+    }
+    return QVariant();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1285"></a><a name=
+"iddle1344"></a><a name="iddle1349"></a><a name=
+"iddle1359"></a><a name="iddle1980"></a><a name=
+"iddle2012"></a><a name="iddle2077"></a><a name=
+"iddle2632"></a><a name="iddle2813"></a><a name=
+"iddle3008"></a><a name="iddle4633"></a><a name=
+"iddle6023"></a><a name="iddle6051"></a><a name=
+"iddle6076"></a><a name="iddle6078"></a><a name=
+"iddle6397"></a><a name="iddle7996"></a><a name=
+"iddle8009"></a><a name="iddle8171"></a><a name="iddle8217"></a>In
+our <tt>headerData()</tt> reimplementation, we return appropriate
+horizontal header labels. The <tt>QTreeView</tt><a name=
+"so we"></a> class, which is used to visualize hierarchical models,
+has no vertical header, so we ignore that possibility.</p>
+
+<p class="docText"><a name="the"></a>Now that we have covered the
+<tt>Node</tt> and <tt>BooleanModel</tt><a name="user changes"></a>
+classes, let's see how the root node is created when the user
+changes the text in the line editor:</p>
+
+<div class="docText">
+<pre>
+void BooleanWindow::booleanExpressionChanged(const QString &amp;expr)
+{
+    BooleanParser parser;
+    Node *rootNode = parser.parse(expr);
+    booleanModel-&gt;setRootNode(rootNode);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="the application"></a>When the user
+changes the text in the application's line editor, the main
+window's <tt>booleanExpressionChanged()</tt><a name=
+"parsed and"></a> slot is called. In this slot, the user's text is
+parsed and the parser returns a pointer to the root node of the
+parse tree.</p>
+
+<p class="docText"><a name="not shown"></a>We have not shown the
+<tt>BooleanParser</tt><a name="The full"></a> class because it is
+not relevant for GUI or model/view programming. The full source for
+this example is provided with the book's examples.</p>
+
+<p class="docText"><a name="When implementing"></a>When
+implementing tree models such as <tt>BooleanModel</tt><a name=
+"be quite"></a>, it can be quite easy to make mistakes, resulting
+in strange behavior of <tt>QTreeView</tt><a name="help find"></a>.
+To help find and solve problems in custom data models, a
+<tt>ModelTest</tt><a name="series of"></a> class is available from
+Trolltech Labs. The class performs a series of tests on the model
+to catch common errors. To use <tt>ModelTest</tt>, download it from
+<a class="docLink" target="_blank" href=
+"http://labs.trolltech.com/page/Projects/Itemview/Modeltest">http://labs.trolltech.com/page/Projects/Itemview/Modeltest</a><a name="in the"></a>
+and follow the instructions given in the <tt>README</tt> file.</p>
+
+<p class="docText"><a name="different custom"></a>In this section,
+we have seen how to create three different custom models. Many
+models are much simpler than those shown here, with one-to-one
+correspondences between items and model indexes. Further model/view
+examples are provided with Qt itself, along with extensive
+documentation.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch10lev1sec2.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch10lev1sec4.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

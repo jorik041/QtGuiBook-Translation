@@ -1,0 +1,255 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch13lev1sec2.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch13lev1sec2.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch13lev1sec2.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch13lev1sec2.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch13lev1sec1.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch13lev1sec3.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch13lev1sec2"></a>
+<h3 class="docSection1Title" id="-100000">Viewing Tables</h3>
+
+<p class="docText"><a name="In the"></a>In the preceding section,
+we saw how to interact with a database using <tt>QSqlQuery</tt> and
+<tt>QSqlTableModel</tt><a name="we will"></a>. In this section, we
+will see how to present a <tt>QSqlTableModel</tt><a name="a"></a>
+in a <tt>QTableView</tt> widget.</p>
+
+<p class="docText">The Scooters application, shown in <a class=
+"docLink" href="#ch13fig01">Figure 13.1</a><a name="on a"></a>,
+presents a table of scooter models. The example is based on a
+single table, <tt>scooter</tt>, defined as follows:</p>
+
+<div class="docText">
+<pre>
+CREATE TABLE scooter (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(40) NOT NULL,
+    maxspeed INTEGER NOT NULL,
+    maxrange INTEGER NOT NULL,
+    weight INTEGER NOT NULL,
+    description VARCHAR(80) NOT NULL);
+</pre>
+</div>
+<br>
+<a name="ch13fig01"></a>
+<center>
+<h5 class="docFigureTitle">Figure 13.1. The Scooters
+application</h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZ3BvYWlwY3RocnRzYy9vZXNsLl9q.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="279" src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0Nzkzb2lqcGNnaHJ0c2Mvb2Vwcy4-.jpg"
+alt="">
+</center>
+<br>
+
+<p class="docText"><a name="iddle1258"></a><a name=
+"iddle4185"></a><a name="iddle4659"></a><a name=
+"iddle4665"></a><a name="iddle4668"></a><a name=
+"iddle4669"></a><a name="iddle4670"></a><a name=
+"iddle5162"></a><a name="iddle5867"></a><a name=
+"iddle5873"></a><a name="iddle5874"></a><a name=
+"iddle5876"></a><a name="iddle6186"></a><a name=
+"iddle6890"></a><a name="iddle7067"></a><a name=
+"iddle7153"></a><a name="iddle7204"></a><a name=
+"iddle7235"></a><a name="iddle7269"></a><a name=
+"iddle7311"></a><a name="iddle7313"></a><a name=
+"iddle7326"></a><a name="iddle7332"></a><a name=
+"iddle7343"></a><a name="iddle7579"></a><a name="iddle7673"></a>The
+<tt>id</tt><a name="the database"></a> field's values are generated
+automatically by the database, in this case by SQLite. Other
+databases may use a different syntax for this.</p>
+
+<p class="docText"><a name="meaningful names"></a>For ease of
+maintenance, we use an enum to give meaningful names to the column
+indexes:</p>
+
+<div class="docText">
+<pre>
+enum {
+    Scooter_Id = 0,
+    Scooter_Name = 1,
+    Scooter_MaxSpeed = 2,
+    Scooter_MaxRange = 3,
+    Scooter_Weight = 4,
+    Scooter_Description = 5
+};
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="necessary to"></a>Here is all the code
+that is necessary to set up a <tt>QSqlTableModel</tt> to display
+the <tt>scooter</tt> table:</p>
+
+<div class="docText">
+<pre>
+    model = new QSqlTableModel(this);
+    model-&gt;setTable("scooter");
+    model-&gt;setSort(Scooter_Name, Qt::AscendingOrder);
+    model-&gt;setHeaderData(Scooter_Name, Qt::Horizontal, tr("Name"));
+    model-&gt;setHeaderData(Scooter_MaxSpeed, Qt::Horizontal, tr("MPH"));
+    model-&gt;setHeaderData(Scooter_MaxRange, Qt::Horizontal, tr("Miles"));
+    model-&gt;setHeaderData(Scooter_Weight, Qt::Horizontal, tr("Lbs"));
+    model-&gt;setHeaderData(Scooter_Description, Qt::Horizontal,
+                            tr("Description"));
+    model-&gt;select();
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="we saw"></a>Creating the model is
+similar to what we saw in the preceding section. One difference is
+that we have provided our own column titles. If we had not done so,
+the raw field names would have been used. We have also specified a
+sorting order using <tt>setSort()</tt><a name="this is"></a>;
+behind the scenes, this is implemented by an <tt>ORDER BY</tt>
+clause.</p>
+
+<p class="docText"><a name="it with"></a>Now that we have created
+the model and populated it with data using
+<tt>select()</tt><a name="we can"></a>, we can create a view to
+present it:</p>
+
+<div class="docText">
+<pre>
+    view = new QTableView;
+    view-&gt;setModel(model);
+    view-&gt;setSelectionMode(QAbstractItemView::SingleSelection);
+    view-&gt;setSelectionBehavior(QAbstractItemView::SelectRows);
+    view-&gt;setColumnHidden(Scooter_Id, true);
+    view-&gt;resizeColumnsToContents();
+    view-&gt;setEditTriggers(QAbstractItemView::NoEditTriggers);
+
+    QHeaderView *header = view-&gt;horizontalHeader();
+    header-&gt;setStretchLastSection(true);
+</pre>
+</div>
+<br>
+
+<p class="docText">In <a class="docLink" href=
+"ch10.html#ch10">Chapter 10</a><a name="how to"></a>, we saw how to
+use <tt>QTableView</tt><a name="present data"></a> to present data
+from a <tt>QAbstractItemModel</tt> in a table. Since
+<tt>QSqlTableModel</tt> is (indirectly) derived from
+<tt>QAbstractItemModel</tt><a name="of a"></a>, it can readily be
+used as the data source of a <tt>QTableView</tt>. The
+<tt>setModel()</tt><a name="necessary to"></a> call is all that is
+necessary to connect the view to the model. The rest of the code
+only customizes the table to make it more user-friendly.</p>
+
+<p class="docText"><a name="iddle2345"></a><a name=
+"iddle2623"></a><a name="iddle2829"></a><a name=
+"iddle4046"></a><a name="iddle4655"></a><a name=
+"iddle5839"></a><a name="iddle5841"></a><a name=
+"iddle5843"></a><a name="iddle5848"></a><a name=
+"iddle6840"></a><a name="iddle7295"></a><a name=
+"iddle7691"></a><a name="we have"></a>The selection mode specifies
+what, if anything, the user can select; here we have made
+individual cells (fields) selectable. This selection is usually
+shown by a dotted outline around the selected cell. The selection
+behavior specifies how selections should work visually, in this
+case by entire rows. This selection is usually shown by using a
+different background color. We have chosen to hide the ID column
+because the IDs are not meaningful to the user. We have also set
+<tt>NoEditTriggers</tt> to make the table view read-only.</p>
+
+<p class="docText"><a name="use"></a>An alternative for presenting
+read-only tables is to use <tt>QSqlTableModel</tt>'s base class,
+<tt>QSqlQueryModel</tt>. This class provides the
+<tt>setQuery()</tt><a name="SQL queries"></a> function, so it is
+possible to set complex SQL queries to provide particular views of
+one or more tables—for example, using joins.</p>
+
+<p class="docText"><a name="Scooters database"></a>Unlike the
+Scooters database, most databases have lots of tables and foreign
+key relationships. Qt provides <tt>QSqlRelationalTableModel</tt>, a
+subclass of <tt>QSqlTableModel</tt><a name="with foreign"></a> that
+can be used to display and edit tables with foreign keys. A
+<tt>QSqlRelationalTableModel</tt><a name="is very"></a> is very
+similar to a <tt>QSqlTableModel</tt><a name="we can"></a>, except
+that we can add <tt>QSqlRelation</tt><a name="to the"></a>s to the
+model, one for each foreign key. In many cases, a foreign key has
+an ID field and a name field; by using a
+<tt>QSqlRelationalTableModel</tt><a name="the name"></a>, we can
+ensure that users can see and change the name field while behind
+the scenes the corresponding ID field is the one that is actually
+used. For this to work correctly, we must set a
+<tt>QSqlRelationalDelegate</tt><a name="on the"></a> (or a custom
+subclass of our own) on the view that is being used to present the
+model.</p>
+
+<p class="docText"><a name="changing of"></a>We will show how to
+enable the presentation and changing of foreign keys in the next
+two sections, and we will give more coverage of
+<tt>QTableView</tt>s in the last section of this chapter.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch13lev1sec1.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch13lev1sec3.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

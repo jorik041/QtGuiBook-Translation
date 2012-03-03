@@ -1,0 +1,536 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch13lev1sec3.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch13lev1sec3.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch13lev1sec3.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch13lev1sec3.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch13lev1sec2.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch13lev1sec4.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch13lev1sec3"></a>
+<h3 class="docSection1Title" id="-100000">Editing Records Using
+Forms</h3>
+
+<p class="docText"><a name="In this"></a>In this section, we will
+see how to create a dialog form that displays one record at a time.
+The dialog can be used to add, edit, and delete individual records,
+and to navigate through all the records in a table.</p>
+
+<p class="docText"><a name="illustrate these"></a>We will
+illustrate these concepts in the context of the Staff Manager
+application. The application keeps track of which department
+employees are in, where the departments are located, and some basic
+information about employees, such as their internal phone
+extension. The application uses the following three tables:</p>
+
+<div class="docText">
+<pre>
+CREATE TABLE location (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(40) NOT NULL));
+
+CREATE TABLE department (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(40) NOT NULL,
+    locationid INTEGER NOT NULL,
+    FOREIGN KEY (locationid) REFERENCES location));
+
+CREATE TABLE employee (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(40) NOT NULL,
+    departmentid INTEGER NOT NULL,
+    extension INTEGER NOT NULL,
+    email VARCHAR(40) NOT NULL,
+    startdate DATE NOT NULL,
+    FOREIGN KEY (departmentid) REFERENCES department));
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle2291"></a><a name=
+"iddle2374"></a><a name="iddle2830"></a><a name=
+"iddle7674"></a><a name="tables and"></a>The tables and their
+relationships are shown schematically in <a class="docLink" href=
+"#ch13fig02">Figure 13.2</a><a name="department can"></a>. Each
+location can have any number of departments, and each department
+can have any number of employees. The syntax for specifying foreign
+keys is for SQLite 3 and may be different for other databases.</p>
+<a name="ch13fig02"></a>
+<center>
+<h5 class="docFigureTitle">Figure 13.2. The Staff Manager
+application's tables</h5>
+
+<p class="docText"><img border="0" id="" width="456" height="143"
+src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZmlncGNmaDJnMTMvaTBpcy4-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="on"></a>In this section, we will focus
+on <tt>EmployeeForm</tt><a name="review"></a>, the dialog for
+editing employees. In the next section, we will review
+<tt>MainForm</tt>, which provides a master–detail view of
+departments and employees.</p>
+
+<p class="docText">The <tt>EmployeeForm</tt><a name=
+"of employees"></a> class provides a drill-down from the main
+form's summary of employees to a particular employee's full
+details. When invoked, the form shows the specified employee if a
+valid employee ID is given, or the first employee otherwise. (The
+form is shown in <a class="docLink" href="#ch13fig03">Figure
+13.3</a><a name="delete existing"></a>.) Users can navigate through
+the employees, edit or delete existing employees, and add new
+employees.</p>
+<a name="ch13fig03"></a>
+<center>
+<h5 class="docFigureTitle"><a name="Employee dialog"></a>Figure
+13.3. The Employee dialog</h5>
+
+<p class="docText"><img border="0" id="" width="479" height="339"
+src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzcGpwZmlwY3JoZW9lbS95bHNvbWVnLg--.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText">We have provided the following enum in
+<tt>employeeform.h</tt> to give meaningful names to the column
+indexes:</p>
+
+<div class="docText">
+<pre>
+enum {
+    Employee_Id = 0,
+    Employee_Name = 1,
+    Employee_DepartmentId = 2,
+    Employee_Extension = 3,
+    Employee_Email = 4,
+    Employee_StartDate = 5
+};
+</pre>
+</div>
+<br>
+
+<p class="docText">The rest of the header file defines the
+<tt>EmployeeForm</tt> class:</p>
+
+<div class="docText">
+<pre>
+class EmployeeForm : public QDialog
+{
+    Q_OBJECT
+public:
+    EmployeeForm(int id, QWidget *parent = 0);
+
+    void done(int result);
+
+private slots:
+    void addEmployee();
+    void deleteEmployee();
+
+private:
+    QSqlRelationalTableModel *tableModel;
+    QDataWidgetMapper *mapper;
+    QLabel *nameLabel;
+    ...
+    QDialogButtonBox *buttonBox;
+};
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle2375"></a><a name=
+"iddle2831"></a><a name="iddle4900"></a><a name="iddle5849"></a>To
+access the database, we use a <tt>QSqlRelationalTableModel</tt>
+rather than a plain <tt>QSqlTableModel</tt> because we need to
+resolve foreign keys. The <tt>QDataWidgetMapper</tt><a name=
+"widgets in"></a> is a class that allows us to map the widgets in a
+form to the corresponding columns in a data model.</p>
+
+<p class="docText"><a name="The form"></a>The form's constructor is
+quite long, so we will review it in parts, omitting the layout code
+since it isn't relevant.</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+EmployeeForm::EmployeeForm(int id, QWidget *parent)
+    : QDialog(parent)
+{
+    nameEdit = new QLineEdit;
+
+    nameLabel = new QLabel(tr("Na&amp;me:"));
+    nameLabel-&gt;setBuddy(nameEdit);
+
+    departmentComboBox = new QComboBox;
+
+    departmentLabel = new QLabel(tr("Depar&amp;tment:"));
+    departmentLabel-&gt;setBuddy(departmentComboBox);
+
+    extensionLineEdit = new QLineEdit;
+    extensionLineEdit-&gt;setValidator(new QIntValidator(0, 99999, this));
+
+    extensionLabel = new QLabel(tr("E&amp;xtension:"));
+    extensionLabel-&gt;setBuddy(extensionLineEdit);
+
+    emailEdit = new QLineEdit;
+
+    emailLabel = new QLabel(tr("&amp;Email:"));
+    emailLabel-&gt;setBuddy(emailEdit);
+
+    startDateEdit = new QDateEdit;
+    startDateEdit-&gt;setCalendarPopup(true);
+    QDate today = QDate::currentDate();
+    startDateEdit-&gt;setDateRange(today.addDays(-90), today.addDays(90));
+
+    startDateLabel = new QLabel(tr("&amp;Start Date:"));
+    startDateLabel-&gt;setBuddy(startDateEdit);
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle4945"></a><a name=
+"iddle5220"></a><a name="by creating"></a>We begin by creating one
+editing widget for each field. We also create a label to put beside
+each editing widget to identify the corresponding field.</p>
+
+<p class="docText"><a name="use a"></a>We use a
+<tt>QIntValidator</tt> to ensure that the <span class=
+"docEmphRomanAlt">Extension</span><a name="numbers in"></a> line
+editor will accept only valid extensions, in this case numbers in
+the range 0 to 99999. We also set a date range for the <span class=
+"docEmphRomanAlt">Start Date</span><a name="provide a"></a> editor,
+and set the editor to provide a pop-up calendar. We do not populate
+the combobox directly; later on we will give it a model from which
+it can populate itself.</p>
+
+<div class="docText">
+<pre>
+    firstButton = new QPushButton(tr("&lt;&lt; &amp;First"));
+    previousButton = new QPushButton(tr("&lt; &amp;Previous"));
+    nextButton = new QPushButton(tr("&amp;Next &gt;"));
+    lastButton = new QPushButton(tr("&amp;Last &gt;&gt;"));
+
+    addButton = new QPushButton(tr("&amp;Add"));
+    deleteButton = new QPushButton(tr("&amp;Delete"));
+    closeButton = new QPushButton(tr("&amp;Close"));
+
+    buttonBox = new QDialogButtonBox;
+    buttonBox-&gt;addButton(addButton, QDialogButtonBox::ActionRole);
+    buttonBox-&gt;addButton(deleteButton, QDialogButtonBox::ActionRole);
+    buttonBox-&gt;addButton(closeButton, QDialogButtonBox::AcceptRole);
+</pre>
+</div>
+<br>
+
+<p class="docText">We create the navigation buttons (<span class=
+"docEmphRomanAlt">&lt;&lt; First</span>, <span class=
+"docEmphRomanAlt">&lt; Previous</span>, <span class=
+"docEmphRomanAlt">Next &gt;</span>, and <span class=
+"docEmphRomanAlt">Last &gt;&gt;</span><a name="Then we"></a>),
+which are grouped together at the top of the dialog. Then we create
+the other buttons (<span class="docEmphRomanAlt">Add</span>,
+<span class="docEmphRomanAlt">Delete</span>, and <span class=
+"docEmphRomanAlt">Close</span>) and put them inside a
+<tt>QDialogButtonBox</tt><a name="code that"></a>, located at the
+bottom of the dialog. The code that creates the layouts is
+straightforward, so we won't review it.</p>
+
+<p class="docText"><a name="user interface"></a>At this point, we
+have set up the user interface's widgets, so now we can turn our
+attention to the underlying functionality.</p>
+
+<div class="docText">
+<pre>
+    tableModel = new QSqlRelationalTableModel(this);
+    tableModel-&gt;setTable("employee");
+    tableModel-&gt;setRelation(Employee_DepartmentId,
+                            QSqlRelation("department", "id", "name"));
+    tableModel-&gt;setSort(Employee_Name, Qt::AscendingOrder);
+    tableModel-&gt;select();
+
+    QSqlTableModel *relationModel =
+            tableModel-&gt;relationModel(Employee_DepartmentId);
+    departmentComboBox-&gt;setModel(relationModel);
+    departmentComboBox-&gt;setModelColumn(
+            relationModel-&gt;fieldIndex("name"));
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1260"></a><a name=
+"iddle1689"></a><a name="iddle1716"></a><a name=
+"iddle2079"></a><a name="iddle2705"></a><a name=
+"iddle2832"></a><a name="iddle4835"></a><a name=
+"iddle5290"></a><a name="iddle5842"></a><a name=
+"iddle5844"></a><a name="iddle5850"></a><a name=
+"iddle5853"></a><a name="iddle5861"></a><a name=
+"iddle6841"></a><a name="iddle7302"></a><a name=
+"iddle7885"></a><a name="is constructed"></a>The model is
+constructed and set up in much the same way as the
+<tt>QSqlTableModel</tt> we saw earlier, but this time we use a
+<tt>QSqlRelationalTableModel</tt> and set up a foreign key
+relation. The <tt>setRelation()</tt><a name="and a"></a> function
+takes the index of a foreign key field and a
+<tt>QSqlRelation</tt><a name="The"></a>. The
+<tt>QSqlRelation</tt><a name="a table"></a> constructor takes a
+table name (the foreign key's table), the name of the foreign key
+field, and the name of the field to display to represent the
+foreign key field's value.</p>
+
+<p class="docText">A <tt>QComboBox</tt><a name="like a"></a> is
+like a <tt>QListWidget</tt><a name="its data"></a> in that it has
+an internal model to hold its data items. We can replace that model
+with one of our own, and that is what we do here, giving it the
+relation model that is used by the
+<tt>QSqlRelationalTableModel</tt><a name="we must"></a>. The
+relation has two columns, so we must specify which one the combobox
+should show. The relation model was created for us when we called
+<tt>setRelation()</tt>, so we do not know the index of the
+<span class="docEmphRomanAlt">name</span> column. For this reason,
+we use the <tt>fieldIndex()</tt><a name="index to"></a> function
+with the field name to get the right index to make the combobox
+show the department names. Thanks to
+<tt>QSqlRelationalTableModel</tt><a name="than department"></a>,
+the combobox will display department names rather than department
+IDs.</p>
+
+<div class="docText">
+<pre>
+    mapper = new QDataWidgetMapper(this);
+    mapper-&gt;setSubmitPolicy(QDataWidgetMapper::AutoSubmit);
+    mapper-&gt;setModel(tableModel);
+    mapper-&gt;setItemDelegate(new QSqlRelationalDelegate(this));
+    mapper-&gt;addMapping(nameEdit, Employee_Name);
+    mapper-&gt;addMapping(departmentComboBox, Employee_DepartmentId);
+    mapper-&gt;addMapping(extensionLineEdit, Employee_Extension);
+    mapper-&gt;addMapping(emailEdit, Employee_Email);
+    mapper-&gt;addMapping(startDateEdit, Employee_StartDate);
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>QDataWidgetMapper</tt><a name=
+"it is"></a> reflects one database record's fields into the widgets
+it is mapped to, and reflects changes made in these widgets back to
+the database. We can either take responsibility for submitting
+(committing) changes ourselves, or tell the mapper to do it for us
+automatically; here we have chosen the automated option
+(<tt>QDataWidgetMapper::AutoSubmit</tt>).</p>
+
+<p class="docText"><a name="must be"></a>The mapper must be given
+the model to work on, and in the case of a model that has foreign
+keys, we must also give it a <tt>QSqlRelationalDelegate</tt>. This
+delegate ensures that values from the <tt>QSqlRelation</tt><a name=
+"raw IDs"></a>'s display column are shown to the user rather than
+raw IDs. The delegate also ensures that if the user initiates
+editing, the combobox shows display values, but the mapper actually
+writes the corresponding index value (the foreign key) back to the
+database.</p>
+
+<p class="docText"><a name="In cases"></a>In cases where foreign
+keys refer to tables with large numbers of records, it is probably
+best to create our own delegate and use it to present a "list of
+values" <a name="iddle1093"></a><a name="iddle2376"></a><a name=
+"iddle7168"></a><a name="iddle7886"></a><a name=
+"iddle8108"></a><a name="iddle8115"></a><a name=
+"iddle8122"></a><a name="iddle8124"></a><a name="a search"></a>form
+with a search capability rather than relying on
+<tt>QSqlRelationalTableModel</tt>'s default comboboxes.</p>
+
+<p class="docText"><a name="the model"></a>Once the model and
+delegate are set, we add mappings between the form's widgets and
+the corresponding field indexes. The combobox is treated just like
+the other widgets since all the work of dealing with the foreign
+key is handled by the relation model we have already set on it.</p>
+
+<div class="docText">
+<pre>
+    if (id != -1) {
+        for (int row = 0; row &lt; tableModel-&gt;rowCount(); ++row) {
+            QSqlRecord record = tableModel-&gt;record(row);
+            if (record.value(Employee_Id).toInt() == id) {
+                mapper-&gt;setCurrentIndex(row);
+                break;
+            }
+        }
+    } else {
+        mapper-&gt;toFirst();
+    }
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="we look"></a>If the dialog was called
+with a valid employee ID, we look for the record with that ID and
+make it the mapper's current record. Otherwise, we simply navigate
+to the first record. In either case, the record's data will be
+reflected into the mapped widgets.</p>
+
+<div class="docText">
+<pre>
+    connect(firstButton, SIGNAL(clicked()), mapper, SLOT(toFirst()));
+    connect(previousButton, SIGNAL(clicked()),
+            mapper, SLOT(toPrevious()));
+    connect(nextButton, SIGNAL(clicked()), mapper, SLOT(toNext()));
+    connect(lastButton, SIGNAL(clicked()), mapper, SLOT(toLast()));
+    connect(addButton, SIGNAL(clicked()), this, SLOT(addEmployee()));
+    connect(deleteButton, SIGNAL(clicked()),
+            this, SLOT(deleteEmployee()));
+    connect(closeButton, SIGNAL(clicked()), this, SLOT(accept()));
+    ...
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="directly to"></a>The navigation buttons
+are connected directly to the corresponding mapper slots. (If we
+were using the manual submit policy, we would need to implement our
+own slots, and in them we would submit the current record and then
+perform the navigation to avoid changes being lost.) The data
+widget mapper allows us to edit and to navigate. To add or delete
+records, we use the underlying model.</p>
+
+<div class="docText">
+<pre>
+void EmployeeForm::addEmployee()
+{
+    int row = mapper-&gt;currentIndex();
+    mapper-&gt;submit();
+    tableModel-&gt;insertRow(row);
+    mapper-&gt;setCurrentIndex(row);
+
+    nameEdit-&gt;clear();
+    extensionLineEdit-&gt;clear();
+    startDateEdit-&gt;setDate(QDate::currentDate());
+    nameEdit-&gt;setFocus();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle2091"></a><a name=
+"iddle2377"></a><a name="iddle3766"></a><a name=
+"iddle5824"></a><a name="iddle7169"></a><a name="iddle7883"></a>The
+<tt>addEmployee()</tt> slot is invoked when the user clicks the
+<span class="docEmphRomanAlt">Add</span><a name="is lost"></a>
+button. We begin by retrieving the current row since this is lost
+after submitting. Then we call <tt>submit()</tt><a name=
+"current record"></a> to make sure no changes to the current record
+are lost. Although we have set the submit policy to
+<tt>QDataWidgetMapper::AutoSubmit</tt><a name="the automatic"></a>,
+we must still manually submit. This is because the automatic submit
+is applied only when the user changes focus—to avoid the overhead
+of doing a database <tt>UPDATE</tt><a name="the user"></a> every
+time the user inserts or deletes a character—and it is possible
+that the user has edited a field but not tabbed away from it when
+they click the <span class="docEmphRomanAlt">Add</span><a name=
+"mapper navigate"></a> button. Next, we insert a new blank row and
+make the mapper navigate to it. Finally, we initialize the widgets,
+and give the focus to the first widget ready for the user to begin
+typing.</p>
+
+<div class="docText">
+<pre>
+void EmployeeForm::deleteEmployee()
+{
+    int row = mapper-&gt;currentIndex();
+    tableModel-&gt;removeRow(row);
+    mapper-&gt;submit();
+    mapper-&gt;setCurrentIndex(qMin(row, tableModel-&gt;rowCount() - 1));
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="For deleting"></a>For deleting, we
+begin by noting the current row. Then we delete the row and submit
+the change. We must manually submit deletions since the automatic
+submit policy applies only to changes to records. At the end, we
+make the mapper's current index the row following the deleted
+row—or the last row if it was the last row that was deleted.</p>
+
+<p class="docText">The <tt>QDataWidgetMapper</tt><a name=
+"it easy"></a> class makes it easy to develop data-aware forms that
+display information from a data model. In the example, we used a
+<tt>QSqlRelationalTableModel</tt><a name="the underlying"></a> as
+the underlying data model, but <tt>QDataWidgetMapper</tt><a name=
+"would have"></a> can be used with any data model, including
+non-SQL models. An alternative would have been to use
+<tt>QSqlQuery</tt><a name="form with"></a> directly to fill in the
+form with data and to update the database. This approach requires
+more work, but it is also more flexible.</p>
+
+<p class="docText"><a name="the Staff"></a>In the next section, we
+will review the rest of the Staff Manager application, including
+the code that uses the <tt>EmployeeForm</tt> class developed in
+this section.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch13lev1sec2.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch13lev1sec4.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

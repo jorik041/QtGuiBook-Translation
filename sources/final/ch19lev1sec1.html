@@ -1,0 +1,1628 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch19lev1sec1.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch19lev1sec1.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch19lev1sec1.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch19lev1sec1.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href="ch19.html"><img src=
+"images/prev.gif" width="20" height="20" border="0" align=
+"absmiddle" alt="Previous Page"></a> <a href=
+"ch19lev1sec2.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch19"></a>
+<h2 id="title-ID0EX4OM" class="docChapterTitle">19. Look and Feel
+Customization</h2>
+
+<p class="docText"><img border="0" id="" width="150" height="83"
+src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83ZXBwdDlocF9lcl8vMWlzY2Nob25lYS5wZ3Jq.jpg"
+alt="">
+</p>
+
+<ul>
+<li>
+<p class="docList"><a name="iddle1483"></a><a name=
+"iddle1926"></a><a name="iddle3629"></a><a name=
+"iddle5969"></a><a name="iddle7808"></a><a name=
+"iddle7813"></a><a name="iddle8542"></a><span class=
+"docEmphasis"><a class="docLink" href=
+"ch19lev1sec1.html#ch19lev1sec1">Using Qt Style Sheets</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch19lev1sec2.html#ch19lev1sec2">Subclassing QStyle</a></span>
+</p>
+</li>
+</ul>
+
+<p class="docText"><a name="In some"></a>In some circumstances, we
+might want to change the look and feel of Qt's built-in widgets. We
+may only want to do some minor customizations to tweak the
+aesthetics slightly, or we may wish to implement an entirely new
+style, to give our application or suite of applications a unique
+and distinctive appearance. In either case, there are three main
+approaches to redefining the look of Qt's built-in widgets:</p>
+
+<ul>
+<li>
+<p class="docList"><a name="subclass the"></a>We can subclass the
+individual widget classes and reimplement their paint and mouse
+event handlers. This gives complete control but involves a lot of
+work. It also means that we must go through all of our code and
+<span class="docEmphasis">Qt Designer</span><a name=
+"and change"></a> forms and change all occurrences of Qt widget
+classes to use our subclasses.</p>
+</li>
+
+<li>
+<p class="docList">We can subclass <tt>QStyle</tt> or a predefined
+style such as <tt>QWindowsStyle</tt><a name="itself to"></a>. This
+approach is very powerful; it is used by Qt itself to provide a
+native look and feel on the different platforms it supports.</p>
+</li>
+
+<li>
+<p class="docList"><a name="use Qt"></a>Starting with Qt 4.2, we
+can use Qt style sheets, a mechanism inspired by HTML CSS
+(Cascading Style Sheets). Since style sheets are plain text files
+that are interpreted at run-time, no knowledge of programming is
+required to use them.</p>
+</li>
+</ul>
+
+<p class="docText"><a name="first approach"></a>We have already
+covered the techniques required for the first approach, in
+<a class="docLink" href="ch05.html#ch05">Chapters 5</a> and
+<a class="docLink" href="ch07.html#ch07">7</a><a name=
+"In this"></a>, although our emphasis was on creating custom
+widgets. In this chapter, we will review the last two approaches.
+We will present two custom styles: the Candy style, specified as a
+style sheet, and the Bronze style, implemented as a <tt>QStyle</tt>
+subclass (see <a class="docLink" href="#ch19fig01">Figure
+19.1</a><a name="on a"></a>). To keep the examples to a manageable
+size, both styles focus on a carefully chosen subset of Qt's
+widgets.</p>
+<a name="ch19fig01"></a>
+<center>
+<h5 class="docFigureTitle"><a name="styles presented"></a>Figure
+19.1. The custom styles presented in this chapter</h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83bHB0YWhhbmUveWxjc2NpZHlfdC4tcGpzZw--.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="253" src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83cHB0YWhqbmUveWxjc2NpZHkuZy1z.jpg"
+alt="">
+</center>
+<br>
+<a name="ch19lev1sec1"></a>
+<h3 class="docSection1Title" id="-100000">Using Qt Style
+Sheets</h3>
+
+<p class="docText"><a name="sheets are"></a>Qt style sheets are
+strongly inspired by CSS but adapted to work on widgets. A style
+sheet consists of style rules that affect the rendering of a
+widget. These rules are specified as plain text. Since style sheets
+are parsed at run-time, <a name="iddle1279"></a><a name=
+"iddle4250"></a><a name="iddle4742"></a><a name=
+"iddle5311"></a><a name="iddle5578"></a><a name=
+"iddle5970"></a><a name="iddle7339"></a><a name=
+"iddle7814"></a><a name="we can"></a>we can easily experiment with
+different designs by specifying a style sheet for a Qt application
+using the <tt>-stylesheet</tt> <span class=
+"docEmphasis"><tt>file.qss</tt></span> command-line option, by
+using <span class="docEmphasis">Qt Designer</span><a name=
+"or by"></a>'s style sheet editor, or by embedding a
+<tt>QTextEdit</tt><a name="our application"></a> inside our
+application during development.</p>
+
+<p class="docText"><a name="active"></a>Style sheets are applied on
+top of the currently active <tt>QStyle</tt> (e.g.,
+<tt>QWindowsVistaStyle</tt> or
+<tt>QPlastiqueStyle</tt>).<sup class="docFootnote"><a class=
+"docLink" href="#ch19fn01">[*]</a></sup><a name=
+"any subclassing"></a> Because creating style sheets doesn't
+involve any subclassing, they are ideal for minor customizations to
+existing widgets. For example, suppose we want to use yellow as the
+background color of all <tt>QLineEdit</tt><a name=
+"following style"></a>s in an application. This could be
+accomplished using the following style sheet:</p>
+
+<blockquote>
+<p class="docFootnote"><sup><a name="ch19fn01">[*]</a></sup> Style
+sheets are not supported for <tt>QMacStyle</tt><a name=
+"will be"></a> in Qt 4.3. It is expected that this will be
+addressed in a future release.</p>
+</blockquote>
+
+<div class="docText">
+<pre>
+QLineEdit {
+    background-color: yellow;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">In CSS-speak, <tt>QLineEdit</tt> is called a
+selector, <tt>background-color</tt> is an attribute, and
+<tt>yellow</tt> is a value.</p>
+
+<p class="docText"><a name="results than"></a>For this kind of
+customization, using style sheets produces more reliable results
+than fiddling with the widget's palette. This is because a
+<tt>QPalette</tt>'s entries (<tt>Base</tt>, <tt>Button</tt>,
+<tt>Highlight</tt><a name="by different"></a>, etc.) are used
+differently by different styles. For example,
+<tt>QWindowsStyle</tt> uses the <tt>Base</tt><a name="to fill"></a>
+palette entry to fill the background of a read-only combobox,
+whereas <tt>QPlastiqueStyle</tt><a name="uses the"></a> uses the
+<tt>Button</tt><a name="this purpose"></a> entry for this purpose.
+Furthermore, certain styles use hard-coded images to render certain
+elements, by-passing the palette entirely. In contrast, style
+sheets guarantee that no matter which <tt>QStyle</tt><a name=
+"the colors"></a> is active, the colors specified will be the ones
+used.</p>
+
+<p class="docText"><tt>QApplication::setStyleSheet()</tt> sets a
+style sheet for the entire application:</p>
+
+<div class="docText">
+<pre>
+qApp-&gt;setStyleSheet("QLineEdit { background-color: yellow; }");
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1146"></a><a name=
+"iddle1280"></a><a name="iddle2825"></a><a name=
+"iddle2946"></a><a name="iddle4143"></a><a name=
+"iddle4251"></a><a name="iddle4829"></a><a name=
+"iddle6605"></a><a name="iddle6944"></a><a name=
+"iddle6945"></a><a name="iddle7091"></a><a name=
+"iddle7273"></a><a name="iddle7340"></a><a name=
+"iddle8208"></a><a name="widget and"></a>We can also set a style
+sheet on a widget and its children using
+<tt>QWidget::setStyleSheet()</tt>. For example:</p>
+
+<div class="docText">
+<pre>
+dialog-&gt;setStyleSheet("QLineEdit { background-color: yellow; }");
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="sheet directly"></a>If we set the style
+sheet directly on a <tt>QLineEdit</tt>, we can omit both the
+<tt>QLineEdit</tt> selector and the braces:</p>
+
+<div class="docText">
+<pre>
+lineEdit-&gt;setStyleSheet("background-color: yellow;");
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="a single"></a>So far, we have set only
+a single property on a single class of widget. In practice, style
+rules are often combined. For example, the following rule sets the
+foreground and background colors of six widget classes and their
+subclasses:</p>
+
+<div class="docText">
+<pre>
+QCheckBox, QComboBox, QLineEdit, QListView, QRadioButton, QSpinBox {
+    color: #050505;
+    background-color: yellow;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="string in"></a>Colors can be specified
+by name, by an HTML-style string in <tt>#</tt><span class=
+"docEmphasis"><tt>RRGGBB</tt></span> format, or by an RGB or RGBA
+value:</p>
+
+<div class="docText">
+<pre>
+QLineEdit {
+    color: rgb(0, 88, 152);
+    background-color: rgba(97%, 80%, 9%, 50%);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="recognized by"></a>When using color
+names, we can use any name that is recognized by the
+<tt>QColor::setNamedColor()</tt><a name="specify a"></a> function.
+For RGB, we must specify a red, a green, and a blue component, each
+on a scale of 0 to 255 or 0% to 100%. RGBA additionally lets us
+specify an alpha value as the fourth component of the color, which
+corresponds to the color's opacity. Instead of a uniform color, we
+can also specify a palette entry or a gradient:</p>
+
+<div class="docText">
+<pre>
+QLineEdit {
+    color: palette(Base);
+    background-color: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 1,
+                                      stop: 0 white, stop: 0.4 gray,
+                                      stop: 1 green);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="types of"></a>The three types of
+gradients described in <a class="docLink" href=
+"ch08.html#ch08">Chapter 8</a> (p. <a class="docLink" href=
+"ch08lev1sec1.html#ch08fig06">184</a><a name="are available"></a>)
+are available as <tt>qlineargradient()</tt>,
+<tt>qradialgradient()</tt>, and <tt>qconicalgradient()</tt><a name=
+"is explained"></a>. The syntax is explained in the style sheet
+reference documentation.</p>
+
+<p class="docText"><a name="the"></a>Using the
+<tt>background-image</tt> property, we can specify an image for the
+background:</p>
+
+<div class="docText">
+<pre>
+QLineEdit {
+    color: rgb(0, 88, 152);
+    background-image: url(:/images/yellow-bg.png);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle4099"></a><a name=
+"iddle4106"></a><a name="iddle4544"></a><a name=
+"iddle8580"></a><a name="of the"></a>By default, the background
+image is rooted in the top-left corner of the widget (excluding any
+margin specified using <tt>margin</tt><a name="vertically to"></a>)
+and is repeated horizontally and vertically to fill the entire
+widget. This can be configured using the
+<tt>background-position</tt> and <tt>background-repeat</tt>
+attributes. For example:</p>
+
+<div class="docText">
+<pre>
+QLineEdit {
+    background-image: url(:/images/yellow-bg.png);
+    background-position: top right;
+    background-repeat: repeat-y;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="background color"></a>If we specify
+both a background image and a background color, the background
+color will shine through the semi-transparent areas of the
+image.</p>
+
+<p class="docText"><a name="used have"></a>So far, all of the
+selectors we have used have been class names. There are several
+other selectors that we can use; they are listed in <a class=
+"docLink" href="#ch19fig02">Figure 19.2</a>. For example, if we
+want to use specific foreground colors for <span class=
+"docEmphRomanAlt">OK</span> and <span class=
+"docEmphRomanAlt">Cancel</span> buttons, we can write</p>
+<a name="ch19fig02"></a>
+<h5 class="docTableTitle">Figure 19.2. Style sheet selectors</h5>
+
+<table cellspacing="0" class="allBorders" border="1">
+<colgroup align="left" span="3">
+<col width="100">
+<col width="100">
+<col width="350">
+</colgroup>
+
+<thead>
+<tr>
+<th scope="col" class="docTableCell thead" align="center" valign=
+"top" style="background-color:#E6E6E6">Selector</th>
+<th scope="col" class="docTableCell thead" align="center" valign=
+"top" style="background-color:#E6E6E6">Example</th>
+<th scope="col" class="docTableCell thead" align="center" valign=
+"top" style="background-color:#E6E6E6">Matched Widgets</th>
+</tr>
+</thead>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Universal</span>
+</td>
+<td class="docTableCell" align="left" valign="top"><tt>*</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Any widget</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Type</span>
+</td>
+<td class="docTableCell" align="left" valign="top"><tt>QDial</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Instances of a given class, including
+subclasses</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Class</span>
+</td>
+<td class="docTableCell" align="left" valign="top"><tt>.QDial</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Instances of a given class, excluding
+subclasses</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">ID</span>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<tt>QDial#ageDial</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Widgets with the given object name</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Qt property</span>
+</td>
+<td class="docTableCell" align="left" valign="top">
+<tt>QDial[y="0"]</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Widgets with certain properties set to given
+values</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Child</span>
+</td>
+<td class="docTableCell" align="left" valign="top"><tt>QFrame &gt;
+QDial</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Widgets that are direct children of the given
+widgets</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Descendant</span>
+</td>
+<td class="docTableCell" align="left" valign="top"><tt>QFrame
+QDial</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Widgets that are descendants of the given
+widgets</span>
+</td>
+</tr>
+</table>
+<br>
+
+<div class="docText">
+<pre>
+QPushButton[text="OK"] {
+    color: green;
+}
+
+QPushButton[text="Cancel"] {
+    color: red;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="bear in"></a>This selector syntax works
+for any Qt property, although we must bear in mind that style
+sheets don't notice when a property changes behind their back.
+Selectors can also be combined in various ways; for example, to
+select all <tt>QPushButton</tt>s called "okButton" whose <tt>x</tt>
+and <tt>y</tt><a name="that are"></a> properties are 0 and that are
+direct children of a <tt>QFrame</tt><a name="can write"></a> called
+"frame", we can write</p>
+
+<div class="docText">
+<pre>
+QFrame#frame &gt; QPushButton[x="0"][y="0"]#okButton {
+    ...
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1422"></a><a name=
+"iddle1545"></a><a name="iddle2329"></a><a name=
+"iddle3752"></a><a name="iddle4090"></a><a name=
+"iddle4812"></a><a name="iddle5470"></a><a name=
+"iddle7290"></a><a name="iddle8557"></a><a name="In an"></a>In an
+application that presents large forms with lots of line editors and
+comboboxes, such as those used by various bureaucracies, it is
+common to use a yellow background color for mandatory fields. Let's
+suppose that we want to apply this convention to our application.
+First, we would start with this style sheet:</p>
+
+<div class="docText">
+<pre>
+*[mandatoryField="true"] {
+    background-color: yellow;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="is no"></a>Although there is no
+<tt>mandatoryField</tt><a name="defined anywhere"></a> property
+defined anywhere in Qt, we can easily create one by calling
+<tt>QObject::setProperty()</tt><a name="dynamically creates"></a>.
+Starting with Qt 4.2, setting the value of a non-existent property
+dynamically creates that property. For example:</p>
+
+<div class="docText">
+<pre>
+nameLineEdit-&gt;setProperty("mandatoryField", true);
+genderComboBox-&gt;setProperty("mandatoryField", true);
+ageSpinBox-&gt;setProperty("mandatoryField", true);
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="useful for"></a>Style sheets are not
+only useful for controlling colors. They also let us perform
+various adjustments to the size and position of widget elements.
+For example, the following rules can be used to increase the size
+of checkboxes and radio button indicators to 20 x 20 pixels, and
+ensure that there are 8 pixels between the indicator and the
+associated text:</p>
+
+<div class="docText">
+<pre>
+QCheckBox::indicator, QRadioButton::indicator {
+    width: 20px;
+    height: 20px;
+}
+QCheckBox, QRadioButton {
+    spacing: 8px;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="written only"></a>Notice the selector
+syntax for the first rule. Had we written only <tt>QCheckBox</tt>
+instead of <tt>QCheckBox::indicator</tt><a name="the entire"></a>,
+we would have specified the dimensions of the entire widget instead
+of those of the indicator. The first rule is illustrated in
+<a class="docLink" href="#ch19fig03">Figure 19.3</a>.</p>
+<a name="ch19fig03"></a>
+<center>
+<h5 class="docFigureTitle">Figure 19.3. Setting a
+<tt>QCheckBox</tt>'s indicator size</h5>
+
+<p class="docText"><img border="0" id="" width="357" height="215"
+src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83cC45aGZpZmcvaXMxaWNnMDM-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="iddle3066"></a>Subcontrols such as
+<tt>::indicator</tt> can be styled in much the same way as widgets.
+<a class="docLink" href="#ch19fig04">Figure 19.4</a> lists some of
+the subcontrols supported by Qt.</p>
+<a name="ch19fig04"></a>
+<h5 class="docTableTitle">Figure 19.4. The most common customizable
+subcontrols</h5>
+
+<table cellspacing="0" class="allBorders" border="1">
+<colgroup align="left" span="2">
+<col width="175">
+<col width="375">
+</colgroup>
+
+<thead>
+<tr>
+<th scope="col" class="docTableCell thead" align="center" valign=
+"top" style="background-color:#E6E6E6">Subcontrol</th>
+<th scope="col" class="docTableCell thead" align="center" valign=
+"top" style="background-color:#E6E6E6">Description</th>
+</tr>
+</thead>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>::indicator</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">A checkbox, radio button, checkable menu item, or
+checkable group box's indicator</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>::menu-indicator</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">A push button's menu indicator</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>::item</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">A menu, menu bar, or status bar item</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>::up-button</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">A spin box or scroll bar's up button</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>::down-button</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">A spin box or scroll bar's down button</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>::up-arrow</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">A spin box, scroll bar, or header view's up
+arrow</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>::down-arrow</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">A spin box, scroll bar, header view, or
+combobox's down arrow</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>::drop-down</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">A combobox's drop-down arrow</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>::title</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">A group box's title</span>
+</td>
+</tr>
+</table>
+<br>
+
+<p class="docText"><a name="widget states"></a>In addition to
+subcontrols, a style sheet can refer to specific widget states. For
+example, we may want to render the checkbox's text in white when
+the mouse hovers over it by specifying the <tt>:hover</tt>
+state:</p>
+
+<div class="docText">
+<pre>
+QCheckBox:hover {
+    color: white;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="by using"></a>States are signified by
+using a single colon, whereas subcontrols are signified by using
+two colons. We can list several states one after another, each
+separated by a colon. In such cases, the rule will apply only when
+the widget is in <span class="docEmphasis">all</span><a name=
+"For example"></a> the specified states. For example, the following
+rule is applied only if the mouse is hovering over a checked
+checkbox:</p>
+
+<div class="docText">
+<pre>
+QCheckBox:checked:hover {
+    color: white;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="If we"></a>If we want the rule to apply
+when <span class="docEmphasis">any</span><a name="states is"></a>
+of the states is true, we can use multiple selectors, using commas
+to separate them:</p>
+
+<div class="docText">
+<pre>
+QCheckBox:hover, QCheckBox:checked {
+    color: white;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="negation is"></a>Logical negation is
+achieved by using an exclamation mark:</p>
+
+<div class="docText">
+<pre>
+QCheckBox:!checked {
+    color: blue;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle3549"></a><a name=
+"iddle5266"></a>States can be combined with subcontrols:</p>
+
+<div class="docText">
+<pre>
+QComboBox::drop-down:hover {
+    image: url(:/images/downarrow_bright.png);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a class="docLink" href="#ch19fig05">Figure
+19.5</a> lists the style sheet states that are available.</p>
+<a name="ch19fig05"></a>
+<h5 class="docTableTitle">Figure 19.5. Some of the widget states
+accessible to style sheets</h5>
+
+<table cellspacing="0" class="allBorders" border="1">
+<colgroup align="left" span="2">
+<col width="150">
+<col width="350">
+</colgroup>
+
+<thead>
+<tr>
+<th scope="col" class="docTableCell thead" align="center" valign=
+"top" style="background-color:#E6E6E6">State</th>
+<th scope="col" class="docTableCell thead" align="center" valign=
+"top" style="background-color:#E6E6E6">Description</th>
+</tr>
+</thead>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>:disabled</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">The widget is disabled</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>:enabled</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">The widget is enabled</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>:focus</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">The widget has input focus</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>:hover</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">The mouse is hovering over the widget</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>:pressed</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">The widget is being pressed using the
+mouse</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>:checked</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">The button is checked</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>:unchecked</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">The button is unchecked</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>:indeterminate</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">The button is partially checked</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>:open</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">The widget is in an open or expanded state</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>:closed</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">The widget is in a closed or collapsed
+state</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>:on</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">The widget is "on"</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>:off</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">The widget is "off"</span>
+</td>
+</tr>
+</table>
+<br>
+
+<p class="docText"><a name="techniques to"></a>Style sheets can
+also be used together with other techniques to perform more complex
+customizations. For example, suppose we want to position a tiny
+"erase" button inside a <tt>QLineEdit</tt>'s frame, to the right of
+the <tt>QLineEdit</tt>'s text. This involves creating an
+<tt>EraseButton</tt><a name="of the"></a> class, and placing it on
+top of the <tt>QLineEdit</tt><a name="that the"></a> (e.g., using
+layouts), but also reserving some space for the button, so that the
+typed-in text cannot collide with the erase button. Doing this by
+subclassing <tt>QStyle</tt><a name="subclass every"></a> would be
+inconvenient, because we would have to subclass every style in Qt
+that might be used by the application (<tt>QWindowsVistaStyle</tt>,
+<tt>QPlastiqueStyle</tt>, etc.). Using style sheets, the following
+rule does the trick:</p>
+
+<div class="docText">
+<pre>
+QLineEdit {
+    padding: 0px 15px 0px 0px;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>padding</tt><a name="The padding"></a>
+property lets us specify the top, right, bottom, and left padding
+of the widget. The padding is inserted between the
+<tt>QLineEdit</tt><a name="For convenience"></a>'s text and its
+frame. For convenience, CSS also defines <tt>padding-top</tt>,
+<tt>padding-right</tt>, <tt>padding-bottom</tt>, and
+<tt>padding-left</tt><a name="we want"></a>, for when we want to
+set only one padding value. For example:</p>
+
+<div class="docText">
+<pre>
+QLineEdit {
+    padding-right: 15px;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1364"></a><a name=
+"iddle1376"></a><a name="iddle1472"></a><a name=
+"iddle1845"></a><a name="iddle2572"></a><a name=
+"iddle3473"></a><a name="iddle3763"></a><a name=
+"iddle4207"></a><a name="iddle5253"></a><a name=
+"Like most"></a>Like most Qt widgets that are customizable using
+style sheets, <tt>QLineEdit</tt><a name="box model"></a> supports
+the box model depicted in <a class="docLink" href=
+"#ch19fig06">Figure 19.6</a><a name="model specifies"></a>. This
+model specifies four rectangles that affect the layout and
+rendering of a styled widget:</p>
+
+<div style="font-weight:bold">
+<ol class="docList" type="1">
+<li>
+<div style="font-weight:normal">
+<p class="docList">The <span class="docEmphasis">contents
+rectangle</span><a name="of the"></a> is the innermost rectangle.
+This is where the actual contents of the widget (e.g., the text or
+image) is painted.</p>
+</div>
+</li>
+
+<li>
+<div style="font-weight:normal">
+<p class="docList">The <span class="docEmphasis">padding
+rectangle</span><a name="into account"></a> encloses the contents
+rectangle. It takes into account any padding specified using the
+<tt>padding</tt> property.</p>
+</div>
+</li>
+
+<li>
+<div style="font-weight:normal">
+<p class="docList">The <span class="docEmphasis">border
+rectangle</span> encloses the padding rectangle. It reserves space
+for the border.</p>
+</div>
+</li>
+
+<li>
+<div style="font-weight:normal">
+<p class="docList">The <span class="docEmphasis">margin
+rectangle</span><a name="takes into"></a> is the outermost
+rectangle. It encloses the border rectangle and takes into account
+any specified margin.</p>
+</div>
+</li>
+</ol>
+</div>
+<a name="ch19fig06"></a>
+<center>
+<h5 class="docFigureTitle">Figure 19.6. The CSS box model</h5>
+
+<p class="docText"><img border="0" id="" width="310" height="223"
+src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83cC45aGZpZmcvaXMxaWNnMDY-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="and no"></a>For a plain widget with no
+padding, no border, and no margin, the four rectangles coincide
+exactly.</p>
+
+<p class="docText"><a name="custom style"></a>We will now present a
+style sheet that implements a custom style called Candy. <a class=
+"docLink" href="#ch19fig07">Figure 19.7</a><a name="of Candy"></a>
+shows a selection of Candy-styled widgets. The Candy style defines
+a custom look and feel for <tt>QLineEdit</tt>s,
+<tt>QListView</tt>s, <tt>QPushButton</tt>s, and
+<tt>QComboBox</tt><a name="box model"></a>es, using the box model
+presented in <a class="docLink" href="#ch19fig06">Figure
+19.6</a><a name="We will"></a>. We will present the style sheet
+piece by piece; the entire style sheet is available as
+<tt>qss/candy.qss</tt><a name="Candy example"></a> in the Candy
+example's directory supplied with the book's examples.</p>
+<a name="ch19fig07"></a>
+<center>
+<h5 class="docFigureTitle"><a name="Widgets in"></a>Figure 19.7.
+Widgets in the Candy style</h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83dHRwdWFodGduYnNoL2Njc2lkeXVqb24tYXBwXy5s.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="125" src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83dGdwdWFodG4vc2JoaWRjY3N5dW9uLWpwLnA-.jpg"
+alt="">
+</center>
+<br>
+
+<p class="docText">The widgets are used in the dialog shown in
+<a class="docLink" href="ch19.html#ch19fig01">Figure
+19.1</a><a name="the following"></a>. The dialog itself has a
+background image set by the following rule:</p>
+
+<div class="docText">
+<pre>
+QDialog {
+    background-image: url(:/images/background.png);     <span class="docEmphRomanAlt">[R1]</span>
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The following rule sets the <tt>color</tt> and
+<tt>font</tt> attributes for <tt>QLabel</tt>s:</p>
+
+<div class="docText">
+<pre>
+QLabel {
+    font: 9pt;
+    color: rgb(0, 0, 127);                              <span class="docEmphRomanAlt">[R2]</span>
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1365"></a><a name=
+"iddle3550"></a><a name="iddle3585"></a><a name=
+"iddle4208"></a><a name="iddle5267"></a><a name=
+"iddle5285"></a><a name="look of"></a>The next rule defines the
+look of the dialog's <tt>QLineEdit</tt> and of its
+<tt>QListView</tt>:</p>
+
+<div class="docText">
+<pre>
+QLineEdit,
+QListView {
+    color: rgb(127, 0, 63);
+    background-color: rgb(255, 255, 241);
+    selection-color: white;                             <span class="docEmphRomanAlt">[R3]</span>
+    selection-background-color: rgb(191, 31, 127);
+    border: 2px groove gray;
+    border-radius: 10px;
+    padding: 2px 4px;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">To make the <tt>QLineEdit</tt> and
+<tt>QListView</tt><a name="colors for"></a> really stand out, we
+have specified custom foreground and background colors for normal
+and selected text. In addition, we have specified a gray
+2-pixel-wide "grooved" border with the <tt>border</tt> attribute.
+Instead of using <tt>border</tt>, we could have set
+<tt>border-width</tt>, <tt>border-style</tt>, and
+<tt>border-color</tt><a name="a"></a> individually. We can round a
+border's corners by specifying a <tt>border-radius</tt>, and we
+have done so here using a radius of 10 pixels. <a class="docLink"
+href="#ch19fig08">Figure 19.8</a><a name="to the"></a> provides a
+schematic representation of the effects of our changes to the
+widgets' border and padding attributes. To ensure that the widget's
+contents don't collide <a name="iddle1281"></a><a name=
+"iddle1363"></a><a name="we specify"></a>with the border's rounded
+corners, we specify an internal padding of 2 pixels vertically and
+4 pixels horizontally. For <tt>QListView</tt><a name=
+"padding doesn"></a>s, the vertical padding doesn't look quite
+right, so we override it as follows:</p>
+
+<div class="docText">
+<pre>
+QListView {
+    padding: 5px 4px;                                   <span class="docEmphRomanAlt">[R4]</span>
+}
+</pre>
+</div>
+<br>
+<a name="ch19fig08"></a>
+<center>
+<h5 class="docFigureTitle"><a name="Figure"></a>Figure 19.8.
+Structure of a <tt>QLineEdit</tt></h5>
+
+<p class="docText"><img border="0" id="" width="335" height="183"
+src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83cC45aGZpZmcvaXMxaWNnMDg-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="attribute is"></a>When an attribute is
+set by several rules that have the same selector, the last rule is
+the one that is applied.</p>
+
+<p class="docText"><a name="styling"></a>For styling
+<tt>QPushButton</tt><a name="the button"></a>s, we will use a
+completely different approach. Instead of drawing the button using
+style sheet rules, we will use a ready-made image as the
+background. Also, to make the button scalable, the button
+background is defined using the CSS <span class=
+"docEmphasis">border image</span> mechanism.</p>
+
+<p class="docText"><a name="using"></a>Unlike a background image
+specified using <tt>background-image</tt><a name="in"></a>, a
+border image is cut into a 3 x 3 grid, as shown in <a class=
+"docLink" href="#ch19fig09">Figure 19.9</a><a name=
+"four corners"></a>. When filling the background of a widget, the
+four corners (cells <span class="docEmphasis">A</span>,
+<span class="docEmphasis">C</span>, <span class=
+"docEmphasis">G</span>, and <span class=
+"docEmphasis">I</span><a name="are stretched"></a> in the diagram)
+are taken as is, whereas the other five cells are stretched, or
+tiled, to fill the available space.</p>
+<a name="ch19fig09"></a>
+<center>
+<h5 class="docFigureTitle">Figure 19.9. Border image cuts</h5>
+
+<p class="docText"><img border="0" id="" width="410" height="187"
+src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83cC45aGZpZmcvaXMxaWNnMDk-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="specified using"></a>Border images are
+specified using the <tt>border-image</tt><a name="us to"></a>
+property, which requires us to specify an image file name and the
+four "cuts" that define the nine cells. The cuts are defined as
+pixel distances from the top, right, bottom, and left edges. A
+<tt>border.png</tt><a name="border image"></a> border image with
+cuts at 4, 8, 12, and 16 pixels from the top, right, bottom, and
+left edges would be specified as</p>
+
+<div class="docText">
+<pre>
+border-image: url(border.png) 4 8 12 16;
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="a border"></a>When using a border
+image, we must also set the <tt>border-width</tt> attribute
+explicitly. Normally, <tt>border-width</tt><a name=
+"correspond to"></a> should correspond to where the cuts fall;
+otherwise, the corner cells will be stretched or shrunk to fit the
+<tt>border-width</tt>. For the <tt>border.png</tt> example, we
+would specify the border widths as follows:</p>
+
+<div class="docText">
+<pre>
+border-width: 4px 8px 12px 16px;
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="let us"></a>Now that we know how the
+border image mechanism works, let us see how it is <a name=
+"iddle1282"></a><a name="iddle1436"></a><a name=
+"iddle4574"></a><a name="iddle5645"></a>used for styling Candy
+<tt>QPushButton</tt><a name="define how"></a>s. Here are the rules
+that define how push buttons are rendered in their normal
+state:</p>
+
+<div class="docText">
+<pre>
+QPushButton {
+    color: white;
+    font: bold 10pt;
+    border-image: url(:/images/button.png) 16;
+    border-width: 16px;                                   <span class="docEmphRomanAlt">[R5]</span>
+    padding: -16px 0px;
+    min-height: 32px;
+    min-width: 60px;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">In the Candy style sheet, the four cuts for a
+<tt>QPushButton</tt><a name="of a"></a>'s border image are located
+at 16 pixels from the edges of a 34 x 34 pixel border image, as
+shown in <a class="docLink" href="#ch19fig10">Figure 19.10
+(a)</a><a name="need to"></a>. Because the four cuts are uniform,
+we only need to write "16" for the cuts and "16px" for the border
+width.</p>
+
+<p class="docText">In the <tt>QPushButton</tt> example shown in
+<a class="docLink" href="#ch19fig10">Figure 19.10 (b)</a>, the
+border image cells corresponding to <span class=
+"docEmphasis">D</span>, <span class="docEmphasis">E</span>, and
+<span class="docEmphasis">F</span><a name="to need"></a> were
+dropped because the resized button was not tall enough to need
+them, and cells <span class="docEmphasis">B</span> and <span class=
+"docEmphasis">H</span><a name="to occupy"></a> were horizontally
+stretched to occupy the extra width.</p>
+<a name="ch19fig10"></a>
+<center>
+<h5 class="docFigureTitle"><a name="image for"></a>Figure 19.10.
+Border image for <tt>QPushButton</tt></h5>
+
+<p class="docText"><img border="0" id="" width="494" height="207"
+src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83cC45aGZpZmcvaXMxaWNnMTA-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="The standard"></a>The standard use of a
+border image is to provide a border around a widget, with the
+widget inside the border. But we have subverted the border image
+mechanism and used it to create the background of the widget
+itself. As a result, cell <span class=
+"docEmphasis">E</span><a name="and the"></a> has been dropped, and
+the padding rectangle has height 0. To make some room for the push
+button's text, we specify a vertical padding of -16 pixels.
+<a class="docLink" href="#ch19fig11">Figure 19.11</a><a name=
+"the situation"></a> illustrates the situation. If we had used the
+border image mechanism to define an actual border, we probably
+wouldn't want the text to collide with it—but because we are using
+it to create a scalable background, we want the text to go on top
+of it rather than inside it.</p>
+
+<p class="docText">
+</p>
+<a name="ch19fig11"></a>
+<center>
+<h5 class="docFigureTitle">Figure 19.11. Structure of a
+<tt>QPushButton</tt></h5>
+
+<p class="docText"><img border="0" id="" width="495" height="135"
+src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83cC45aGZpZmcvaXMxaWNnMTE-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="iddle1690"></a><a name=
+"iddle3067"></a><a name="iddle4837"></a>Using <tt>min-width</tt>
+and <tt>min-height</tt><a name="values chosen"></a>, we set the
+minimum size of the push button's contents. The values chosen here
+ensure that there is enough room for the border image corners and
+that an <span class="docEmphRomanAlt">OK</span><a name=
+"wider than"></a> button is made a bit wider than necessary, to
+make it look better next to the <span class=
+"docEmphRomanAlt">Cancel</span> button.</p>
+
+<p class="docText">The preceding <tt>QPushButton</tt><a name=
+"a few"></a> rules apply to all push buttons. We will now define a
+few extra rules that apply only when buttons are in certain
+states.</p>
+
+<div class="docText">
+<pre>
+QPushButton:hover {
+    border-image: url(:/images/button-hover.png) 16;           <span class="docEmphRomanAlt">[R6]</span>
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">When the mouse pointer hovers over a
+<tt>QPushButton</tt>, the <tt>:hover</tt> state evaluates to
+<tt>true</tt><a name="rule that"></a> and the specified rule
+overrides any other rule that has a less specific selector. Here,
+we use this technique to specify a slightly brighter image as the
+border image, to obtain a nice hover effect. The other
+<tt>QPushButton</tt> attributes that were specified earlier
+continue to apply; only the <tt>border-image</tt> attribute
+changes.</p>
+
+<div class="docText">
+<pre>
+QPushButton:pressed {
+    color: lightgray;
+    border-image: url(:/images/button-pressed.png) 16;         <span class="docEmphRomanAlt">[R7]</span>
+    padding-top: -15px;
+    padding-bottom: -17px;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="color to"></a>When the user presses a
+push button, we change the foreground color to light gray, we use a
+darker border image, and we move the push button's text down one
+pixel by tweaking the padding.</p>
+
+<p class="docText"><a name="rules will"></a>Our final style rules
+will customize the appearance of <tt>QComboBox</tt><a name=
+"off the"></a>es. To show off the control and precision we can
+achieve using style sheets, we will distinguish between read-only
+and editable comboboxes, as <a class="docLink" href=
+"#ch19fig12">Figure 19.12</a><a name="comboboxes are"></a> shows.
+Read-only comboboxes are rendered as a <tt>QPushButton</tt><a name=
+"down arrow"></a> with a down arrow on the right, whereas editable
+comboboxes are made up of a <tt>QLineEdit</tt><a name=
+"and of"></a>-like component and of a small rounded button. It
+turns out that we can reuse most of the rules that we have already
+defined for <tt>QLineEdit</tt>s, <tt>QListView</tt>s, and
+<tt>QPushButton</tt>s.</p>
+<a name="ch19fig12"></a>
+<center>
+<h5 class="docFigureTitle">Figure 19.12. <tt>QComboBox</tt> in the
+Candy style</h5>
+
+<p class="docText"><img border="0" id="" width="414" height="65"
+src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83eW9wZWFobC5ub2FkL2Njc2lkeW5vLWMtbXhyb2JianBn.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<ul>
+<li>
+<p class="docList">The rule that defines the look of a
+<tt>QLineEdit</tt> can be used to style editable comboboxes:</p>
+
+<div class="docText">
+<pre>
+<span class="docEmphStrong">QComboBox:editable,</span>
+QLineEdit,
+QListView {
+    color: rgb(127, 0, 63);
+    background-color: rgb(255, 255, 241);
+    selection-color: white;                                    <span class="docEmphRomanAlt">[R3´]</span>
+    selection-background-color: rgb(191, 31, 127);
+    border: 2px groove gray;
+    border-radius: 10px;
+    padding: 2px 4px;
+}
+</pre>
+</div>
+</li>
+
+<li>
+<p class="docList"><a name="iddle2302"></a><a name=
+"iddle3068"></a>The rules that define the look of a
+<tt>QPushButton</tt><a name="to read"></a> in its normal state can
+be extended to apply to read-only comboboxes:</p>
+
+<div class="docText">
+<pre>
+<span class="docEmphStrong">QComboBox:!editable,</span>
+QPushButton {
+    color: white;
+    font: bold 10pt;
+    border-image: url(:/images/button.png) 16;                 <span class="docEmphRomanAlt">[R5´]</span>
+    border-width: 16px;
+    padding: -16px 0px;
+    min-height: 32px;
+    min-width: 60px;
+}
+</pre>
+</div>
+</li>
+
+<li>
+<p class="docList"><a name="over the"></a>Hovering over a read-only
+combobox or over the drop-down button of an editable combobox
+should change the background image, just like it already does for
+<tt>QPushButton</tt>:</p>
+
+<div class="docText">
+<pre>
+<span class="docEmphStrong">QComboBox:!editable:hover,</span>
+<span class=
+"docEmphStrong">QComboBox::drop-down:editable:hover,</span>
+QPushButton:hover {
+    border-image: url(:/images/button-hover.png) 16;           <span class="docEmphRomanAlt">[R6´]</span>
+}
+</pre>
+</div>
+</li>
+
+<li>
+<p class="docList">Pressing a read-only combobox is like pressing a
+<tt>QPushButton</tt>:</p>
+
+<div class="docText">
+<pre>
+<span class="docEmphStrong">QComboBox:!editable:on,</span>
+QPushButton:pressed {
+    color: lightgray;
+    border-image: url(:/images/button-pressed.png) 16;         <span class="docEmphRomanAlt">[R7´]</span>
+    padding-top: -15px;
+    padding-bottom: -17px;
+}
+</pre>
+</div>
+</li>
+</ul>
+
+<p class="docText"><a name="iddle2303"></a><a name=
+"styling consistent"></a>Reusing rules R3, R5, R6, and R7 saves
+time and helps keep our styling consistent. But we have not defined
+any rules that will draw the drop-down buttons, so we will create
+these now.</p>
+
+<div class="docText">
+<pre>
+QComboBox::down-arrow {
+    image: url(:/images/down-arrow.png);                       <span class="docEmphRomanAlt">[R8]</span>
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="so that"></a>We provide our own down
+arrow image so that it is a bit larger than the standard arrow.</p>
+
+<div class="docText">
+<pre>
+QComboBox::down-arrow:on {
+    top: 1px;                                                  <span class="docEmphRomanAlt">[R9]</span>
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="one pixel"></a>If the combobox is open,
+the down arrow is moved down one pixel.</p>
+
+<div class="docText">
+<pre>
+QComboBox * {
+    font: 9pt;                                                <span class="docEmphRomanAlt">[R10]</span>
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="clicks a"></a>When the user clicks a
+combobox, it displays a list of items. Rule R10 ensures that the
+combobox's pop-up (or any other child widget) doesn't inherit the
+larger font size that applies to the combobox by rule R5´.</p>
+
+<div class="docText">
+<pre>
+QComboBox::drop-down:!editable {
+    subcontrol-origin: padding;
+    subcontrol-position: center right;
+    width: 11px;                                              <span class="docEmphRomanAlt">[R11]</span>
+    height: 6px;
+    background: none;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">Using the <tt>subcontrol-origin</tt> and
+<tt>subcontrol-position</tt><a name="the drop"></a> attributes, we
+position the drop-down arrow vertically centered on the right-hand
+side of the padding rectangle used by read-only comboboxes. In
+addition, we also set its size to correspond to the size of the
+button's contents, the 11 x 6 pixel <tt>down-arrow.png</tt><a name=
+"and we"></a> image, and we disable its background because our
+drop-down button only consists of the drop-down arrow.</p>
+
+<div class="docText">
+<pre>
+QComboBox:!editable {
+    padding-right: 15px;                                      <span class="docEmphRomanAlt">[R12]</span>
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="specify a"></a>For read-only
+comboboxes, we specify a right padding of 15 pixels to ensure that
+the text shown in the combobox doesn't overlap with the drop-down
+arrow. <a class="docLink" href="#ch19fig13">Figure
+19.13</a><a name="how these"></a> shows how these dimensions
+interact with each other.</p>
+<a name="ch19fig13"></a>
+<center>
+<h5 class="docFigureTitle">Figure 19.13. Structure of a read-only
+<tt>QComboBox</tt></h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83aXBfOWhnZnQvYWwxc2NpaWcuZjEz.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="121" src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83cC45aGZpZmcvaXMxaWNnMTM-.jpg"
+alt="">
+</center>
+<br>
+
+<p class="docText"><a name="that it"></a>For editable comboboxes,
+we need to configure the drop-down button so that it looks like a
+tiny <tt>QPushButton</tt>:</p>
+
+<div class="docText">
+<pre>
+QComboBox::drop-down:editable {
+    border-image: url(:/images/button.png) 16;
+    border-width: 10px;
+    subcontrol-origin: margin;
+    subcontrol-position: center right;                        <span class="docEmphRomanAlt">[R13]</span>
+    width: 7px;
+    height: 6px;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">We specify <tt>button.png</tt><a name=
+"specify a"></a> as the border image. However, this time, we
+specify a border width of 10 pixels instead of 16, to scale the
+image down a bit, and specify a fixed size of the contents of 7
+pixels horizontally and 6 pixels vertically. <a class="docLink"
+href="#ch19fig14">Figure 19.14</a> shows a schematic of what we
+have done.</p>
+<a name="ch19fig14"></a>
+<center>
+<h5 class="docFigureTitle">Figure 19.14. The editable
+<tt>QComboBox</tt>'s drop-down button's border image</h5>
+
+<p class="docText"><img border="0" id="" width="409" height="219"
+src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83cC45aGZpZmcvaXMxaWNnMTQ-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="for the"></a>If the combobox is open,
+we use a different, darker image for the drop-down button:</p>
+
+<div class="docText">
+<pre>
+QComboBox::drop-down:editable:open {
+    border-image: url(:/images/button-pressed.png) 16;        <span class="docEmphRomanAlt">[R14]</span>
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1988"></a><a name=
+"iddle2379"></a><a name="iddle5971"></a><a name=
+"iddle5993"></a><a name="iddle7858"></a><a name=
+"iddle8602"></a><a name="of"></a>For editable comboboxes, we
+specify a right margin of 29 pixels to provide space for the
+drop-down button, as shown on <a class="docLink" href=
+"#ch19fig15">Figure 19.15</a>:</p>
+
+<div class="docText">
+<pre>
+QComboBox:editable {
+    margin-right: 29px;                                       <span class="docEmphRomanAlt">[R15]</span>
+}
+</pre>
+</div>
+<br>
+<a name="ch19fig15"></a>
+<center>
+<h5 class="docFigureTitle">Figure 19.15. Structure of an editable
+<tt>QComboBox</tt></h5>
+
+<p class="docText"><img border="0" id="" width="414" height="182"
+src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83cC45aGZpZmcvaXMxaWNnMTU-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="sheet is"></a>We have now finished
+creating our Candy style sheet. The style sheet is about 100 lines
+long, and makes use of a few custom images. The result is a highly
+distinctive dialog.</p>
+
+<p class="docText"><a name="style using"></a>Creating a custom
+style using style sheets can involve quite a lot of trial and
+error, especially for those who have not used CSS before. One of
+the main challenges with style sheets is that CSS conflict
+resolution and cascading don't always give intuitive results. For
+further details, see the online documentation at <a class="docLink"
+target="_blank" href=
+"http://doc.trolltech.com/4.3/stylesheet.html">http://doc.trolltech.com/4.3/stylesheet.html</a><a name="style sheet"></a>.
+This describes Qt's style sheet support and provides links to the
+CSS specification.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href="ch19.html"><img src=
+"images/prev.gif" width="20" height="20" border="0" align=
+"absmiddle" alt="Previous Page"></a> <a href=
+"ch19lev1sec2.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

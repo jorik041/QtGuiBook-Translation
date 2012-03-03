@@ -1,0 +1,484 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch20lev1sec3.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch20lev1sec3.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch20lev1sec3.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch20lev1sec3.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch20lev1sec2.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch21.html"><img src="images/next.gif" width="20" height="20"
+border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch20lev1sec3"></a>
+<h3 class="docSection1Title" id="-100000">Doing Overlays Using
+Framebuffer Objects</h3>
+
+<p class="docText"><a name="we need"></a>Often, we need to draw
+simple annotations on top of a complex 3D scene. If the scene is
+very complex, it may take several seconds to render it. To avoid
+rendering the scene repeatedly, whenever an annotation changes we
+could use X11 overlays or the built-in OpenGL support for
+overlays.</p>
+
+<p class="docText"><a name="availability of"></a>More recently, the
+availability of pbuffers and framebuffer objects has provided a
+more convenient and more flexible idiom for doing overlays. The
+basic idea is that we render the 3D scene onto an off-screen
+surface, which we bind to a texture. The texture is mapped onto the
+screen by drawing a rectangle, and the annotations are drawn on
+top. When the annotations change, we need to redraw only the
+rectangle and the annotations. Conceptually, this is very similar
+to what we did in <a class="docLink" href="ch05.html#ch05">Chapter
+5</a><a name="the"></a> for the 2D <tt>Plotter</tt> widget.</p>
+
+<p class="docText"><a name="the Teapots"></a>To illustrate this
+technique, we will review the code of the Teapots application shown
+in <a class="docLink" href="#ch20fig03">Figure 20.3</a><a name=
+"single OpenGL"></a>. The application consists of a single OpenGL
+window that shows an array of teapots and that lets the user draw a
+rubber band on top by clicking and dragging the mouse. The teapots
+do not move or change in any way, except when the window is
+resized. The implementation relies on a framebuffer object to store
+the teapot scene. A similar effect could be implemented using a
+pbuffer by substituting <tt>QGLPixelBuffer</tt> for
+<tt>QGLFramebufferObject</tt>.</p>
+<a name="ch20fig03"></a>
+<center>
+<h5 class="docFigureTitle">Figure 20.3. The Teapots
+application</h5>
+
+<p class="docText"><img border="0" id="" width="445" height="466"
+src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83cC5laGFwZ2ovaXN0cGNvdHM-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+class Teapots : public QGLWidget
+{
+    Q_OBJECT
+
+public:
+    Teapots(QWidget *parent = 0);
+    ~Teapots();
+
+protected:
+    void initializeGL();
+    void resizeGL(int width, int height);
+    void paintGL();
+    void mousePressEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
+
+private:
+    void createGLTeapotObject();
+    void drawTeapot(GLfloat x, GLfloat y, GLfloat ambientR,
+                    GLfloat ambientG, GLfloat ambientB,
+                    GLfloat diffuseR, GLfloat diffuseG,
+                    GLfloat diffuseB, GLfloat specularR,
+                    GLfloat specularG, GLfloat specularB,
+                    GLfloat shininess);
+    void drawTeapots();
+    QGLFramebufferObject *fbObject;
+    GLuint glTeapotObject;
+    QPoint rubberBandCorner1;
+    QPoint rubberBandCorner2;
+    bool rubberBandIsShown;
+};
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle7947"></a>The <tt>Teapots</tt>
+class is derived from <tt>QGLWidget</tt> and reimplements the
+high-level OpenGL handlers <tt>initializeGL()</tt>,
+<tt>resizeGL()</tt>, and <tt>paintGL()</tt>. It also reimplements
+<tt>mousePressEvent()</tt>, <tt>mouseMoveEvent()</tt>, and
+<tt>mouseReleaseEvent()</tt> to let the user draw a rubber
+band.</p>
+
+<p class="docText"><a name="object and"></a>The private functions
+take care of creating the teapot object and of drawing teapots. The
+code is rather complex and is based on the <tt>teapots</tt> example
+in <span class="docEmphasis">OpenGL Programming
+Guide</span><a name="it is"></a> by Jackie Neider, Tom Davis, and
+Mason Woo (Addison-Wesley, 1993). Since it is not directly relevant
+to our purposes, we will not present it here.</p>
+
+<p class="docText"><a name="and whether"></a>The private variables
+store the framebuffer object, the teapot object, the rubber band's
+corners, and whether the rubber band is visible.</p>
+
+<div class="docText">
+<pre>
+Teapots::Teapots(QWidget *parent)
+    : QGLWidget(parent)
+{
+    rubberBandIsShown = false;
+
+    makeCurrent();
+    fbObject = new QGLFramebufferObject(1024, 1024,
+                                        QGLFramebufferObject::Depth);
+    createGLTeapotObject();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle3219"></a><a name=
+"iddle3220"></a><a name="iddle5091"></a><a name=
+"iddle5103"></a><a name="iddle6895"></a><a name=
+"iddle6896"></a><a name="iddle7948"></a><a name=
+"iddle7949"></a><a name="iddle7954"></a>The <tt>Teapots</tt>
+constructor initializes the <tt>rubberBandIsShown</tt><a name=
+"framebuffer object"></a> private variable, creates the framebuffer
+object, and creates the teapot object. We will skip the
+<tt>createGLTeapotObject()</tt><a name="it is"></a> function since
+it is rather long and contains no Qt-relevant code.</p>
+
+<div class="docText">
+<pre>
+Teapots::~Teapots()
+{
+    makeCurrent();
+    delete fbObject;
+    glDeleteLists(glTeapotObject, 1);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="In the"></a>In the destructor, we
+release the resources associated with the framebuffer object and
+the teapot.</p>
+
+<div class="docText">
+<pre>
+void Teapots::initializeGL()
+{
+    static const GLfloat ambient[] = { 0.0, 0.0, 0.0, 1.0 };
+    static const GLfloat diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
+    static const GLfloat position[] = { 0.0, 3.0, 3.0, 0.0 };
+    static const GLfloat lmodelAmbient[] = { 0.2, 0.2, 0.2, 1.0 };
+    static const GLfloat localView[] = { 0.0 };
+
+    glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
+    glLightfv(GL_LIGHT0, GL_POSITION, position);
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodelAmbient);
+    glLightModelfv(GL_LIGHT_MODEL_LOCAL_VIEWER, localView);
+
+    glFrontFace(GL_CW);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glEnable(GL_AUTO_NORMAL);
+    glEnable(GL_NORMALIZE);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>initializeGL()</tt><a name=
+"reimplemented to"></a> function is reimplemented to set up the
+lighting model and to turn on various OpenGL features. The code is
+taken directly from the <tt>teapots</tt><a name="described in"></a>
+example described in the <span class="docEmphasis">OpenGL
+Programming Guide</span> referred to earlier.</p>
+
+<div class="docText">
+<pre>
+void Teapots::resizeGL(int width, int height)
+{
+    fbObject-&gt;bind();
+
+    glDisable(GL_TEXTURE_2D);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_DEPTH_TEST);
+
+    glViewport(0, 0, width, height);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    if (width &lt;= height) {
+        glOrtho(0.0, 20.0, 0.0, 20.0 * GLfloat(height) / GLfloat(width),
+                -10.0, 10.0);
+    } else {
+        glOrtho(0.0, 20.0 * GLfloat(width) / GLfloat(height), 0.0, 20.0,
+                -10.0, 10.0);
+    }
+    glMatrixMode(GL_MODELVIEW);
+    drawTeapots();
+
+    fbObject-&gt;release();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1327"></a><a name=
+"iddle4237"></a><a name="iddle4238"></a><a name=
+"iddle5078"></a><a name="iddle5080"></a><a name=
+"iddle5096"></a><a name="iddle6845"></a><a name=
+"iddle7953"></a><a name="iddle8028"></a>The
+<tt>resizeGL()</tt><a name="the"></a> function is reimplemented to
+redraw the teapot scene whenever the <tt>Teapot</tt><a name=
+"teapots onto"></a> widget is resized. To render the teapots onto
+the framebuffer object, we call
+<tt>QGLFramebufferObject::bind()</tt><a name="OpenGL features"></a>
+at the beginning of the function. Then, we set up some OpenGL
+features and the projection and model view matrices. The call to
+<tt>drawTeapots()</tt><a name="the framebuffer"></a> near the end
+draws the teapots onto the framebuffer object. Finally, the call to
+<tt>release()</tt><a name="to our"></a> unbinds the framebuffer
+object, ensuring that subsequent OpenGL drawing operations don't go
+to our framebuffer object.</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+void Teapots::paintGL()
+{
+    glDisable(GL_LIGHTING);
+    glViewport(0, 0, width(), height());
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    glDisable(GL_DEPTH_TEST);
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, fbObject-&gt;texture());
+    glColor3f(1.0, 1.0, 1.0);
+    GLfloat s = width() / GLfloat(fbObject-&gt;size().width());
+    GLfloat t = height() / GLfloat(fbObject-&gt;size().height());
+
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0, 0.0);
+    glVertex2f(-1.0, -1.0);
+    glTexCoord2f(s, 0.0);
+    glVertex2f(1.0, -1.0);
+    glTexCoord2f(s, t);
+    glVertex2f(1.0, 1.0);
+    glTexCoord2f(0.0, t);
+    glVertex2f(-1.0, 1.0);
+    glEnd();
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText">In <tt>paintGL()</tt><a name=
+"resetting the"></a>, we start by resetting the projection and
+model view matrices. Then we bind the framebuffer object to a
+texture, and draw a rectangle with the texture to cover the entire
+widget.</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+    if (rubberBandIsShown) {
+        glMatrixMode(GL_PROJECTION);
+        glOrtho(0, width(), height(), 0, 0, 100);
+        glMatrixMode(GL_MODELVIEW);
+        glDisable(GL_TEXTURE_2D);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glLineWidth(4.0);
+        glColor4f(1.0, 1.0, 1.0, 0.2);
+        glRecti(rubberBandCorner1.x(), rubberBandCorner1.y(),
+                rubberBandCorner2.x(), rubberBandCorner2.y());
+        glColor4f(1.0, 1.0, 0.0, 0.5);
+        glLineStipple(3, 0xAAAA);
+        glEnable(GL_LINE_STIPPLE);
+
+        glBegin(GL_LINE_LOOP);
+        glVertex2i(rubberBandCorner1.x(), rubberBandCorner1.y());
+        glVertex2i(rubberBandCorner2.x(), rubberBandCorner1.y());
+        glVertex2i(rubberBandCorner2.x(), rubberBandCorner2.y());
+        glVertex2i(rubberBandCorner1.x(), rubberBandCorner2.y());
+        glEnd();
+
+        glLineWidth(1.0);
+        glDisable(GL_LINE_STIPPLE);
+        glDisable(GL_BLEND);
+    }
+}
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle3909"></a><a name=
+"iddle3915"></a><a name="iddle3920"></a><a name=
+"iddle3921"></a><a name="iddle5108"></a><a name=
+"iddle6544"></a><a name="iddle6551"></a><a name=
+"iddle6555"></a><a name="iddle6984"></a><a name=
+"iddle7950"></a><a name="iddle7951"></a><a name=
+"iddle7952"></a><a name="iddle8341"></a><a name=
+"rubber band"></a>If the rubber band is currently shown, we draw it
+on top of the rectangle. The code is standard OpenGL.</p>
+
+<div class="docText">
+<pre>
+void Teapots::mousePressEvent(QMouseEvent *event)
+{
+    rubberBandCorner1 = event-&gt;pos();
+    rubberBandCorner2 = event-&gt;pos();
+    rubberBandIsShown = true;
+}
+
+void Teapots::mouseMoveEvent(QMouseEvent *event)
+{
+    if (rubberBandIsShown) {
+        rubberBandCorner2 = event-&gt;pos();
+        updateGL();
+    }
+}
+
+void Teapots::mouseReleaseEvent(QMouseEvent * /* event */)
+{
+    if (rubberBandIsShown) {
+        rubberBandIsShown = false;
+        updateGL();
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="The mouse"></a>The mouse event handlers
+update the <tt>rubberBandCorner1</tt>, <tt>rubberBandCorner2</tt>,
+and <tt>rubberBandIsShown</tt><a name="represent the"></a>
+variables that represent the rubber band and call
+<tt>updateGL()</tt><a name="schedule a"></a> to schedule a repaint
+of the scene. Repainting the scene is very quick, because
+<tt>paintGL()</tt><a name="on top"></a> only draws a textured
+rectangle and a rubber band on top of it. The scene is rendered
+anew only when the user resizes the window, in
+<tt>resizeGL()</tt>.</p>
+
+<p class="docText"><a name="iddle2987"></a><a name=
+"iddle2988"></a><a name="iddle3663"></a><a name=
+"iddle4289"></a><a name="iddle5079"></a><a name=
+"iddle5081"></a><a name="iddle5084"></a><a name=
+"iddle5193"></a><a name="iddle8110"></a>Here's the application's
+<tt>main()</tt> function:</p>
+
+<div class="docText">
+<pre>
+int main(int argc, char *argv[])
+{
+    QApplication app(argc, argv);
+
+    if (!QGLFormat::hasOpenGL()) {
+        std::cerr &lt;&lt; "This system has no OpenGL support" &lt;&lt; std::endl;
+        return 1;
+    }
+
+    if (!QGLFramebufferObject::hasOpenGLFramebufferObjects()) {
+        std::cerr &lt;&lt; "This system has no framebuffer object support"
+                  &lt;&lt; std::endl;
+        return 1;
+    }
+
+    Teapots teapots;
+    teapots.setWindowTitle(QObject::tr("Teapots"));
+    teapots.resize(400, 400);
+    teapots.show();
+
+    return app.exec();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="message and"></a>The function gives an
+error message and terminates with an error code if the system has
+no OpenGL support, or if it has no framebuffer object support.</p>
+
+<p class="docText"><a name="we can"></a>The Teapots example gives
+us a taste of how we can bind an off-screen surface to a texture
+and draw onto that surface using OpenGL commands. Many variations
+are possible; for example, we could use a <tt>QPainter</tt><a name=
+"a"></a> instead of OpenGL commands to draw on a
+<tt>QGLFramebufferObject</tt> or <tt>QGLPixelBuffer</tt><a name=
+"OpenGL scene"></a>. This provides a way to render transformed text
+in an OpenGL scene. Another common idiom is to use a framebuffer
+object to render a scene and then call <tt>toImage()</tt><a name=
+"to produce"></a> on the result to produce a
+<tt>QImage</tt><a name="included with"></a>. The examples included
+with Qt show many of these idioms in action, both for framebuffer
+objects and for pbuffers.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch20lev1sec2.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch21.html"><img src="images/next.gif" width="20" height="20"
+border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

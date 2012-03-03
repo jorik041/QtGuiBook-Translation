@@ -1,0 +1,553 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch20.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch20.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch20.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch20.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch19lev1sec2.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch20lev1sec1.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch20"></a>
+<h2 id="title-ID0EZCPM" class="docChapterTitle">20. 3D
+Graphics</h2>
+
+<p class="docText"><img border="0" id="" width="170" height="123"
+src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83ZXBwdDBocF9lcl8vMmlzY2Nob25lYS5wZ3Jq.jpg"
+alt="">
+</p>
+
+<ul>
+<li>
+<p class="docList"><a name="iddle2847"></a><a name=
+"iddle2950"></a><a name="iddle2980"></a><a name=
+"iddle4122"></a><a name="iddle4156"></a><a name=
+"iddle4288"></a><a name="iddle5076"></a><a name=
+"iddle5082"></a><a name="iddle5085"></a><a name=
+"iddle5505"></a><a name="iddle6373"></a><a name=
+"iddle8054"></a><a name="iddle8570"></a><span class=
+"docEmphasis"><a class="docLink" href=
+"ch20lev1sec1.html#ch20lev1sec1">Drawing Using OpenGL</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch20lev1sec2.html#ch20lev1sec2">Combining OpenGL and
+QPainter</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch20lev1sec3.html#ch20lev1sec3">Doing Overlays Using
+Framebuffer Objects</a></span>
+</p>
+</li>
+</ul>
+
+<p class="docText"><a name="OpenGL is"></a>OpenGL is a standard API
+for rendering 3D graphics. Qt applications can draw 3D graphics by
+using the <span class="docEmphasis">QtOpenGL</span><a name=
+"on the"></a> module, which relies on the system's OpenGL library.
+The module provides the <tt>QGLWidget</tt><a name="we can"></a>
+class, which we can subclass to develop our own widgets that draw
+themselves using OpenGL commands. For many 3D applications, this is
+sufficient. The first section of this chapter presents a simple
+application that uses this technique to draw a tetrahedron and lets
+the user interact with it using the mouse.</p>
+
+<p class="docText">Starting with Qt 4, it is possible to use a
+<tt>QPainter</tt> on a <tt>QGLWidget</tt> as though it were a
+normal <tt>QWidget</tt><a name="the high"></a>. One huge benefit of
+this is that we get the high performance of OpenGL for most drawing
+operations, such as transformations and pixmap drawing. Another
+benefit of using <tt>QPainter</tt><a name="its higher"></a> is that
+we can use its higher-level API for 2D graphics, and combine it
+with OpenGL calls to perform 3D graphics. In the chapter's second
+section, we will show how to combine 2D and 3D drawing in the same
+widget using a mixture of <tt>QPainter</tt> and OpenGL
+commands.</p>
+
+<p class="docText">Using <tt>QGLWidget</tt><a name="the back"></a>,
+we can draw 3D scenes on the screen, using OpenGL as the back-end.
+To render to a hardware-accelerated off-screen surface, we can use
+the <span class="docEmphasis">pbuffer</span> and <span class=
+"docEmphasis">framebuffer object</span> extensions, which are
+available through the <tt>QGLPixelBuffer</tt> and
+<tt>QGLFramebufferObject</tt><a name="will show"></a> classes. In
+the third section of the chapter, we will show how to use a
+framebuffer object to implement overlays.</p>
+
+<p class="docText"><a name="is new"></a>This chapter assumes that
+you are familiar with OpenGL. If OpenGL is new to you, a good place
+to start learning it is <a class="docLink" target="_blank" href=
+"http://www.opengl.org/">http://www.opengl.org/</a>.</p>
+<a name="ch20lev1sec1"></a>
+<h3 class="docSection1Title" id="-100000">Drawing Using OpenGL</h3>
+
+<p class="docText"><a name="OpenGL from"></a>Drawing graphics with
+OpenGL from a Qt application is straightforward: We must subclass
+<tt>QGLWidget</tt><a name="few virtual"></a>, reimplement a few
+virtual functions, and link the application against the
+<span class="docEmphasis">QtOpenGL</span><a name="and OpenGL"></a>
+and OpenGL libraries. Because <tt>QGLWidget</tt><a name="from"></a>
+is derived from <tt>QWidget</tt><a name="of what"></a>, most of
+what we already know still applies. The main difference is that we
+use standard OpenGL functions to perform the drawing instead of
+<tt>QPainter</tt>.</p>
+
+<p class="docText"><a name="iddle2626"></a><a name=
+"iddle5086"></a><a name="iddle7837"></a><a name=
+"iddle7968"></a><a name="iddle7978"></a><a name="of the"></a>To
+show how this works, we will review the code of the Tetrahedron
+application shown in <a class="docLink" href="#ch20fig01">Figure
+20.1</a><a name="with each"></a>. The application presents a 3D
+tetrahedron, or four-sided die, with each face drawn using a
+different color. The user can rotate the tetrahedron by pressing a
+mouse button and dragging. The user can set the color of a face by
+double-clicking it and choosing a color from the
+<tt>QColorDialog</tt> that pops up.</p>
+<a name="ch20fig01"></a>
+<center>
+<h5 class="docFigureTitle">Figure 20.1. The Tetrahedron
+application</h5>
+
+<p class="docText"><img border="0" id="" width="330" height="352"
+src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83cHBkZWhqdG4vcm90c2NpcmEuZ2hl.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<div class="docText">
+<pre>
+class Tetrahedron : public QGLWidget
+{
+    Q_OBJECT
+
+public:
+    Tetrahedron(QWidget *parent = 0);
+
+protected:
+    void initializeGL();
+    void resizeGL(int width, int height);
+    void paintGL();
+    void mousePressEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+    void mouseDoubleClickEvent(QMouseEvent *event);
+
+private:
+    void draw();
+    int faceAtPosition(const QPoint &amp;pos);
+
+    GLfloat rotationX;
+    GLfloat rotationY;
+    GLfloat rotationZ;
+    QColor faceColors[4];
+    QPoint lastPos;
+};
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle2170"></a><a name=
+"iddle3217"></a><a name="iddle3221"></a><a name=
+"iddle5074"></a><a name="iddle5089"></a><a name=
+"iddle5097"></a><a name="iddle5101"></a><a name=
+"iddle5105"></a><a name="iddle6893"></a><a name=
+"iddle6897"></a><a name="iddle6946"></a><a name=
+"iddle7227"></a><a name="iddle7969"></a><a name=
+"iddle7972"></a><a name="iddle7977"></a>The <tt>Tetrahedron</tt>
+class is derived from <tt>QGLWidget</tt>. The
+<tt>initializeGL()</tt>, <tt>resizeGL()</tt>, and
+<tt>paintGL()</tt> functions are reimplemented from
+<tt>QGLWidget</tt>. The mouse event handlers are reimplemented from
+<tt>QWidget</tt> as usual.</p>
+
+<div class="docText">
+<pre>
+Tetrahedron::Tetrahedron(QWidget *parent)
+    : QGLWidget(parent)
+{
+    setFormat(QGLFormat(QGL::DoubleBuffer | QGL::DepthBuffer));
+
+    rotationX = -21.0;
+    rotationY = -57.0;
+    rotationZ = 0.0;
+    faceColors[0] = Qt::red;
+    faceColors[1] = Qt::green;
+    faceColors[2] = Qt::blue;
+    faceColors[3] = Qt::yellow;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">In the constructor, we call
+<tt>QGLWidget::setFormat()</tt><a name="private variables"></a> to
+specify the OpenGL display context, and we initialize the class's
+private variables.</p>
+
+<div class="docText">
+<pre>
+void Tetrahedron::initializeGL()
+{
+    qglClearColor(Qt::black);
+    glShadeModel(GL_FLAT);
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>initializeGL()</tt> function is called
+just once, before <tt>paintGL()</tt><a name="can set"></a> is
+called. This is the place where we can set up the OpenGL rendering
+context, define display lists, and perform other
+initializations.</p>
+
+<p class="docText">All the code is standard OpenGL, except for the
+call to <tt>QGLWidget</tt>'s <tt>qglClearColor()</tt> function. If
+we wanted to stick to standard OpenGL, we would call
+<tt>glClearColor()</tt> in RGBA mode and <tt>glClearIndex()</tt> in
+color index mode instead.</p>
+
+<div class="docText">
+<pre>
+void Tetrahedron::resizeGL(int width, int height)
+{
+    glViewport(0, 0, width, height);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    GLfloat x = GLfloat(width) / height;
+    glFrustum(-x, +x, -1.0, +1.0, 4.0, 15.0);
+    glMatrixMode(GL_MODELVIEW);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>resizeGL()</tt> function is called
+before <tt>paintGL()</tt> is called the first time, but after
+<tt>initializeGL()</tt><a name="is the"></a> is called. It is also
+called whenever the widget is resized. This is the place where we
+can set up the OpenGL viewport, projection, and any other settings
+that depend on the widget's size.</p>
+
+<div class="docText">
+<pre>
+void Tetrahedron::paintGL()
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    draw();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1420"></a><a name=
+"iddle2237"></a><a name="iddle2531"></a><a name=
+"iddle2537"></a><a name="iddle3910"></a><a name=
+"iddle3916"></a><a name="iddle4235"></a><a name=
+"iddle4239"></a><a name="iddle5075"></a><a name=
+"iddle5094"></a><a name="iddle5098"></a><a name=
+"iddle5414"></a><a name="iddle6543"></a><a name=
+"iddle6550"></a><a name="iddle7970"></a><a name=
+"iddle7974"></a><a name="iddle7975"></a><a name="iddle7976"></a>The
+<tt>paintGL()</tt><a name="whenever the"></a> function is called
+whenever the widget needs to be repainted. This is similar to
+<tt>QWidget::paintEvent()</tt><a name="of"></a>, but instead of
+<tt>QPainter</tt><a name="functions we"></a> functions we use
+OpenGL functions. The actual drawing is performed by the private
+function <tt>draw()</tt>.</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+void Tetrahedron::draw()
+{
+    static const GLfloat P1[3] = { 0.0, -1.0, +2.0 };
+    static const GLfloat P2[3] = { +1.73205081, -1.0, -1.0 };
+    static const GLfloat P3[3] = { -1.73205081, -1.0, -1.0 };
+    static const GLfloat P4[3] = { 0.0, +2.0, 0.0 };
+
+    static const GLfloat * const coords[4][3] = {
+        { P1, P2, P3 }, { P1, P3, P4 }, { P1, P4, P2 }, { P2, P4, P3 }
+    };
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    glTranslatef(0.0, 0.0, -10.0);
+    glRotatef(rotationX, 1.0, 0.0, 0.0);
+    glRotatef(rotationY, 0.0, 1.0, 0.0);
+    glRotatef(rotationZ, 0.0, 0.0, 1.0);
+
+    for (int i = 0; i &lt; 4; ++i) {
+        glLoadName(i);
+        glBegin(GL_TRIANGLES);
+        qglColor(faceColors[i]);
+        for (int j = 0; j &lt; 3; ++j) {
+            glVertex3f(coords[i][j][0], coords[i][j][1],
+                       coords[i][j][2]);
+        }
+        glEnd();
+    }
+}
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText">In <tt>draw()</tt><a name=
+"the tetrahedron"></a>, we draw the tetrahedron, taking into
+account the <span class="docEmphasis">x</span>, <span class=
+"docEmphasis">y</span>, and <span class=
+"docEmphasis">z</span><a name="and the"></a> rotations and the
+colors stored in the <tt>faceColors</tt> array. Everything is
+standard OpenGL, except for the <tt>qglColor()</tt> call. We could
+have used one of the OpenGL functions <tt>glColor3d()</tt> or
+<tt>glIndex()</tt> instead, depending on the mode.</p>
+
+<div class="docText">
+<pre>
+void Tetrahedron::mousePressEvent(QMouseEvent *event)
+{
+    lastPos = event-&gt;pos();
+}
+
+void Tetrahedron::mouseMoveEvent(QMouseEvent *event)
+{
+    GLfloat dx = GLfloat(event-&gt;x() - lastPos.x()) / width();
+    GLfloat dy = GLfloat(event-&gt;y() - lastPos.y()) / height();
+    if (event-&gt;buttons() &amp; Qt::LeftButton) {
+        rotationX += 180 * dy;
+        rotationY += 180 * dx;
+        updateGL();
+    } else if (event-&gt;buttons() &amp; Qt::RightButton) {
+        rotationX += 180 * dy;
+        rotationZ += 180 * dx;
+        updateGL();
+    }
+    lastPos = event-&gt;pos();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1430"></a><a name=
+"iddle1444"></a><a name="iddle2220"></a><a name=
+"iddle2527"></a><a name="iddle2702"></a><a name=
+"iddle2907"></a><a name="iddle3532"></a><a name=
+"iddle3895"></a><a name="iddle3900"></a><a name=
+"iddle4832"></a><a name="iddle5107"></a><a name=
+"iddle6538"></a><a name="iddle6954"></a><a name=
+"iddle7971"></a><a name="iddle7973"></a><a name="iddle8340"></a>The
+<tt>mousePressEvent()</tt> and <tt>mouseMoveEvent()</tt> functions
+are reimplemented from <tt>QWidget</tt><a name="clicking and"></a>
+to allow the user to rotate the view by clicking and dragging. The
+left mouse button allows the user to rotate around the <span class=
+"docEmphasis">x</span>- and <span class=
+"docEmphasis">y</span><a name="the"></a>-axes, the right mouse
+button around the <span class="docEmphasis">x</span>- and
+<span class="docEmphasis">z</span>-axes.</p>
+
+<p class="docText">After modifying the <tt>rotationX</tt> variable,
+and either the <tt>rotationY</tt> or the <tt>rotationZ</tt>
+variable, we call <tt>updateGL()</tt> to redraw the scene.</p>
+
+<div class="docText">
+<pre>
+void Tetrahedron::mouseDoubleClickEvent(QMouseEvent *event)
+{
+    int face = faceAtPosition(event-&gt;pos());
+    if (face != -1) {
+        QColor color = QColorDialog::getColor(faceColors[face], this);
+        if (color.isValid()) {
+            faceColors[face] = color;
+            updateGL();
+        }
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>mouseDoubleClickEvent()</tt> is
+reimplemented from <tt>QWidget</tt><a name="a tetrahedron"></a> to
+allow the user to set the color of a tetrahedron face by
+double-clicking it. We call the private function
+<tt>faceAtPosition()</tt><a name="the cursor"></a> to determine
+which face, if any, is located under the cursor. If a face was
+double-clicked, we call <tt>QColorDialog::getColor()</tt><a name=
+"the"></a> to obtain a new color for that face. Then we update the
+<tt>faceColors</tt><a name="new color"></a> array with the new
+color, and we call <tt>updateGL()</tt><a name="the scene"></a> to
+redraw the scene.</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+int Tetrahedron::faceAtPosition(const QPoint &amp;pos)
+{
+    const int MaxSize = 512;
+    GLuint buffer[MaxSize];
+    GLint viewport[4];
+
+    makeCurrent();
+
+    glGetIntegerv(GL_VIEWPORT, viewport);
+    glSelectBuffer(MaxSize, buffer);
+    glRenderMode(GL_SELECT);
+
+    glInitNames();
+    glPushName(0);
+
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    gluPickMatrix(GLdouble(pos.x()), GLdouble(viewport[3] - pos.y()),
+                  5.0, 5.0, viewport);
+    GLfloat x = GLfloat(width()) / height();
+    glFrustum(-x, x, -1.0, 1.0, 4.0, 15.0);
+    draw();
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+
+    if (!glRenderMode(GL_RENDER))
+        return -1;
+    return buffer[3];
+}
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle2986"></a><a name=
+"iddle3662"></a><a name="iddle3741"></a><a name=
+"iddle4478"></a><a name="iddle5092"></a><a name=
+"iddle6017"></a><a name="The"></a>The
+<tt>faceAtPosition()</tt><a name="the number"></a> function returns
+the number of the face at a certain position on the widget, or -1
+if there is no face at that position. The code for determining this
+in OpenGL is a bit complicated. Essentially, we render the scene in
+<tt>GL_SELECT</tt><a name="to take"></a> mode to take advantage of
+OpenGL's picking capabilities and then retrieve the face number
+(its "name") from the OpenGL hit record. The code is all standard
+OpenGL code, except for the
+<tt>QGLWidget::makeCurrent()</tt><a name="we use"></a> call at the
+beginning, which is necessary to ensure that we use the correct
+OpenGL context. (<tt>QGLWidget</tt><a name="calls"></a> does this
+automatically before it calls <tt>initializeGL()</tt>,
+<tt>resizeGL()</tt>, or <tt>paintGL()</tt>, so we don't need this
+call anywhere else in the <tt>Tetrahedron</tt> implementation.)</p>
+
+<p class="docText">Here's the application's <tt>main()</tt>
+function:</p>
+
+<div class="docText">
+<pre>
+int main(int argc, char *argv[])
+{
+    QApplication app(argc, argv);
+
+    if (!QGLFormat::hasOpenGL()) {
+        std::cerr &lt;&lt; "This system has no OpenGL support" &lt;&lt; std::endl;
+        return 1;
+    }
+
+    Tetrahedron tetrahedron;
+    tetrahedron.setWindowTitle(QObject::tr("Tetrahedron"));
+    tetrahedron.resize(300, 300);
+    tetrahedron.show();
+
+    return app.exec();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="to the"></a>If the user's system
+doesn't support OpenGL, we print an error message to the console
+and return immediately.</p>
+
+<p class="docText">To link the application against the <span class=
+"docEmphasis">QtOpenGL</span> module and the system's OpenGL
+library, the <tt>.pro</tt> file needs this entry:</p>
+
+<div class="docText">
+<pre>
+QT += opengl
+</pre>
+</div>
+<br>
+
+<p class="docText">That completes the Tetrahedron application.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch19lev1sec2.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch20lev1sec1.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

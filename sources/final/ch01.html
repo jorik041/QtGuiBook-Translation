@@ -1,0 +1,370 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch01.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch01.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch01.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch01.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href="part01.html"><img src=
+"images/prev.gif" width="20" height="20" border="0" align=
+"absmiddle" alt="Previous Page"></a> <a href=
+"ch01lev1sec1.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="part01"></a>
+<h1 class="docPartTitle" id="title-ID0E25MM">Part I: Basic Qt</h1>
+
+<blockquote>
+<p class="docText">&nbsp;</p>
+</blockquote>
+<br>
+<a name="ch01"></a>
+<h2 id="title-ID0EHANM" class="docChapterTitle">1. Getting
+Started</h2>
+
+<p class="docText"><img border="0" id="" width="149" height="141"
+src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzbnBpZV9nY3NoL29fcHIxaGMwdGFlZWoucHBy.jpg"
+alt="">
+</p>
+
+<ul>
+<li>
+<p class="docList"><a name="iddle1207"></a><a name=
+"iddle1696"></a><a name="iddle1854"></a><a name=
+"iddle2591"></a><a name="iddle2651"></a><a name=
+"iddle2969"></a><a name="iddle3001"></a><a name=
+"iddle3018"></a><a name="iddle3471"></a><a name=
+"iddle3655"></a><a name="iddle3668"></a><a name=
+"iddle4708"></a><a name="iddle4722"></a><a name=
+"iddle4859"></a><a name="iddle5251"></a><a name=
+"iddle6618"></a><a name="iddle7432"></a><a name=
+"iddle8543"></a><span class="docEmphasis"><a class="docLink" href=
+"ch01lev1sec1.html#ch01lev1sec1">Hello Qt</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch01lev1sec2.html#ch01lev1sec2">Making Connections</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch01lev1sec3.html#ch01lev1sec3">Laying Out Widgets</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch01lev1sec4.html#ch01lev1sec4">Using the Reference
+Documentation</a></span>
+</p>
+</li>
+</ul>
+
+<p class="docText"><a name="This chapter"></a>This chapter shows
+how to combine basic C++ with the functionality provided by Qt to
+create a few small graphical user interface (GUI) applications.
+This chapter also introduces two key Qt ideas: "signals and slots"
+and layouts. In <a class="docLink" href="ch02.html#ch02">Chapter
+2</a><a name="go into"></a>, we will go into more depth, and in
+<a class="docLink" href="ch03.html#ch03">Chapter 3</a><a name=
+"will start"></a>, we will start building a more realistic
+application.</p>
+
+<p class="docText"><a name="experience with"></a>If you already
+know Java or C# but have limited experience with C++, you might
+want to start by reading the C++ introduction in <a class="docLink"
+href="app04.html#app04">Appendix D</a>.</p>
+<a name="ch01lev1sec1"></a>
+<h3 class="docSection1Title" id="-100000">Hello Qt</h3>
+
+<p class="docText"><a name="Qt program"></a>Let's start with a very
+simple Qt program. We will first study it line by line, and then
+see how to compile and run it.</p>
+
+<div class="docText">
+<pre>
+<span class=
+"docEmphRomanAlt">1</span> #include &lt;QApplication&gt;
+<span class="docEmphRomanAlt">2</span> #include &lt;QLabel&gt;
+
+<span class=
+"docEmphRomanAlt">3</span> int main(int argc, char *argv[])
+<span class="docEmphRomanAlt">4</span> {
+<span class=
+"docEmphRomanAlt">5</span>     QApplication app(argc, argv);
+<span class=
+"docEmphRomanAlt">6</span>     QLabel *label = new QLabel("Hello Qt!");
+<span class="docEmphRomanAlt">7</span>     label-&gt;show();
+<span class="docEmphRomanAlt">8</span>     return app.exec();
+<span class="docEmphRomanAlt">9</span> }
+</pre>
+</div>
+<br>
+
+<p class="docText">Lines 1 and 2 include the definitions of the
+<tt>QApplication</tt> and <tt>QLabel</tt><a name="the same"></a>
+classes. For every Qt class, there is a header file with the same
+name (and capitalization) as the class that contains the class's
+definition.</p>
+
+<p class="docText">Line 5 creates a <tt>QApplication</tt> object to
+manage application-wide resources. The <tt>QApplication</tt>
+constructor requires <tt>argc</tt> and <tt>argv</tt><a name=
+"of its"></a> because Qt supports a few command-line arguments of
+its own.</p>
+
+<p class="docText">Line 6 creates a <tt>QLabel</tt> widget that
+displays "Hello Qt!". In Qt and Unix terminology, a <span class=
+"docEmphasis">widget</span><a name="term stems"></a> is a visual
+element in a user interface. The term stems from <a name=
+"iddle1404"></a><a name="iddle1721"></a><a name=
+"iddle1837"></a><a name="iddle2080"></a><a name=
+"iddle2433"></a><a name="iddle2483"></a><a name=
+"iddle2492"></a><a name="iddle2780"></a><a name=
+"iddle3044"></a><a name="iddle3291"></a><a name=
+"iddle3782"></a><a name="iddle3801"></a><a name=
+"iddle4281"></a><a name="iddle4461"></a><a name=
+"iddle4517"></a><a name="iddle4531"></a><a name=
+"iddle5334"></a><a name="iddle6996"></a><a name=
+"iddle8150"></a><a name="iddle8427"></a><a name=
+"iddle8461"></a><a name="iddle8562"></a><a name=
+"iddle8624"></a><a name="is the"></a>"window gadget" and is the
+equivalent of both "control" and "container" in Windows
+terminology. Buttons, menus, scroll bars, and frames are all
+examples of widgets. Widgets can contain other widgets; for
+example, an application window is usually a widget that contains a
+<tt>QMenuBar</tt>, a few <tt>QToolBar</tt>s, a <tt>QStatusBar</tt>,
+and some other widgets. Most applications use a
+<tt>QMainWindow</tt> or a <tt>QDialog</tt><a name="widget can"></a>
+as the application window, but Qt is so flexible that any widget
+can be a window. In this example, the <tt>QLabel</tt><a name=
+"widget is"></a> widget is the application window.</p>
+
+<p class="docText"><a name="the label"></a>Line 7 makes the label
+visible. Widgets are always created hidden so that we can customize
+them before showing them, thereby avoiding flicker.</p>
+
+<p class="docText"><a name="passes control"></a>Line 8 passes
+control of the application on to Qt. At this point, the program
+enters the event loop. This is a kind of stand-by mode where the
+program waits for user actions such as mouse clicks and key
+presses. User actions generate <span class=
+"docEmphasis">events</span><a name="one or"></a> (also called
+"messages") to which the program can respond, usually by executing
+one or more functions. For example, when the user clicks a widget,
+a "mouse press" and a "mouse release" event are generated. In this
+respect, GUI applications differ drastically from conventional
+batch programs, which typically process input, produce results, and
+terminate without human intervention.</p>
+
+<p class="docText">For simplicity, we don't bother calling
+<tt>delete</tt> on the <tt>QLabel</tt><a name="the"></a> object at
+the end of the <tt>main()</tt><a name="since the"></a> function.
+This memory leak is harmless in such a small program, since the
+memory will be reclaimed by the operating system when the program
+terminates.</p>
+
+<p class="docText"><a name="the program"></a>It is now possible to
+try the program on your own machine. It should look like the one
+shown in <a class="docLink" href="#ch01fig01">Figure
+1.1</a><a name="Qt"></a>. First, you will need to install Qt 4.3.2
+(or a later Qt 4 release), a process that is explained in <a class=
+"docLink" href="app01.html#app01">Appendix A</a><a name=
+"now on"></a>. From now on, we will assume that you have a
+correctly installed copy of Qt 4 and that Qt's <tt>bin</tt>
+directory is in your <tt>PATH</tt><a name="will also"></a>
+environment variable. (On Windows, this is done automatically by
+the Qt installation program.) You will also need the program's code
+in a file called <tt>hello.cpp</tt><a name="in a"></a> in a
+directory called <tt>hello</tt><a name="type in"></a>. You can type
+in <tt>hello.cpp</tt><a name="or copy"></a> yourself or copy it
+from the examples that accompany this book, where it is available
+as <tt>examples/chap01/hello/hello.cpp</tt>. (All the examples are
+available from the book's web site, <a class="docLink" target=
+"_blank" href=
+"http://www.informit.com/title/0132354160">http://www.informit.com/title/0132354160</a>.)</p>
+<a name="ch01fig01"></a>
+<center>
+<h5 class="docFigureTitle">Figure 1.1. Hello on Linux</h5>
+
+<p class="docText"><img border="0" id="" width="91" height="56"
+src="images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzcGlqZmlzaC9nMXAxZ2MwLjA-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText">From a command prompt, change the directory to
+<tt>hello</tt>, and type</p>
+
+<div class="docText">
+<pre>
+qmake -project
+</pre>
+</div>
+<br>
+
+<p class="docText">to create a platform-independent project file
+(<tt>hello.pro</tt>), and then type</p>
+
+<div class="docText">
+<pre>
+qmake hello.pro
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1431"></a><a name=
+"iddle1674"></a><a name="iddle1704"></a><a name=
+"iddle2042"></a><a name="iddle2839"></a><a name=
+"iddle3072"></a><a name="iddle3738"></a><a name=
+"iddle3743"></a><a name="iddle3817"></a><a name=
+"iddle3822"></a><a name="iddle3834"></a><a name=
+"iddle3928"></a><a name="iddle4022"></a><a name=
+"iddle4457"></a><a name="iddle4459"></a><a name=
+"iddle4519"></a><a name="iddle4570"></a><a name=
+"iddle5640"></a><a name="iddle6850"></a><a name=
+"iddle7599"></a><a name="iddle8152"></a><a name=
+"iddle8358"></a><a name="iddle8468"></a><a name=
+"iddle8474"></a><a name="iddle8628"></a><a name="iddle8697"></a>to
+create a platform-specific makefile from the project file. (The
+<tt>qmake</tt> tool is covered in more detail in <a class="docLink"
+href="app02.html#app02">Appendix B</a>.) Type <tt>make</tt> to
+build the program. Run it by typing <tt>hello</tt> on Windows,
+<tt>./hello</tt> on Unix, and <tt>open hello.app</tt><a name=
+"button in"></a> on Mac OS X. To terminate the program, click the
+close button in the window's title bar.</p>
+
+<p class="docText"><a name="and have"></a>If you are using Windows
+and have installed the Qt Open Source Edition and the MinGW
+compiler, you will have a shortcut to an MS-DOS Prompt window that
+has all the environment variables correctly set up for Qt. If you
+start this window, you can compile Qt applications within it using
+<tt>qmake</tt> and <tt>make</tt> as described previously. The
+executables produced are put in the application's <tt>debug</tt> or
+<tt>release</tt> folder (e.g.,
+<tt>C:\examples\chap01\hello\release\hello.exe</tt>).</p>
+
+<p class="docText"><a name="version of"></a>If you are using
+Microsoft Visual C++ with a commercial version of Qt, you will need
+to run <tt>nmake</tt> instead of <tt>make</tt><a name=
+"project file"></a>. Alternatively, you can create a Visual Studio
+project file from <tt>hello.pro</tt> by typing</p>
+
+<div class="docText">
+<pre>
+qmake -tp vc hello.pro
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="you are"></a>and then build the program
+in Visual Studio. If you are using Xcode on Mac OS X, you can
+generate an Xcode project using the command</p>
+
+<div class="docText">
+<pre>
+qmake -spec macx-xcode hello.pro
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="we go"></a>Before we go on to the next
+example, let's have some fun: Replace the line</p>
+
+<div class="docText">
+<pre>
+QLabel *label = new QLabel("Hello Qt!");
+</pre>
+</div>
+<br>
+
+<p class="docText">with</p>
+
+<div class="docText">
+<pre>
+QLabel *label = new QLabel("&lt;h2&gt;&lt;i&gt;Hello&lt;/i&gt; "
+                           "&lt;font color=red&gt;Qt!&lt;/font&gt;&lt;/h2&gt;");
+</pre>
+</div>
+<br>
+
+<p class="docText">and rebuild the application. When run, it should
+look like <a class="docLink" href="#ch01fig02">Figure
+1.2</a><a name="interface using"></a>. As the example illustrates,
+it's easy to brighten up a Qt application's user interface using
+some simple HTML-style formatting.</p>
+<a name="ch01fig02"></a>
+<center>
+<h5 class="docFigureTitle"><a name="Figure"></a>Figure 1.2. A label
+with basic HTML formatting</h5>
+
+<p class="docText"><img border="0" id="" width="124" height="56"
+src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzcGlqZmlzaC9nMnAxZ2MwLjA-.jpg"
+alt="">
+</p>
+</center>
+<br>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href="part01.html"><img src=
+"images/prev.gif" width="20" height="20" border="0" align=
+"absmiddle" alt="Previous Page"></a> <a href=
+"ch01lev1sec1.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

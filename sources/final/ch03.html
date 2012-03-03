@@ -1,0 +1,514 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch03.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch03.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch03.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch03.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch02lev1sec6.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch03lev1sec1.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch03"></a>
+<h2 id="title-ID0EIKNM" class="docChapterTitle">3. Creating Main
+Windows</h2>
+
+<p class="docText"><img border="0" id="" width="150" height="119"
+src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzbnBpZV9nY3NoL29fcHIzaGMwdGFlZWoucHBy.jpg"
+alt="">
+</p>
+
+<ul>
+<li>
+<p class="docList"><a name="iddle2621"></a><a name=
+"iddle7665"></a><span class="docEmphasis"><a class="docLink" href=
+"ch03lev1sec1.html#ch03lev1sec1">Subclassing QMainWindow</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch03lev1sec2.html#ch03lev1sec2">Creating Menus and
+Toolbars</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch03lev1sec3.html#ch03lev1sec3">Setting Up the Status
+Bar</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch03lev1sec4.html#ch03lev1sec4">Implementing the File
+Menu</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch03lev1sec5.html#ch03lev1sec5">Using Dialogs</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch03lev1sec6.html#ch03lev1sec6">Storing Settings</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch03lev1sec7.html#ch03lev1sec7">Multiple Documents</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch03lev1sec8.html#ch03lev1sec8">Splash Screens</a></span>
+</p>
+</li>
+</ul>
+
+<p class="docText"><a name="This chapter"></a>This chapter will
+teach you how to create main windows using Qt. By the end, you will
+be able to build an application's entire user interface, complete
+with menus, toolbars, a status bar, and as many dialogs as the
+application requires.</p>
+
+<p class="docText"><a name="window provides"></a>An application's
+main window provides the framework upon which the application's
+user interface is built. The main window for the Spreadsheet
+application shown in <a class="docLink" href="#ch03fig01">Figure
+3.1</a><a name="form the"></a> will form the basis of this chapter.
+The Spreadsheet application makes use of the Find, Go to Cell, and
+Sort dialogs that we created in <a class="docLink" href=
+"ch02.html#ch02">Chapter 2</a>.</p>
+<a name="ch03fig01"></a>
+<center>
+<h5 class="docFigureTitle">Figure 3.1. The spreadsheet
+application</h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzZ3BpYWZpc2gvLjF0bDNnYzBfMHBq.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="417" src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzcGlqZmlzaC9nMXAzZ2MwLjA-.jpg"
+alt="">
+</center>
+<br>
+
+<p class="docText"><a name="iddle2494"></a><a name=
+"iddle3682"></a><a name="iddle3734"></a><a name=
+"iddle4605"></a><a name="iddle5314"></a><a name=
+"iddle5322"></a><a name="iddle6108"></a><a name=
+"iddle6504"></a><a name="iddle7849"></a><a name=
+"that provides"></a>Behind most GUI applications lies a body of
+code that provides the underlying functionality—for example, code
+to read and write files or to process the data presented in the
+user interface. In <a class="docLink" href="ch04.html#ch04">Chapter
+4</a><a name="implement such"></a>, we will see how to implement
+such functionality, again using the Spreadsheet application as our
+example.</p>
+<a name="ch03lev1sec1"></a>
+<h3 class="docSection1Title" id="-100000">Subclassing
+QMainWindow</h3>
+
+<p class="docText">An application's main window is created by
+subclassing <tt>QMainWindow</tt>. Many of the techniques we saw in
+<a class="docLink" href="ch02.html#ch02">Chapter 2</a><a name=
+"since both"></a> for creating dialogs are also relevant for
+creating main windows, since both <tt>QDialog</tt> and
+<tt>QMainWindow</tt> are derived from <tt>QWidget</tt>.</p>
+
+<p class="docText">Main windows can be created using <span class=
+"docEmphasis">Qt Designer</span><a name="do everything"></a>, but
+in this chapter we will do everything in code to demonstrate how
+it's done. If you prefer the more visual approach, see the
+"Creating Main Windows in <span class="docEmphasis">Qt
+Designer</span>" chapter in <span class="docEmphasis">Qt
+Designer</span>'s online manual.</p>
+
+<p class="docText"><a name="is spread"></a>The source code for the
+Spreadsheet application's main window is spread across
+<tt>mainwindow.h</tt> and <tt>mainwindow.cpp</tt><a name=
+"with the"></a>. Let's start with the header file:</p>
+
+<div class="docText">
+<pre>
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
+
+#include &lt;QMainWindow&gt;
+
+class QAction;
+class QLabel;
+class FindDialog;
+class Spreadsheet;
+
+class MainWindow : public QMainWindow
+{
+    Q_OBJECT
+
+public:
+    MainWindow();
+
+protected:
+    void closeEvent(QCloseEvent *event);
+</pre>
+</div>
+<br>
+
+<p class="docText">We define the class <tt>MainWindow</tt> as a
+subclass of <tt>QMainWindow</tt>. It contains the <tt>Q_OBJECT</tt>
+macro since it provides its own signals and slots.</p>
+
+<p class="docText">The <tt>closeEvent()</tt> function is a virtual
+function in <tt>QWidget</tt><a name="is reimplemented"></a> that is
+automatically called when the user closes the window. It is
+reimplemented in <tt>MainWindow</tt><a name="so that"></a> so that
+we can ask the user the standard question "Do you want to save your
+changes?" and to save user preferences to disk.</p>
+
+<div class="docText">
+<pre>
+private slots:
+    void newFile();
+    void open();
+    bool save();
+    bool saveAs();
+    void find();
+    void goToCell();
+    void sort();
+    void about();
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle7472"></a><a name=
+"iddle7543"></a><a name="such as"></a>Some menu options, such as
+<span class="docEmphRomanAlt">File|New</span> and <span class=
+"docEmphRomanAlt">Help|About</span><a name="implemented as"></a>,
+are implemented as private slots in <tt>MainWindow</tt>. Most slots
+have <tt>void</tt> as their return value, but <tt>save()</tt> and
+<tt>saveAs()</tt> return a <tt>bool</tt><a name="executed in"></a>.
+The return value is ignored when a slot is executed in response to
+a signal, but when we call a slot as a function the return value is
+available to us just as it is when we call any ordinary C++
+function.</p>
+
+<div class="docText">
+<pre>
+    void openRecentFile();
+    void updateStatusBar();
+    void spreadsheetModified();
+
+private:
+    void createActions();
+    void createMenus();
+    void createContextMenu();
+    void createToolBars();
+    void createStatusBar();
+    void readSettings();
+    void writeSettings();
+    bool okToContinue();
+    bool loadFile(const QString &amp;fileName);
+    bool saveFile(const QString &amp;fileName);
+    void setCurrentFile(const QString &amp;fileName);
+    void updateRecentFileActions();
+    QString strippedName(const QString &amp;fullFileName);
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="more private"></a>The main window needs
+some more private slots and several private functions to support
+the user interface.</p>
+
+<div class="docText">
+<pre>
+    Spreadsheet *spreadsheet;
+    FindDialog *findDialog;
+    QLabel *locationLabel;
+    QLabel *formulaLabel;
+    QStringList recentFiles;
+    QString curFile;
+
+    enum { MaxRecentFiles = 5 };
+    QAction *recentFileActions[MaxRecentFiles];
+    QAction *separatorAction;
+
+    QMenu *fileMenu;
+    QMenu *editMenu;
+    ...
+    QToolBar *fileToolBar;
+    QToolBar *editToolBar;
+    QAction *newAction;
+    QAction *openAction;
+    ...
+    QAction *aboutQtAction;
+};
+
+#endif
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1341"></a><a name=
+"iddle1512"></a><a name="iddle2187"></a><a name=
+"iddle2719"></a><a name="iddle2921"></a><a name=
+"iddle3122"></a><a name="iddle3174"></a><a name=
+"iddle3176"></a><a name="iddle3401"></a><a name=
+"iddle3684"></a><a name="iddle3788"></a><a name=
+"iddle4366"></a><a name="iddle4367"></a><a name=
+"iddle5317"></a><a name="iddle5331"></a><a name=
+"iddle6610"></a><a name="iddle7137"></a><a name=
+"iddle7383"></a><a name="iddle7733"></a><a name=
+"iddle7892"></a><a name="iddle8074"></a><a name=
+"iddle8631"></a><a name="iddle8696"></a><a name="iddle8728"></a>In
+addition to its private slots and private functions,
+<tt>MainWindow</tt><a name="of these"></a> also has lots of private
+variables. We will explain all of these as we use them.</p>
+
+<p class="docText">We will now review the implementation:</p>
+
+<div class="docText">
+<pre>
+#include &lt;QtGui&gt;
+
+#include "finddialog.h"
+#include "gotocelldialog.h"
+#include "mainwindow.h"
+#include "sortdialog.h"
+#include "spreadsheet.h"
+</pre>
+</div>
+<br>
+
+<p class="docText">We include the <tt>&lt;QtGui&gt;</tt><a name=
+"all the"></a> header file, which contains the definition of all
+the Qt classes used in our subclass. We also include some custom
+header files, notably <tt>finddialog.h</tt>,
+<tt>gotocelldialog.h</tt>, and <tt>sortdialog.h</tt> from <a class=
+"docLink" href="ch02.html#ch02">Chapter 2</a>.</p>
+
+<div class="docText">
+<pre>
+MainWindow::MainWindow()
+{
+    spreadsheet = new Spreadsheet;
+    setCentralWidget(spreadsheet);
+
+    createActions();
+    createMenus();
+    createContextMenu();
+    createToolBars();
+    createStatusBar();
+
+    readSettings();
+
+    findDialog = 0;
+
+    setWindowIcon(QIcon(":/images/icon.png"));
+    setCurrentFile("");
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">In the constructor, we begin by creating a
+<tt>Spreadsheet</tt><a name="central widget"></a> widget and
+setting it to be the main window's central widget. The central
+widget occupies the middle of the main window (see <a class=
+"docLink" href="#ch03fig02">Figure 3.2</a>). The
+<tt>Spreadsheet</tt><a name="is a"></a> class is a
+<tt>QTableWidget</tt><a name="will implement"></a> subclass with
+some spreadsheet capabilities, such as support for spreadsheet
+formulas. We will implement it in <a class="docLink" href=
+"ch04.html#ch04">Chapter 4</a>.</p>
+<a name="ch03fig02"></a>
+<center>
+<h5 class="docFigureTitle"><a name="Figure"></a>Figure 3.2.
+<tt>QMainWindow</tt>'s areas</h5>
+
+<p class="docText"><img border="0" id="" width="332" height="295"
+src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzcGlnZmlzaC9mMmkzZ2MwLjA-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="the private"></a>We call the private
+functions <tt>createActions()</tt>, <tt>createMenus()</tt>,
+<tt>createContextMenu()</tt>, <tt>createToolBars()</tt>, and
+<tt>createStatusBar()</tt><a name="set up"></a> to set up the rest
+of the main window. We also call the private function
+<tt>readSettings()</tt> to read the application's stored
+settings.</p>
+
+<p class="docText">We initialize the <tt>findDialog</tt> pointer to
+be a null pointer. The first time <tt>MainWindow::find()</tt> is
+called, we will create the <tt>FindDialog</tt> object.</p>
+
+<p class="docText"><a name="to"></a>At the end of the constructor,
+we set the window's icon to <tt>icon.png</tt><a name=
+"image formats"></a>, a PNG file. Qt supports many image formats,
+including BMP, GIF, JPEG, PNG, PNM, SVG, TIFF, XBM, and XPM.
+Calling <tt>QWidget::setWindowIcon()</tt><a name="there is"></a>
+sets the icon shown in the top-left corner of the window.
+Unfortunately, there is no platform-independent <a name=
+"iddle2188"></a><a name="iddle2370"></a><a name=
+"iddle3172"></a><a name="iddle4497"></a><a name=
+"iddle5316"></a><a name="iddle5656"></a><a name=
+"iddle6903"></a><a name="iddle6907"></a><a name=
+"iddle6912"></a><a name="iddle8141"></a><a name=
+"iddle8705"></a><a name="iddle8729"></a><a name=
+"that appears"></a>way of setting the application icon that appears
+on the desktop. Platform-specific procedures are explained at
+<a class="docLink" target="_blank" href=
+"http://doc.trolltech.com/4.3/appicon.html">http://doc.trolltech.com/4.3/appicon.html</a>.</p>
+
+<p class="docText"><a name="methods for"></a>GUI applications
+generally use many images. There are several methods for providing
+images to the application. The most common are the following:</p>
+
+<ul>
+<li>
+<p class="docList"><a name="images in"></a>Storing images in files
+and loading them at run-time.</p>
+</li>
+
+<li>
+<p class="docList"><a name="are also"></a>Including XPM files in
+the source code. (This works because XPM files are also valid C++
+files.)</p>
+</li>
+
+<li>
+<p class="docList"><a name="Using Qt"></a>Using Qt's resource
+mechanism.</p>
+</li>
+</ul>
+
+<p class="docText"><a name="use Qt"></a>Here we use Qt's resource
+mechanism because it is more convenient than loading files at
+run-time, and it works with any supported file format. We have
+chosen to store the images in the source tree in a subdirectory
+called <tt>images</tt>.</p>
+
+<p class="docText"><a name="make use"></a>To make use of Qt's
+resource system, we must create a resource file and add a line to
+the <tt>.pro</tt><a name="called the"></a> file that identifies the
+resource file. In this example, we have called the resource file
+<tt>spreadsheet.qrc</tt><a name="line in"></a>, so we put the
+following line in the <tt>.pro</tt> file:</p>
+
+<div class="docText">
+<pre>
+RESOURCES = spreadsheet.qrc
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="extract from"></a>The resource file
+itself uses a simple XML format. Here's an extract from the one we
+have used:</p>
+
+<div class="docText">
+<pre>
+&lt;RCC&gt;
+&lt;qresource&gt;
+    &lt;file&gt;images/icon.png&lt;/file&gt;
+    ...
+    &lt;file&gt;images/gotocell.png&lt;/file&gt;
+&lt;/qresource&gt;
+&lt;/RCC&gt;
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1014"></a><a name=
+"iddle1051"></a><a name="iddle1068"></a><a name=
+"iddle1661"></a><a name="iddle1896"></a><a name=
+"iddle3123"></a><a name="iddle3177"></a><a name=
+"iddle3426"></a><a name="iddle3432"></a><a name=
+"iddle3693"></a><a name="iddle4684"></a><a name=
+"iddle4701"></a><a name="iddle5250"></a><a name=
+"iddle7429"></a><a name="iddle7702"></a><a name=
+"iddle7738"></a><a name="iddle8223"></a><a name=
+"iddle8359"></a><a name="so they"></a>Resource files are compiled
+into the application's executable, so they can't get lost. When we
+refer to resources, we use the path prefix <tt>:/</tt> (colon
+slash), which is why the icon is specified as
+<tt>:/images/icon.png</tt><a name="and we"></a>. Resources can be
+any kind of file (not just images), and we can use them in most
+places where Qt expects a file name. We cover them in more detail
+in <a class="docLink" href="ch12.html#ch12">Chapter 12</a>.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch02lev1sec6.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch03lev1sec1.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

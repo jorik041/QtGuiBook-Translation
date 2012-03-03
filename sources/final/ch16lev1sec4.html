@@ -1,0 +1,298 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch16lev1sec4.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch16lev1sec4.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch16lev1sec4.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch16lev1sec4.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch16lev1sec3.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch17.html"><img src="images/next.gif" width="20" height="20"
+border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch16lev1sec4"></a>
+<h3 class="docSection1Title" id="-100000">Writing XML</h3>
+
+<p class="docText"><a name="Most applications"></a>Most
+applications that can read XML files also need to write such files.
+There are three approaches for generating XML files from Qt
+applications:</p>
+
+<ul>
+<li>
+<p class="docList"><a name="use a"></a>We can use a
+<tt>QXmlStreamWriter</tt>.</p>
+</li>
+
+<li>
+<p class="docList"><a name="can build"></a>We can build a DOM tree
+and call <tt>save()</tt> on it.</p>
+</li>
+
+<li>
+<p class="docList">We can generate XML by hand.</p>
+</li>
+</ul>
+
+<p class="docText"><a name="whether we"></a>The choice between
+these approaches is mostly independent of whether we use
+<tt>QXmlStreamReader</tt><a name="although if"></a>, DOM, or SAX
+for reading XML documents, although if the data is held in a DOM
+tree it often makes sense to save the tree directly.</p>
+
+<p class="docText">Writing XML using the
+<tt>QXmlStreamWriter</tt><a name="of escaping"></a> class is
+particularly easy since the class takes care of escaping special
+characters for us. If we wanted to output the book index data from
+a <tt>QTreeWidget</tt> using <tt>QXmlStreamWriter</tt><a name=
+"The first"></a>, we could do so using just two functions. The
+first function would take a file name and a <tt>QTreeWidget
+*</tt><a name="in the"></a>, and would iterate over all the
+top-level items in the tree:</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+bool writeXml(const QString &amp;fileName, QTreeWidget *treeWidget)
+{
+    QFile file(fileName);
+    if (!file.open(QFile::WriteOnly | QFile::Text)) {
+        std::cerr &lt;&lt; "Error: Cannot write file "
+                  &lt;&lt; qPrintable(fileName) &lt;&lt; ": "
+                  &lt;&lt; qPrintable(file.errorString()) &lt;&lt; std::endl;
+        return false;
+    }
+
+    QXmlStreamWriter xmlWriter(&amp;file);
+    xmlWriter.setAutoFormatting(true);
+    xmlWriter.writeStartDocument();
+    xmlWriter.writeStartElement("bookindex");
+    for (int i = 0; i &lt; treeWidget-&gt;topLevelItemCount(); ++i)
+        writeIndexEntry(&amp;xmlWriter, treeWidget-&gt;topLevelItem(i));
+    xmlWriter.writeEndDocument();
+    file.close();
+    if (file.error()) {
+        std::cerr &lt;&lt; "Error: Cannot write file "
+                  &lt;&lt; qPrintable(fileName) &lt;&lt; ": "
+                  &lt;&lt; qPrintable(file.errorString()) &lt;&lt; std::endl;
+        return false;
+    }
+    return true;
+}
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1034"></a><a name=
+"iddle1255"></a><a name="iddle1534"></a><a name=
+"iddle1656"></a><a name="iddle2389"></a><a name=
+"iddle4966"></a><a name="iddle6731"></a><a name=
+"iddle6732"></a><a name="iddle6733"></a><a name=
+"iddle6734"></a><a name="iddle6735"></a><a name=
+"iddle7008"></a><a name="iddle8015"></a><a name=
+"iddle8372"></a><a name="iddle8664"></a><a name=
+"iddle8667"></a><a name="iddle8671"></a><a name=
+"iddle8678"></a><a name="iddle8679"></a><a name=
+"iddle8680"></a><a name="switch on"></a>If we switch on
+auto-formatting, the XML is output in a more human-friendly style,
+with indentation used to show the data's recursive structure. The
+<tt>writeStartDocument()</tt> function writes the XML header
+line</p>
+
+<div class="docText">
+<pre>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>writeStartElement()</tt><a name=
+"tag text"></a> function generates a new start tag with the given
+tag text. The <tt>writeEndDocument()</tt><a name=
+"function closes"></a> function closes any open start tags. For
+each top-level item, we call <tt>writeIndexEntry()</tt><a name=
+"the"></a>, passing it the <tt>QXmlStreamWriter</tt><a name=
+"the item"></a>, and the item to output. Here is the code for
+<tt>writeIndexEntry()</tt>:</p>
+
+<div class="docText">
+<pre>
+void writeIndexEntry(QXmlStreamWriter *xmlWriter, QTreeWidgetItem *item)
+{
+    xmlWriter-&gt;writeStartElement("entry");
+    xmlWriter-&gt;writeAttribute("term", item-&gt;text(0));
+    QString pageString = item-&gt;text(1);
+    if (!pageString.isEmpty()) {
+        QStringList pages = pageString.split(", ");
+        foreach (QString page, pages)
+            xmlWriter-&gt;writeTextElement("page", page);
+    }
+    for (int i = 0; i &lt; item-&gt;childCount(); ++i)
+        writeIndexEntry(xmlWriter, item-&gt;child(i));
+    xmlWriter-&gt;writeEndElement();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The function creates an <tt>&lt;entry&gt;</tt>
+element corresponding to the <tt>QTreeWidgetItem</tt> it receives
+as a parameter. The <tt>writeAttribute()</tt><a name=
+"just been"></a> function adds an attribute to the tag that has
+just been written; for example, it might turn
+<tt>&lt;entry&gt;</tt> into <tt>&lt;entry
+term="sidebearings"&gt;</tt><a name="are split"></a>. If there are
+page numbers, they are split on comma-spaces, and for each one, a
+separate <tt>&lt;page&gt;...&lt;/page&gt;</tt><a name="is all"></a>
+tag pair is written, with the page text in between. This is all
+achieved by calling <tt>writeTextElement()</tt><a name=
+"the text"></a> and passing it a tag name and the text to put
+between the start and end tags. In all cases,
+<tt>QXmlStreamWriter</tt><a name="we never"></a> takes care of
+escaping XML special characters, so we never have to worry about
+this.</p>
+
+<p class="docText"><a name="item has"></a>If the item has child
+items, we recursively call <tt>writeIndexEntry()</tt> on each of
+them. Finally, we call <tt>writeEndElement()</tt> to output
+<tt>&lt;/entry&gt;</tt>.</p>
+
+<p class="docText">Using <tt>QXmlStreamWriter</tt><a name=
+"if we"></a> to write XML is the easiest and safest approach, but
+if we already have the XML in a DOM tree, we can simply ask the
+tree to output the relevant XML by calling <tt>save()</tt><a name=
+"on the"></a> on the <tt>QDomDocument</tt> object. By default,
+<tt>save()</tt><a name="the encoding"></a> uses UTF-8 as the
+encoding for the generated file. We can use another encoding
+<a name="iddle1005"></a><a name="iddle1035"></a><a name=
+"iddle1151"></a><a name="iddle1256"></a><a name=
+"iddle1535"></a><a name="iddle2384"></a><a name=
+"iddle2390"></a><a name="iddle2467"></a><a name=
+"iddle4972"></a><a name="iddle6047"></a><a name=
+"iddle6319"></a><a name="iddle7143"></a><a name=
+"iddle8016"></a><a name="prepending an"></a>by prepending an
+<tt>&lt;?xml?&gt;</tt> declaration such as</p>
+
+<div class="docText">
+<pre>
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="to do"></a>to the DOM tree. The
+following code snippet shows how to do this:</p>
+
+<div class="docText">
+<pre>
+const int Indent = 4;
+
+QDomDocument doc;
+...
+QTextStream out(&amp;file);
+QDomNode xmlNode = doc.createProcessingInstruction("xml",
+                             "version=\"1.0\" encoding=\"ISO-8859-1\"");
+doc.insertBefore(xmlNode, doc.firstChild());
+doc.save(out, Indent);
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="is to"></a>Starting with Qt 4.3, an
+alternative is to set the encoding on the <tt>QTextStream</tt>
+using <tt>setCodec()</tt> and to pass
+<tt>QDomNode::EncodingFromTextStream</tt> as third parameter to
+<tt>save()</tt>.</p>
+
+<p class="docText"><a name="We can"></a>Generating XML files by
+hand isn't much harder than using DOM. We can use
+<tt>QTextStream</tt><a name="do with"></a> and write the strings as
+we would do with any other text file. The trickiest part is to
+escape special characters in text and attribute values. The
+<tt>Qt::escape()</tt><a name="that makes"></a> function escapes the
+characters '&lt;', '&gt;', and '&amp;'. Here's some code that makes
+use of it:</p>
+
+<div class="docText">
+<pre>
+QTextStream out(&amp;file);
+out.setCodec("UTF-8");
+out &lt;&lt; "&lt;doc&gt;\n"
+    &lt;&lt; "   &lt;quote&gt;" &lt;&lt; Qt::escape(quoteText) &lt;&lt; "&lt;/quote&gt;\n"
+    &lt;&lt; "   &lt;translation&gt;" &lt;&lt; Qt::escape(translationText)
+    &lt;&lt; "&lt;/translation&gt;\n"
+    &lt;&lt; "&lt;/doc&gt;\n";
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="XML files"></a>When generating XML
+files like this, in addition to having to write the correct
+<tt>&lt;?xml?&gt;</tt><a name="to escape"></a> declaration and
+setting the right encoding, we must also remember to escape the
+text we write, and if we use attributes we must escape single or
+double quotes in their values. Using
+<tt>QXmlStreamWriter</tt><a name="is much"></a> is much easier
+since it handles all of this for us.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch16lev1sec3.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch17.html"><img src="images/next.gif" width="20" height="20"
+border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

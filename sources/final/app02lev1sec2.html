@@ -1,0 +1,405 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>app02lev1sec2.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/app02lev1sec2.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fapp02lev1sec2.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fapp02lev1sec2.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"app02lev1sec1.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"app03.html"><img src="images/next.gif" width="20" height="20"
+border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="app02lev1sec2"></a>
+<h3 class="docSection1Title" id="-100000">Using Third-Party Build
+Tools</h3>
+
+<p class="docText"><a name="Many build"></a>Many build tools are
+available, both open source and commercial, that can be used to
+build Qt applications. Such tools fall into two broad categories:
+tools that generate makefiles (or IDE project files) and rely on
+the standard build system, and tools that are build systems in
+their own right, with no external build tools necessary.</p>
+
+<p class="docText"><a name="we will"></a>In this section, we will
+review three tools, all chosen because they have support for Qt
+built-in or easily available. The first, CMake, generates
+makefiles, and the other two, Boost.Build and SCons, are build
+systems in their own right. In each case, we will see how to build
+the Spreadsheet application developed in <a class="docLink" href=
+"ch03.html#ch03">Chapters 3</a> and <a class="docLink" href=
+"ch04.html#ch04">4</a><a name="any new"></a>. Evaluating any new
+build tool or build system requires some reading up and some
+experimentation on real applications, but we hope that this brief
+review of build tools will be illustrative.</p>
+<a name="app02lev2sec1"></a>
+<h4 id="title-ID0EESPM" class="docSection2Title">CMake:
+Cross-Platform Make</h4>
+
+<p class="docText">The CMake tool, available from <a class=
+"docLink" target="_blank" href=
+"http://www.cmake.org/">http://www.cmake.org/</a><a name="Qt"></a>,
+is an open source cross-platform makefile generator with support
+for Qt 4 development built-in. To use CMake, we must create a
+<tt>CMakeLists.txt</tt><a name="like a"></a> file to describe the
+project, much like a <tt>qmake .pro</tt> file. Here is the
+<tt>CMakeLists.txt</tt> file for the Spreadsheet application:</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+project(spreadsheet)
+cmake_minimum_required(VERSION 2.4.0)
+find_package(Qt4 REQUIRED)
+include(${QT_USE_FILE})
+set(spreadsheet_SRCS
+    cell.cpp
+    finddialog.cpp
+    gotocelldialog.cpp
+    main.cpp
+    mainwindow.cpp
+    sortdialog.cpp
+    spreadsheet.cpp
+)
+set(spreadsheet_MOC_SRCS
+    finddialog.h
+    gotocelldialog.h
+    mainwindow.h
+    sortdialog.h
+    spreadsheet.h
+)
+set(spreadsheet_UIS
+    gotocelldialog.ui
+    sortdialog.ui
+)
+set(spreadsheet_RCCS
+    spreadsheet.qrc
+)
+qt4_wrap_cpp(spreadsheet_MOCS ${spreadsheet_MOC_SRCS})
+qt4_wrap_ui(spreadsheet_UIS_H ${spreadsheet_UIS})
+qt4_wrap_cpp(spreadsheet_MOC_UI ${spreadsheet_UIS_H})
+qt4_add_resources(spreadsheet_RCC_SRCS ${spreadsheet_RCCS})
+add_definitions(-DQT_NO_DEBUG)
+add_executable(spreadsheet
+    ${spreadsheet_SRCS}
+    ${spreadsheet_MOCS}
+    ${spreadsheet_MOC_UI}
+    ${spreadsheet_RCC_SRCS})
+target_link_libraries(spreadsheet ${QT_LIBRARIES} pthread)
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1336"></a><a name=
+"iddle1362"></a><a name="iddle2438"></a><a name=
+"iddle3740"></a><a name="iddle4024"></a><a name=
+"iddle6130"></a><a name="we must"></a>Most of the file is simply
+boilerplate. The only application-specific items we must put in are
+the application's name (in the first line), the list of
+<tt>.cpp</tt> source files, the list of <tt>.ui</tt> files, and the
+list of <tt>.qrc</tt><a name="figure out"></a> files. For header
+files, CMake is smart enough to figure out the dependencies for
+itself, so we don't need to specify them. However, <tt>.h</tt>
+files that define <tt>Q_OBJECT</tt> classes must be processed by
+<tt>moc</tt>, so we have listed these.</p>
+
+<p class="docText"><a name="in CMake"></a>The first few lines set
+the application name and pull in CMake's support for Qt 4. Then we
+set up some variables to hold the file names. The
+<tt>qt4_wrap_cpp()</tt> command runs <tt>moc</tt><a name=
+"and similarly"></a> on the given files, and similarly
+<tt>qt4_wrap_ui()</tt> runs <tt>uic</tt> and
+<tt>qt4_add_resources()</tt> runs <tt>rcc</tt><a name=
+"the executable"></a>. To create the executable, we specify all the
+required <tt>.cpp</tt><a name="including those"></a> files,
+including those generated by <tt>moc</tt> and <tt>rcc</tt><a name=
+"specify the"></a>. Finally, we must specify the libraries to link
+with the executable, in this case the standard Qt 4 libraries and
+the threading library.</p>
+
+<p class="docText"><a name="the"></a>Once the
+<tt>CMakeLists.txt</tt><a name="following command"></a> file is
+completed, we can generate a makefile using the following
+command:</p>
+
+<div class="docText">
+<pre>
+cmake .
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="the"></a>This tells CMake to read the
+<tt>CMakeLists.txt</tt><a name="file called"></a> file in the
+current directory and to generate a file called <tt>Makefile</tt>.
+We can then use <tt>make</tt> (or <tt>nmake</tt>) to build the
+application, and <tt>make clean</tt> if we want a fresh start.</p>
+<a name="app02lev2sec2"></a>
+<h4 id="title-ID0EMWPM" class="docSection2Title">Boost.Build
+(bjam)</h4>
+
+<p class="docText"><a name="build tool"></a>The Boost C++ class
+libraries include their own build tool, called Boost.Build or
+<tt>bjam</tt>, available freely and documented at <a class=
+"docLink" target="_blank" href=
+"http://www.boost.org/tools/build/v2/">http://www.boost.org/tools/build/v2/</a><a name="assumes that"></a>.
+Version 2 of this tool has built-in support for Qt 4 applications
+but assumes that there is an environment variable called
+<tt>QTDIR</tt><a name="path to"></a> that gives the path to the Qt
+4 installation. Some installations of Boost.Build have Qt support
+disabled by default; for these, we must edit the file
+<tt>user-config.jam</tt><a name="the line"></a> and add the
+line</p>
+
+<div class="docText">
+<pre>
+using qt ;
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="Instead of"></a>Instead of relying on
+<tt>QTDIR</tt><a name="specify the"></a>, we can specify the path
+where Qt is installed by changing the preceding line to something
+like this:</p>
+
+<div class="docText">
+<pre>
+using qt : /home/kathy/opt/qt432 ;
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="application built"></a>Every
+application built with Boost.Build requires two files:
+<tt>boost-build.jam</tt> and <tt>Jamroot</tt>. In fact, only one
+copy of <tt>boost-build.jam</tt><a name="it is"></a> is required
+for any number of applications, as long as it is in a directory
+that includes all the applications' directories as subdirectories
+(no matter how deeply nested). The <tt>boost-build.jam</tt><a name=
+"a single"></a> file needs to contain only a single line, to
+specify the path to the build system's installation directory. For
+example:</p>
+
+<div class="docText">
+<pre>
+boost-build /home/kathy/opt/boost-build ;
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>Jamroot</tt> file needed to build the
+Spreadsheet application looks like this:</p>
+
+<div class="docText">
+<pre>
+using qt : /home/kathy/opt/qt432 ;
+
+exe spreadsheet :
+    cell.cpp
+    finddialog.cpp
+    finddialog.h
+    gotocelldialog.cpp
+    gotocelldialog.h
+    gotocelldialog.ui
+    main.cpp
+    mainwindow.cpp
+    mainwindow.h
+    sortdialog.cpp
+    sortdialog.h
+    sortdialog.ui
+    spreadsheet.cpp
+    spreadsheet.h
+    spreadsheet.qrc
+    /qt//QtGui
+    /qt//QtCore ;
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="must provide"></a>The first line pulls
+in the Qt 4 support, and we must provide the Qt 4 installation
+path. Next, we specify that we want to build an executable called
+<tt>spreadsheet</tt><a name="For header"></a> and that it depends
+on the files listed. For header files, Boost.Build is smart enough
+to figure out the dependencies for itself, so normally we don't
+need to list them. However, <tt>.h</tt> files that define
+<tt>Q_OBJECT</tt> classes must be processed by <tt>moc</tt><a name=
+"lines specify"></a>, so we must include them in the list. The last
+two lines specify the Qt libraries we want to use.</p>
+
+<p class="docText">Assuming that the <tt>bjam</tt><a name=
+"the path"></a> executable is in the path, we can build the
+application using the following command:</p>
+
+<div class="docText">
+<pre>
+bjam release
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle4578"></a><a name=
+"iddle7040"></a><a name="to build"></a>This tells Boost.Build to
+build the application specified in the current directory's
+<tt>Jamroot</tt><a name="file using"></a> file using a release
+build. (If you installed only Qt's debug libraries, this will
+produce errors; run <tt>bjam debug</tt><a name="The"></a> in that
+case.) The <tt>moc</tt>, <tt>uic</tt>, and <tt>rcc</tt><a name=
+"will be"></a> tools will be run as necessary. To clean up, run
+<tt>bjam clean release</tt>.</p>
+<a name="app02lev2sec3"></a>
+<h4 id="title-ID0EH1PM" class="docSection2Title">SCons: Software
+Construction Tool</h4>
+
+<p class="docText">The SCons tool, available at <a class="docLink"
+target="_blank" href=
+"http://www.scons.org/">http://www.scons.org/</a><a name=
+"to replace"></a>, is an open source Python-based build tool that
+is meant to replace <tt>make</tt><a name="and an"></a>. It has
+built-in support for Qt 3, and an add-on to support Qt 4 is
+available from David García Garzón at <a class="docLink" target=
+"_blank" href=
+"http://www.iua.upf.edu/~dgarcia/Codders/sconstools.html">http://www.iua.upf.edu/~dgarcia/Codders/sconstools.html</a>.
+There is one file to download from that site,
+<tt>qt4.py</tt><a name="as the"></a>, and this should be put in the
+same directory as the application. This extension is expected to be
+included in the official SCons release in due course.</p>
+
+<p class="docText">Once <tt>qt4.py</tt> is in place, we can create
+an <tt>SConstruct</tt> file where we specify our build:</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+#!/usr/bin/env python
+
+import os
+
+QT4_PY_PATH = "."
+QTDIR = "/home/kathy/opt/qt432"
+
+pkgpath = os.environ.get("PKG_CONFIG_PATH", "")
+pkgpath += ":%s/lib/pkgconfig" % QTDIR
+os.environ["PKG_CONFIG_PATH"] = pkgpath
+os.environ["QTDIR"] = QTDIR
+
+env = Environment(tools=["default", "qt4"], toolpath=[QT4_PY_PATH])
+env["CXXFILESUFFIX"] = ".cpp"
+
+env.EnableQt4Modules(["QtGui", "QtCore"])
+rccs = [env.Qrc("spreadsheet.qrc", QT4_QRCFLAGS="-name spreadsheet")]
+uis = [env.Uic4(ui) for ui in ["gotocelldialog.ui", "sortdialog.ui"]]
+sources = [
+    "cell.cpp",
+    "finddialog.cpp",
+    "gotocelldialog.cpp",
+    "main.cpp",
+    "mainwindow.cpp",
+    "sortdialog.cpp",
+    "spreadsheet.cpp"]
+env.Program(target="spreadsheet", source=[rccs, sources])
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="have access"></a>This file is written
+in Python, so we have access to all the features and libraries
+available in the Python language.</p>
+
+<p class="docText"><a name="We begin"></a>Most of the file is
+boilerplate, with just a few application-specific items needed. We
+begin by setting the paths to <tt>qt4.py</tt><a name=
+"installation directory"></a> and to Qt 4's installation directory.
+We could avoid copying <tt>qt4.py</tt><a name="directory by"></a>
+into every application's directory by putting it in a standard
+location and setting the path to it accordingly. We must explicitly
+enable the Qt modules we are using, in this case <span class=
+"docEmphasis">QtCore</span><a name="and"></a> and <span class=
+"docEmphasis">QtGui</span><a name="must specify"></a>, and we must
+specify the files that need to be processed by <tt>rcc</tt> or
+<tt>uic</tt><a name="list the"></a>. Finally, we list the source
+files, and set the program's name as well as the source and
+resource files it depends on. We do not have to specify the
+<tt>.h</tt> files; the Qt 4 support is smart enough to run
+<tt>moc</tt> correctly as necessary, by inspecting the
+<tt>.cpp</tt> files.</p>
+
+<p class="docText">Now we can build the application using the
+<tt>scons</tt> command:</p>
+
+<div class="docText">
+<pre>
+scons
+</pre>
+</div>
+<br>
+
+<p class="docText">This builds the application specified in the
+<tt>SConstruct</tt> file in the current directory. We can clean up
+using <tt>scons -c</tt>.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"app02lev1sec1.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"app03.html"><img src="images/next.gif" width="20" height="20"
+border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

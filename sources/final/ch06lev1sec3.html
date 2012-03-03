@@ -1,0 +1,318 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch06lev1sec3.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch06lev1sec3.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch06lev1sec3.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch06lev1sec3.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch06lev1sec2.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch06lev1sec4.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch06lev1sec3"></a>
+<h3 class="docSection1Title" id="-100000">Splitters</h3>
+
+<p class="docText"><a name="A"></a>A <tt>QSplitter</tt><a name=
+"widget that"></a> is a widget that contains other widgets. The
+widgets in a splitter are separated by splitter handles. Users can
+change the sizes of a splitter's child widgets by dragging the
+handles. Splitters can often be used as an alternative to layout
+managers, to give more control to the user.</p>
+
+<p class="docText"><a name="child widgets"></a>The child widgets of
+a <tt>QSplitter</tt><a name="in the"></a> are automatically placed
+side by side (or one below the other) in the order in which they
+are created, with splitter bars between adjacent widgets. Here's
+the code for creating the window depicted in <a class="docLink"
+href="#ch06fig07">Figure 6.7</a>:</p>
+
+<div class="docText">
+<pre>
+int main(int argc, char *argv[])
+{
+    QApplication app(argc, argv);
+
+    QTextEdit *editor1 = new QTextEdit;
+    QTextEdit *editor2 = new QTextEdit;
+    QTextEdit *editor3 = new QTextEdit;
+
+    QSplitter splitter(Qt::Horizontal);
+    splitter.addWidget(editor1);
+    splitter.addWidget(editor2);
+    splitter.addWidget(editor3);
+    ...
+    splitter.show();
+    return app.exec();
+}
+</pre>
+</div>
+<br>
+<a name="ch06fig07"></a>
+<center>
+<h5 class="docFigureTitle">Figure 6.7. The Splitter
+application</h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzcHBpX2xpc2gvdGVsYXB0Y3NydGpnLg--.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="124" src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzcGkubGlzaC9nZXBqcHRjc3J0.jpg"
+alt="">
+</center>
+<br>
+
+<p class="docText"><a name="iddle2605"></a><a name=
+"iddle3413"></a><a name="iddle3653"></a><a name=
+"iddle3654"></a><a name="iddle3988"></a><a name="iddle5797"></a>The
+example consists of three <tt>QTextEdit</tt><a name="a"></a>s laid
+out horizontally by a <tt>QSplitter</tt> widget—this is shown
+schematically in <a class="docLink" href="#ch06fig08">Figure
+6.8</a><a name="and have"></a>. Unlike layout managers, which
+simply lay out a form's child widgets and have no visual
+representation, <tt>QSplitter</tt> is derived from
+<tt>QWidget</tt><a name="other widget"></a> and can be used like
+any other widget.</p>
+<a name="ch06fig08"></a>
+<center>
+<h5 class="docFigureTitle">Figure 6.8. The Splitter application's
+widgets</h5>
+
+<p class="docText"><img border="0" id="" width="327" height="126"
+src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzcGlnZmlzaC9mOGk2Z2MwLjA-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="and vertical"></a>Complex layouts can
+be achieved by nesting horizontal and vertical
+<tt>QSplitter</tt><a name="the Mail"></a>s. For example, the Mail
+Client application shown in <a class="docLink" href=
+"#ch06fig09">Figure 6.9</a>, consists of a horizontal
+<tt>QSplitter</tt> that contains a vertical <tt>QSplitter</tt> on
+its right side. The layout is shown schematically in <a class=
+"docLink" href="#ch06fig10">Figure 6.10</a>.</p>
+<a name="ch06fig09"></a>
+<center>
+<h5 class="docFigureTitle">Figure 6.9. The Mail Client
+application</h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzdHBpbmlscy9oX2kxdGFjY21lbGwucGdhag--.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="308" src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzZ3Bpbmlsc2gvLmkxdGFjY21lbHBq.jpg"
+alt="">
+</center>
+<br>
+<a name="ch06fig10"></a>
+<center>
+<h5 class="docFigureTitle">Figure 6.10. The Mail Client's splitter
+layout</h5>
+
+<p class="docText"><img border="0" id="" width="325" height="221"
+src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzcGlnZmlzaC9mMGk2Z2MwLjE-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText">Here's the code in the constructor of the Mail
+Client application's <tt>QMainWindow</tt> subclass:</p>
+
+<div class="docText">
+<pre>
+MailClient::MailClient()
+{
+    ...
+    rightSplitter = new QSplitter(Qt::Vertical);
+    rightSplitter-&gt;addWidget(messagesTreeWidget);
+    rightSplitter-&gt;addWidget(textEdit);
+    rightSplitter-&gt;setStretchFactor(1, 1);
+
+    mainSplitter = new QSplitter(Qt::Horizontal);
+    mainSplitter-&gt;addWidget(foldersTreeWidget);
+    mainSplitter-&gt;addWidget(rightSplitter);
+    mainSplitter-&gt;setStretchFactor(1, 1);
+    setCentralWidget(mainSplitter);
+
+    setWindowTitle(tr("Mail Client"));
+    readSettings();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1514"></a><a name=
+"iddle5319"></a><a name="iddle5802"></a><a name=
+"iddle7331"></a><a name="iddle7783"></a><a name=
+"create a"></a>After creating the three widgets that we want to
+display, we create a vertical splitter,
+<tt>rightSplitter</tt><a name="and add"></a>, and add the two
+widgets we want on the right. Then we create a horizontal splitter,
+<tt>mainSplitter</tt><a name="the widget"></a>, and add the widget
+we want it to display on the left and
+<tt>rightSplitter</tt><a name="widgets we"></a> whose widgets we
+want shown on the right. We make <tt>mainSplitter</tt> the
+<tt>QMainWindow</tt>'s central widget.</p>
+
+<p class="docText">When the user resizes a window,
+<tt>QSplitter</tt><a name="of the"></a> normally distributes the
+space so that the relative sizes of the child widgets stay the
+same. In the Mail Client example, we don't want this behavior;
+instead, we want the <tt>QTreeWidget</tt> and the
+<tt>QTableWidget</tt><a name="we want"></a> to keep their sizes and
+we want to give any extra space to the <tt>QTextEdit</tt>. This is
+achieved by the two <tt>setStretchFactor()</tt><a name=
+"and the"></a> calls. The first argument is the 0-based index of
+the splitter's child widget, and the second argument is the stretch
+factor we want to set; the default is 0.</p>
+
+<p class="docText">The first <tt>setStretchFactor()</tt> call is on
+<tt>rightSplitter</tt><a name="position"></a>, and it sets the
+widget at position 1 (<tt>textEdit</tt>) to have a stretch factor
+of 1. The second <tt>setStretchFactor()</tt> call is on
+<tt>mainSplitter</tt>, and it sets the widget at position 1
+(<tt>rightSplitter</tt><a name="that the"></a>) to have a stretch
+factor of 1. This ensures that the <tt>textEdit</tt><a name=
+"get any"></a> will get any additional space that is available.</p>
+
+<p class="docText"><a name="iddle1190"></a><a name=
+"iddle3098"></a><a name="iddle4115"></a><a name=
+"iddle4406"></a><a name="iddle5716"></a><a name=
+"iddle5717"></a><a name="iddle5722"></a><a name=
+"iddle5725"></a><a name="iddle5729"></a><a name=
+"iddle5744"></a><a name="iddle5799"></a><a name=
+"iddle5800"></a><a name="iddle5801"></a><a name=
+"iddle6119"></a><a name="iddle6781"></a><a name=
+"iddle6878"></a><a name="iddle6925"></a><a name=
+"iddle7018"></a><a name="iddle7055"></a><a name=
+"iddle7324"></a><a name="iddle7379"></a><a name=
+"iddle7399"></a><a name="iddle8445"></a><a name=
+"iddle8448"></a><a name="iddle8588"></a><a name=
+"iddle8675"></a>When the application is started,
+<tt>QSplitter</tt><a name="sizes"></a> gives the child widgets
+appropriate sizes based on their initial sizes (or based on their
+size hint if no initial size is specified). We can move the
+splitter handles programmatically by calling
+<tt>QSplitter::setSizes()</tt><a name="The"></a>. The
+<tt>QSplitter</tt><a name="provides a"></a> class also provides a
+means of saving and restoring its state the next time the
+application is run. Here's the <tt>writeSettings()</tt><a name=
+"that saves"></a> function that saves the Mail Client's
+settings:</p>
+
+<div class="docText">
+<pre>
+void MailClient::writeSettings()
+{
+    QSettings settings("Software Inc.", "Mail Client");
+
+    settings.beginGroup("mainWindow");
+    settings.setValue("geometry", saveGeometry());
+    settings.setValue("mainSplitter", mainSplitter-&gt;saveState());
+    settings.setValue("rightSplitter", rightSplitter-&gt;saveState());
+    settings.endGroup();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">Here's the corresponding <tt>readSettings()</tt>
+function:</p>
+
+<div class="docText">
+<pre>
+void MailClient::readSettings()
+{
+    QSettings settings("Software Inc.", "Mail Client");
+
+    settings.beginGroup("mainWindow");
+    restoreGeometry(settings.value("geometry").toByteArray());
+    mainSplitter-&gt;restoreState(
+            settings.value("mainSplitter").toByteArray());
+    rightSplitter-&gt;restoreState(
+            settings.value("rightSplitter").toByteArray());
+    settings.endGroup();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><span class="docEmphasis">Qt Designer</span>
+fully supports <tt>QSplitter</tt><a name="approximately in"></a>.
+To put widgets into a splitter, place the child widgets
+approximately in their desired positions, select them, and click
+<span class="docEmphRomanAlt">Form|Lay Out Horizontally in
+Splitter</span> or <span class="docEmphRomanAlt">Form|Lay Out
+Vertically in Splitter</span>.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch06lev1sec2.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch06lev1sec4.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

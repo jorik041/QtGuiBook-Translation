@@ -1,0 +1,214 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch17lev1sec2.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch17lev1sec2.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch17lev1sec2.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch17lev1sec2.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch17lev1sec1.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch17lev1sec3.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch17lev1sec2"></a>
+<h3 class="docSection1Title" id="-100000">Using a Web Browser to
+Provide Online Help</h3>
+
+<p class="docText"><a name="Large applications"></a>Large
+applications may require more online help than tooltips, status
+tips, and "What's This?" help can reasonably show. A simple
+solution to this is to provide the help text in HTML format and
+launch the user's web browser at the appropriate page.</p>
+
+<p class="docText"><a name="include a"></a>Applications that
+include a help browser typically have a <span class=
+"docEmphRomanAlt">Help</span><a name="in the"></a> entry in the
+main window's <span class="docEmphRomanAlt">Help</span> menu and a
+<span class="docEmphRomanAlt">Help</span><a name="to use"></a>
+button in every dialog. In this section, we will show how to use
+the <tt>QDesktopServices</tt><a name="for these"></a> class to
+provide the functionality for these buttons.</p>
+
+<p class="docText">The application's main window will typically
+have a <tt>help()</tt> slot that is called when the user presses
+<span class="docEmphRomanAlt">F1</span> or clicks the <span class=
+"docEmphRomanAlt">Help|Help</span> menu option.</p>
+
+<div class="docText">
+<pre>
+void MainWindow::help()
+{
+    QUrl url(directoryOf("doc").absoluteFilePath("index.html"));
+    url.setScheme("file");
+    QDesktopServices::openUrl(url);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="are in"></a>In this example, we assume
+that our application's HTML help files are in a subdirectory called
+<tt>doc</tt>. The <tt>QDir::absoluteFilePath()</tt> function
+returns a <tt>QString</tt> <a name="iddle1188"></a><a name=
+"iddle1413"></a><a name="iddle2156"></a><a name=
+"iddle2419"></a><a name="iddle3021"></a><a name=
+"iddle3704"></a><a name="iddle4162"></a><a name=
+"iddle4854"></a><a name="iddle6441"></a><a name=
+"iddle6443"></a><a name="iddle7232"></a><a name=
+"iddle7310"></a><a name="page_410"></a><a name="file name"></a>with
+the full path to the given file name. We begin by creating a
+<tt>QUrl</tt><a name="Since this"></a> object with the path to the
+help file. Since this is help for the main window, we use our help
+system's <tt>index.html</tt><a name="which all"></a> file from
+which all the other help files are accessible through hyperlinks.
+Next, we set the URL's scheme to "file" so that the file we have
+set will be looked for in the local file system. Finally, we use
+the desktop services' <tt>openUrl()</tt> static convenience
+function to launch the user's web browser.</p>
+
+<p class="docText"><a name="so we"></a>We do not know which web
+browser will be used, so we must be careful to make our HTML valid
+and compatible with the browsers that our users might be using.
+Most web browsers will set their local working directory to the
+URL's path, and will therefore assume that any images and
+hyperlinks that do not have absolute paths have the working
+directory as their root. All this means is that we must put all our
+HTML files and image files in our <tt>doc</tt><a name=
+"directory"></a> directory (or subdirectories under it) and make
+all our references relative, except for links to external web
+sites.</p>
+
+<div class="docText">
+<pre>
+QDir MainWindow::directoryOf(const QString &amp;subdir)
+{
+    QDir dir(QApplication::applicationDirPath());
+
+#if defined(Q_OS_WIN)
+    if (dir.dirName().toLower() == "debug"
+            || dir.dirName().toLower() == "release")
+        dir.cdUp();
+#elif defined(Q_OS_MAC)
+    if (dir.dirName() == "MacOS") {
+        dir.cdUp();
+        dir.cdUp();
+        dir.cdUp();
+    }
+#endif
+    dir.cd(subdir);
+    return dir;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The static <tt>directoryOf()</tt><a name=
+"a"></a> function returns a <tt>QDir</tt><a name="to the"></a>
+corresponding to the specified subdirectory relative to the
+application's directory. On Windows, the application's executable
+usually lives in a <tt>debug</tt> or <tt>release</tt><a name=
+"OS X"></a> subdirectory, in which case we move one directory up;
+on Mac OS X, we take the bundle directory structure into
+account.</p>
+
+<p class="docText"><a name="to launch"></a>For dialogs, we will
+normally want to launch the web browser at a specific page from
+within our help system's pages, and perhaps at a specific point
+within the page. For example:</p>
+
+<div class="docText">
+<pre>
+void EntryDialog::help()
+{
+    QUrl url(directoryOf("doc").absoluteFilePath("forms.html"));
+    url.setScheme("file");
+    url.setFragment("editing");
+    QDesktopServices::openUrl(url);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle2194"></a><a name=
+"iddle3025"></a><a name="iddle3079"></a><a name=
+"iddle6268"></a><a name="the user"></a>This slot is called from
+inside a dialog when the user clicks the dialog's <span class=
+"docEmphRomanAlt">Help</span><a name="except that"></a> button. It
+is very similar to the previous example, except that we have chosen
+a different starting page. This particular page has help text for
+several different forms, with anchor references (e.g., <tt>&lt;a
+name="editing"&gt;</tt><a name="help text"></a>) in the HTML to
+indicate where each form's help text begins. To access a particular
+place within a page, we call <tt>setFragment()</tt><a name=
+"the anchor"></a> and pass the anchor we want the page scrolled
+to.</p>
+
+<p class="docText"><a name="available to"></a>Providing help files
+in HTML format and making them available to users via their own web
+browser is simple and convenient. But web browsers cannot access
+the application's resources (such as icons), and they cannot easily
+be customized to suit the application. Also, if we jump to a
+particular page as we did for the <tt>EntryDialog</tt><a name=
+"clicking the"></a>, clicking the browser's <span class=
+"docEmphRomanAlt">Home</span> or <span class=
+"docEmphRomanAlt">Back</span><a name="not have"></a> button will
+not have the desired effect.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch17lev1sec1.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch17lev1sec3.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

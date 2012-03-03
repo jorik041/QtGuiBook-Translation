@@ -1,0 +1,1238 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch22lev1sec1.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch22lev1sec1.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch22lev1sec1.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch22lev1sec1.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href="ch22.html"><img src=
+"images/prev.gif" width="20" height="20" border="0" align=
+"absmiddle" alt="Previous Page"></a> <a href=
+"ch22lev1sec2.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch22"></a>
+<h2 id="title-ID0EGGPM" class="docChapterTitle">22. Application
+Scripting</h2>
+
+<p class="docText"><img border="0" id="" width="330" height="181"
+src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83ZXBwdDJocF9lcl8vMmlzY2Nob25lYS5wZ3Jq.jpg"
+alt="">
+</p>
+
+<ul>
+<li>
+<p class="docList"><a name="iddle2333"></a><a name=
+"iddle3389"></a><a name="iddle6158"></a><a name=
+"iddle7046"></a><span class="docEmphasis"><a class="docLink" href=
+"ch22lev1sec1.html#ch22lev1sec1">Overview of the ECMAScript
+Language</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch22lev1sec2.html#ch22lev1sec2">Extending Qt Applications
+with Scripts</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch22lev1sec3.html#ch22lev1sec3">Implementing GUI Extensions
+Using Scripts</a></span>
+</p>
+</li>
+
+<li>
+<p class="docList"><span class="docEmphasis"><a class="docLink"
+href="ch22lev1sec4.html#ch22lev1sec4">Automating Tasks through
+Scripting</a></span>
+</p>
+</li>
+</ul>
+
+<p class="docText"><a name="Scripts are"></a>Scripts are programs
+written in an interpreted language that extend the facilities of an
+existing system. Some scripts are run as stand-alone applications,
+whereas others execute embedded in applications. Starting with
+version 4.3, Qt includes <span class=
+"docEmphasis">QtScript</span><a name="that can"></a>, a module that
+can be used to make Qt applications scriptable using ECMAScript,
+the standardized version of JavaScript. This module is a complete
+rewrite of the earlier Trolltech product Qt Script for Applications
+(QSA) and provides full support for ECMAScript Edition 3.</p>
+
+<p class="docText"><a name="is the"></a>ECMAScript is the official
+name of the language standardized by Ecma International. It forms
+the basis of JavaScript (Mozilla), JScript (Microsoft), and
+ActionScript (Adobe). Although the language's syntax is
+superficially similar to C++ and Java, the underlying concepts are
+radically different and set it apart from most other
+object-oriented programming languages. In the first section of this
+chapter, we will quickly review the ECMAScript language and show
+how to run ECMAScript code using Qt. If you already know JavaScript
+or any other ECMAScript-based language, you can probably just skim
+this section.</p>
+
+<p class="docText"><a name="scripting support"></a>In the second
+section, we will see how to add scripting support to a Qt
+application. This makes it possible for users to add their own
+functionality in addition to what the application already provides.
+This approach is also frequently used to make it easier to support
+users; technical support staff can supply bug fixes and workarounds
+in the form of scripts.</p>
+
+<p class="docText"><a name="show how"></a>In the third section, we
+will show how to develop GUI front-ends by combining ECMAScript
+code and forms created using <span class="docEmphasis">Qt
+Designer</span><a name="cycle associated"></a>. This technique is
+appealing to developers who dislike the "compile, link, run" cycle
+associated with C++ development and prefer the scripting approach.
+It also enables users with JavaScript experience to design fully
+functional GUI interfaces without having to learn C++.</p>
+
+<p class="docText"><a name="to develop"></a>Finally, in the last
+section, we will show how to develop scripts that rely on C++
+components as part of their processing. This can be done with
+arbitrary C++ and C++/Qt components, which don't need to have been
+designed with scriptability in mind. This approach is especially
+useful when several programs <a name="iddle8405"></a><a name=
+"we want"></a>need to be written using the same basic components,
+or when we want to make C++ functionality available to non-C++
+programmers.</p>
+<a name="ch22lev1sec1"></a>
+<h3 class="docSection1Title" id="-100000">Overview of the
+ECMAScript Language</h3>
+
+<p class="docText"><a name="a brief"></a>This section presents a
+brief introduction to the ECMAScript language so that you can
+understand the code snippets presented in the rest of the chapter
+and can start writing your own scripts. The Mozilla Foundation's
+web site hosts a more complete tutorial at <a class="docLink"
+target="_blank" href=
+"http://developer.mozilla.org/en/docs/Core_JavaScript_1.5_Guide">http://developer.mozilla.org/en/docs/Core_JavaScript_1.5_Guide</a>,
+and David Flanagan's <span class="docEmphasis">JavaScript: The
+Definitive Guide</span><a name="both as"></a> (O'Reilly, 2006) is
+recommended both as a tutorial and as a reference manual. The
+official ECMAScript specification is available online at <a class=
+"docLink" target="_blank" href=
+"http://www.ecmainternational.org/publications/standards/Ecma-262.htm">
+http://www.ecmainternational.org/publications/standards/Ecma-262.htm</a>.</p>
+
+<p class="docText"><a name="The basic"></a>The basic ECMAScript
+control structures—<tt>if</tt> statements, <tt>for</tt> loops, and
+<tt>while</tt><a name="as in"></a> loops—are the same as in C++ and
+Java. ECMAScript also provides more or less the same assignment,
+relational, and arithmetic operators. ECMAScript strings support
+concatenation with <tt>+</tt><a name="appending with"></a> and
+appending with <tt>+=</tt>.</p>
+
+<p class="docText"><a name="start by"></a>To get a feel for the
+ECMAScript syntax, we will start by studying the following program,
+which prints a list of all the prime numbers less than 1000:</p>
+
+<div class="docText">
+<pre>
+const MAX = 1000;
+var isPrime = new Array(MAX);
+
+for (var i = 2; i &lt; MAX; ++i)
+    isPrime[i] = true;
+
+for (var i = 2; i &lt; MAX; ++i) {
+    if (isPrime[i]) {
+        for (var j = i; i * j &lt; MAX; ++j)
+            isPrime[i * j] = false;
+    }
+}
+
+for (var i = 2; i &lt; MAX; ++i) {
+    if (isPrime[i])
+        print(i);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="striking feature"></a>From a C++
+programmer's perspective, probably the most striking feature of
+ECMAScript is that variables are not explicitly typed; the
+<tt>var</tt><a name="variables are"></a> keyword is all that is
+required to declare a variable. Read-only variables are declared
+with <tt>const</tt> instead of <tt>var</tt><a name="is that"></a>.
+Another noteworthy feature of the preceding program is that there
+is no <tt>main()</tt><a name="from the"></a> function. Instead,
+code that is located outside any function is executed immediately,
+starting from the top of the file and working down to the
+bottom.</p>
+
+<p class="docText"><a name="at the"></a>Unlike in C++, semicolons
+at the end of statements are generally optional in ECMAScript.
+Using sophisticated rules, the interpreter can insert most missing
+<a name="iddle1342"></a><a name="iddle2872"></a><a name=
+"iddle2880"></a><a name="iddle3275"></a><a name=
+"iddle3998"></a><a name="iddle4066"></a><a name=
+"iddle4072"></a><a name="iddle4078"></a><a name=
+"iddle4085"></a><a name="iddle4427"></a><a name=
+"iddle5708"></a><a name="iddle7787"></a><a name=
+"iddle8257"></a><a name="iddle8287"></a><a name=
+"iddle8297"></a><a name="typing semicolons"></a>semicolons itself.
+Despite this, typing semicolons ourselves is recommended, to avoid
+unpleasant surprises.</p>
+
+<p class="docText"><a name="To run"></a>To run the above program,
+we can use the <tt>qscript</tt><a name="in Qt"></a> interpreter
+located in Qt's <tt>examples/script/qscript</tt><a name=
+"the interpreter"></a> directory. If the interpreter is called with
+a file name as a command-line argument, the file is taken to be
+ECMAScript and is executed; otherwise, an interactive session
+begins.</p>
+
+<p class="docText"><a name="variable with"></a>If we don't provide
+an initial value when declaring a variable with <tt>var</tt>, the
+default value is <tt>undefined</tt>, a special value of type
+<tt>Undefined</tt><a name="value of"></a>. We can later assign any
+value of any type to the variable using the assignment operator
+(<tt>=</tt>). Consider the following examples:</p>
+
+<div class="docText">
+<pre>
+var x;
+typeof x;          // returns "undefined"
+
+x = null;
+typeof x;          // returns "null"
+
+x = true;
+typeof x;          // returns "boolean"
+
+x = 5;
+typeof x;          // returns "number"
+
+x = "Hello";
+typeof x;          // returns "string"
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>typeof</tt><a name=
+"type associated"></a> operator returns a lowercase string
+representation of the data type associated with the value stored in
+a variable. ECMAScript defines five primitive data types:
+<tt>Undefined</tt>, <tt>Null</tt>, <tt>Boolean</tt>,
+<tt>Number</tt>, and <tt>String</tt>. The <tt>Undefined</tt> and
+<tt>Null</tt> types are special types for the <tt>undefined</tt>
+and <tt>null</tt> constants, respectively. The <tt>Boolean</tt>
+type consists of two values, <tt>true</tt> and <tt>false</tt>. The
+<tt>Number</tt> type stores floating-point numbers. The
+<tt>String</tt> type stores Unicode strings.</p>
+
+<p class="docText"><a name="to the"></a>Variables can also store
+objects and functions, corresponding to the data types
+<tt>Object</tt> and <tt>Function</tt>. For example:</p>
+
+<div class="docText">
+<pre>
+x = new Array(10);
+typeof x;          // returns "object"
+
+x = print;
+typeof x;          // returns "function"
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="data types"></a>Like Java, ECMAScript
+distinguishes between primitive data types and object types.
+Primitive data types behave like C++ value types, such as
+<tt>int</tt> and <tt>QString</tt><a name="without the"></a>. These
+are created without the <tt>new</tt><a name="are copied"></a>
+operator and are copied by value. In contrast, object types must be
+created using the <tt>new</tt><a name="and variables"></a>
+operator, and variables of these types store only a reference (a
+pointer) to the object. When allocating objects with
+<tt>new</tt><a name="not need"></a>, we do not need to worry about
+releasing their memory, since the garbage collector does this
+automatically.</p>
+
+<p class="docText"><a name="we assign"></a>If we assign a value to
+a variable without declaring it first using the
+<tt>var</tt><a name="if we"></a> keyword, the variable will be
+created as a global variable. And if we try to read the <a name=
+"iddle2647"></a><a name="iddle2874"></a><a name=
+"iddle6817"></a><a name="iddle7678"></a><a name=
+"iddle7888"></a><a name="iddle8288"></a><a name="we get"></a>value
+of a variable that doesn't exist, we get a <tt>ReferenceError</tt>
+exception. We can catch the exception using a <tt>try ...
+catch</tt> statement, as follows:</p>
+
+<div class="docText">
+<pre>
+try {
+    print(y);
+} catch (e) {
+    print(e.name + ": " + e.message);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">If the variable <tt>y</tt><a name="on the"></a>
+does not exist, the message "ReferenceError: y is not defined" is
+printed on the console.</p>
+
+<p class="docText"><a name="our programs"></a>If undefined
+variables can cause havoc in our programs, so can variables that
+are defined but that hold the <tt>undefined</tt><a name=
+"variable using"></a> constant—the default value if no initializer
+is provided when declaring a variable using <tt>var</tt>. To test
+for <tt>undefined</tt><a name="the strict"></a>, we can use the
+strict comparison operators <tt>===</tt> or <tt>!==</tt>. For
+example:</p>
+
+<div class="docText">
+<pre>
+var x;
+...
+var y = 0;
+if (x !== undefined)
+    y = x;
+</pre>
+</div>
+<br>
+
+<p class="docText">The familiar <tt>==</tt> and <tt>!=</tt><a name=
+"are also"></a> comparison operators are also available in
+ECMAScript, but unlike <tt>===</tt><a name="and"></a> and
+<tt>!==</tt><a name="return"></a>, they sometimes return
+<tt>true</tt><a name="the compared"></a> when the compared values
+have different types. For example, <tt>24 == "24"</tt> and <tt>null
+== undefined</tt> return <tt>true</tt>, whereas <tt>24 ===
+"24"</tt> and <tt>null === undefined</tt> return
+<tt>false</tt>.</p>
+
+<p class="docText"><a name="illustrates how"></a>We will now review
+a more complex program that illustrates how to define our own
+functions in ECMAScript:</p>
+
+<div class="docText">
+<pre>
+function square(x)
+{
+    return x * x;
+}
+
+function sumOfSquares(array)
+{
+    var result = 0;
+    for (var i = 0; i &lt; array.length; ++i)
+        result += square(array[i]);
+    return result;
+}
+
+var array = new Array(100);
+for (var i = 0; i &lt; array.length; ++i)
+    array[i] = (i * 257) % 101;
+
+print(sumOfSquares(array));
+</pre>
+</div>
+<br>
+
+<p class="docText">Functions are defined using the
+<tt>function</tt><a name="parameters are"></a> keyword. In keeping
+with ECMAScript's dynamic nature, the parameters are declared with
+no type, and the function has no explicit return type.</p>
+
+<p class="docText"><a name="iddle1211"></a><a name=
+"iddle2311"></a><a name="iddle2875"></a><a name="iddle7887"></a>By
+looking at the code, we can guess that <tt>square()</tt> should be
+called with a <tt>Number</tt> and that <tt>sumOfSquares()</tt>
+should be called with an <tt>Array</tt> object, but this doesn't
+have to be the case. For example, <tt>square("7")</tt><a name=
+"numbers in"></a> will return 49, because ECMAScript's
+multiplication operator will convert strings to numbers in a
+numeric context. Similarly, the <tt>sumOfSquare()</tt> function
+will work not only for <tt>Array</tt><a name="have a"></a> objects
+but also for other objects that have a similar interface.</p>
+
+<p class="docText">In general, ECMAScript applies the <span class=
+"docEmphasis">duck typing</span><a name="must be"></a> principle:
+"If it walks like a duck and quacks like a duck, it must be a
+duck". This stands in contrast to the strong typing used by C++ and
+Java, where parameter types must be declared and arguments must
+match the declared types.</p>
+
+<p class="docText">In the preceding example,
+<tt>sumOfSquares()</tt> was hard-coded to apply
+<tt>square()</tt><a name="of the"></a> on each element of the
+array. We can make it more flexible by letting it accept a unary
+function as the second argument and renaming it <tt>sum()</tt>:</p>
+
+<div class="docText">
+<pre>
+function sum(array, unaryFunc)
+{
+    var result = 0;
+    for (var i = 0; i &lt; array.length; ++i)
+        result += unaryFunc(array[i]);
+    return result;
+}
+
+var array = new Array(100);
+for (var i = 0; i &lt; array.length; ++i)
+    array[i] = (i * 257) % 101;
+
+print(sum(array, square));
+</pre>
+</div>
+<br>
+
+<p class="docText">The call <tt>sum(array, square)</tt><a name=
+"to"></a> is equivalent to <tt>sumOfSquares(array)</tt><a name=
+"Instead of"></a>. Instead of defining a <tt>square()</tt><a name=
+"also pass"></a> function, we can also pass an anonymous function
+to <tt>sum()</tt>:</p>
+
+<div class="docText">
+<pre>
+print(sum(array, function(x) { return x * x; }));
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="instead of"></a>And instead of defining
+an <tt>array</tt> variable, we can pass an array literal:</p>
+
+<div class="docText">
+<pre>
+print(sum([4, 8, 11, 15], function(x) { return x * x; }));
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="than there"></a>ECMAScript lets us
+supply more arguments to a function than there are parameters
+declared. The extra arguments are accessible through the
+<tt>arguments</tt> array. Consider the following example:</p>
+
+<div class="docText">
+<pre>
+function sum(unaryFunc)
+{
+    var result = 0;
+    for (var i = 1; i &lt; arguments.length; ++i)
+        result += unaryFunc(arguments[i]);
+    return result;
+}
+
+print(sum(square, 1, 2, 3, 4, 5, 6));
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="page_514"></a>Here, the
+<tt>sum()</tt><a name="a variable"></a> function is defined to take
+a variable number of arguments. The first argument is the function
+that we want to apply. The other arguments are the numbers that we
+want to sum. When iterating over the <tt>arguments</tt><a name=
+"it corresponds"></a> array, we must skip the item at index
+position 0 because it corresponds to <tt>unaryFunc</tt>, the unary
+function. We could also omit the <tt>unaryFunc</tt><a name=
+"it from"></a> parameter from the parameter list and extract it
+from the <tt>arguments</tt> array:</p>
+
+<div class="docText">
+<pre>
+function sum()
+{
+    var unaryFunc = arguments[0];
+    var result = 0;
+    for (var i = 1; i &lt; arguments.length; ++i)
+        result += unaryFunc(arguments[i]);
+    return result;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>arguments</tt><a name="based on"></a>
+array can be used to overload the behavior of functions based on
+the types of the arguments or on their number. For example, suppose
+that we want to let <tt>sum()</tt><a name="unary argument"></a>
+take an optional unary argument followed by a list of numbers,
+allowing us to invoke it as follows:</p>
+
+<div class="docText">
+<pre>
+print(sum(1, 2, 3, 4, 5, 6));
+print(sum(square, 1, 2, 3, 4, 5, 6));
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="can implement"></a>Here's how we can
+implement <tt>sum()</tt><a name="to support"></a> to support
+this:</p>
+
+<div class="docText">
+<pre>
+function sum()
+{
+    var unaryFunc = function(x) { return x; };
+    var i = 0;
+
+    if (typeof arguments[0] == "function") {
+        unaryFunc = arguments[0];
+        i = 1;
+    }
+
+    var result = 0;
+    while (i &lt; arguments.length)
+        result += unaryFunc(arguments[i++]);
+    return result;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="supply a"></a>If we supply a function
+as the first argument, that function is applied to each number
+before it is added to the sum; otherwise, we use the identity
+function <tt>function(x) { return x; }</tt>.</p>
+
+<p class="docText"><a name="arguably the"></a>For C++ programmers,
+arguably the most difficult aspect of ECMAScript is its object
+model. ECMAScript is an <span class=
+"docEmphasis">object-based</span><a name="of a"></a>
+object-oriented language, setting it apart from C++, C#, Java,
+Simula, and Smalltalk, which are all class-based. Instead of a
+class concept, ECMAScript provides us with lower-level mechanisms
+that let us achieve the same results.</p>
+
+<p class="docText"><a name="iddle1791"></a><a name=
+"iddle3247"></a><a name="iddle4093"></a><a name=
+"iddle4539"></a><a name="iddle8034"></a><a name=
+"iddle8258"></a><a name="iddle8399"></a><a name=
+"us implement"></a>The first mechanism that lets us implement
+classes in ECMAScript is that of a constructor. A <span class=
+"docEmphasis">constructor</span> is a function that can be invoked
+using the <tt>new</tt> operator. For example, here is a constructor
+for a <tt>Shape</tt> object:</p>
+
+<div class="docText">
+<pre>
+function Shape(x, y) {
+    this.x = x;
+    this.y = y;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>Shape</tt> constructor has two
+parameters and initializes the new object's <tt>x</tt> and
+<tt>y</tt> properties (member variables) based on the values passed
+to the constructor. The <tt>this</tt><a name="is essentially"></a>
+keyword refers to the object being created. In ECMAScript, an
+object is essentially a collection of properties; properties can be
+added, removed, or modified at any time. A property is created the
+first time it is set, so when we assign to <tt>this.x</tt> and
+<tt>this.y</tt> in the constructor, the <tt>x</tt> and <tt>y</tt>
+properties are created as a result.</p>
+
+<p class="docText"><a name="is to"></a>A common mistake for C++ and
+Java developers is to forget the <tt>this</tt><a name=
+"been unlikely"></a> keyword when accessing object properties. In
+the preceding example, this would have been unlikely, because a
+statement such as <tt>x = x</tt><a name="very suspicious"></a>
+would have looked very suspicious, but in other examples this would
+have led to the creation of spurious global variables.</p>
+
+<p class="docText"><a name="a"></a>To instantiate a
+<tt>Shape</tt><a name="we use"></a> object, we use the <tt>new</tt>
+operator as follows:</p>
+
+<div class="docText">
+<pre>
+var shape = new Shape(10, 20);
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="use the"></a>If we use the
+<tt>typeof</tt><a name="on the"></a> operator on the <tt>shape</tt>
+variable, we obtain <tt>Object</tt>, not <tt>Shape</tt><a name=
+"an object"></a>, as the data type. If we want to determine whether
+an object has been created using the <tt>Shape</tt> constructor, we
+can use the <tt>instanceof</tt> operator:</p>
+
+<div class="docText">
+<pre>
+var array = new Array(100);
+array instanceof Shape;            // returns false
+
+var shape = new Shape(10, 20);
+shape instanceof Shape;            // returns true
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="as a"></a>ECMAScript lets any function
+serve as a constructor. However, if the function doesn't perform
+any modifications to the <tt>this</tt><a name="a constructor"></a>
+object, it doesn't make much sense to invoke it as a constructor.
+Conversely, a constructor can be invoked as a plain function, but
+again this rarely makes sense.</p>
+
+<p class="docText"><a name="provides built"></a>In addition to the
+primitive data types, ECMAScript provides built-in constructors
+that let us instantiate fundamental object types, notably
+<tt>Array</tt>, <tt>Date</tt>, and <tt>RegExp</tt><a name=
+"create objects"></a>. Other constructors correspond to the
+primitive data types, allowing us to create objects that store
+primitive values. The <tt>valueOf()</tt><a name="us retrieve"></a>
+member function lets us retrieve the primitive value stored in the
+object. For example:</p>
+
+<div class="docText">
+<pre>
+var boolObj = new Boolean(true);
+typeof boolObj;                    // returns "object"
+
+var boolVal = boolObj.valueOf();
+typeof boolVal;                    // returns "boolean"
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle4556"></a><a name=
+"iddle7412"></a><a class="docLink" href="#ch22fig01">Figure
+22.1</a><a name="global constants"></a> lists the built-in global
+constants, functions, and objects provided by ECMAScript. In the
+next section, we will see how to supplement this built-in
+functionality with additional, application-specific components
+written in C++.</p>
+<a name="ch22fig01"></a>
+<center>
+<h5 class="docFigureTitle"><a name="Figure"></a>Figure 22.1.
+Built-in properties of the global object</h5>
+
+<table cellspacing="0" class="allBorders" border="1">
+<colgroup align="left" span="2">
+<col width="200">
+<col width="350">
+</colgroup>
+
+<tr>
+<td class="docTableCell" align="left" valign="top" colspan="2"
+style="background-color:#E6E6E6"><span class=
+"docEmphRomanAlt">Constants</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>NaN</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">IEEE 754 Not-a-Number (NaN) value</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>Infinity</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Positive infinity (+</span><img alt="" src=
+"images/U221E.GIF"><span class="docEmphRomanAlt">)</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>undefined</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt"><a name="for uninitialized"></a>Default value for
+uninitialized variables</span>
+</td>
+</tr>
+</table>
+<br>
+
+<table cellspacing="0" class="allBorders" border="1">
+<colgroup align="left" span="2">
+<col width="200">
+<col width="350">
+</colgroup>
+
+<tr>
+<td class="docTableCell" align="left" valign="top" colspan="2"
+style="background-color:#E6E6E6"><span class=
+"docEmphRomanAlt">Functions</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>print(x)</tt><sup class="docFootnote"><a class="docLink" href=
+"#ch22tn01">[*]</a></sup>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt"><a name="a value"></a>Prints a value on the
+console</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>eval(str)</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Executes an ECMAScript program</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>parseInt(str, base)</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Converts a string to an integer value</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>parseFloat(str)</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Converts a string to a floating-point
+value</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>isNaN(n)</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Returns</span> <tt>true</tt> <span class=
+"docEmphRomanAlt">if</span> <tt>n</tt> <span class=
+"docEmphRomanAlt">is NaN</span></td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>isFinite(n)</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Returns</span> <tt>true</tt> <span class=
+"docEmphRomanAlt">if</span> <tt>n</tt> <span class=
+"docEmphRomanAlt">is a number other than NaN, +</span><img alt=""
+src="images/U221E.GIF">, <span class="docEmphRomanAlt">or
+-</span><img alt="" src="images/U221E.GIF"></td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>decodeURI(str)</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Converts an 8-bit-encoded URI to Unicode</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>decodeURIComponent(str)</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Converts an 8-bit-encoded URI component to
+Unicode</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>encodeURI(str)</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Converts a Unicode URI to an 8-bit-encoded
+URI</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>encodeURIComponent(str)</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Converts a Unicode URI component to
+8-bit-encoded</span>
+</td>
+</tr>
+</table>
+<br>
+
+<blockquote>
+<p class="docFootnote"><sup><a name="ch22tn01">[*]</a></sup> Not
+specified by the ECMAScript standard.</p>
+</blockquote>
+
+<table cellspacing="0" class="allBorders" border="1">
+<colgroup align="left" span="2">
+<col width="200">
+<col width="350">
+</colgroup>
+
+<tr>
+<td class="docTableCell" align="left" valign="top" colspan="2"
+style="background-color:#E6E6E6"><span class=
+"docEmphRomanAlt">Classes (Constructors)</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>Object</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Provides functionality common to all
+objects</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>Function</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Encapsulates an ECMAScript function</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>Array</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Represents a resizable vector of items</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>String</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Stores a Unicode string</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>Boolean</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Stores a Boolean value (</span><tt>true</tt>
+<span class="docEmphRomanAlt">or</span> <tt>false</tt><span class=
+"docEmphRomanAlt">)</span></td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>Number</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Stores a floating-point number</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>Date</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Stores a date and time</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>RegExp</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Provides regular expression pattern
+matching</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>Error</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Base type for error types</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>EvalError</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Raised when using</span> <tt>eval()</tt>
+<span class="docEmphRomanAlt">wrongly</span></td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>RangeError</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Raised when a numeric value is outside the legal
+range</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>ReferenceError</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Raised when trying to access an undefined
+variable</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>SyntaxError</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Raised when a syntax error is detected by</span>
+<tt>eval()</tt></td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>TypeError</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Raised when an argument has the wrong type</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top">
+<tt>URIError</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Raised when URI parsing fails</span>
+</td>
+</tr>
+</table>
+<br>
+
+<table cellspacing="0" class="allBorders" border="1">
+<colgroup align="left" span="2">
+<col width="200">
+<col width="350">
+</colgroup>
+
+<tr>
+<td class="docTableCell" align="left" valign="top" colspan="2"
+style="background-color:#E6E6E6"><span class=
+"docEmphRomanAlt">Object</span>
+</td>
+</tr>
+
+<tr>
+<td class="docTableCell" align="left" valign="top"><tt>Math</tt>
+</td>
+<td class="docTableCell" align="left" valign="top"><span class=
+"docEmphRomanAlt">Provides mathematical constants and
+functions</span>
+</td>
+</tr>
+</table>
+<br>
+</center>
+<br>
+
+<p class="docText"><a name="ECMAScript and"></a>We have seen how to
+define a constructor in ECMAScript and how to add member variables
+to the constructed object. Normally, we also want to define member
+functions. Because functions are treated as first-class citizens in
+ECMAScript, this turns out to be surprisingly easy. Here's a new
+version of the <tt>Shape</tt> constructor, this time with two
+member functions, <tt>manhattanPos()</tt> and
+<tt>translate()</tt>:</p>
+
+<div class="docText">
+<pre>
+function Shape(x, y) {
+    this.x = x;
+    this.y = y;
+
+    this.manhattanPos = function() {
+        return Math.abs(this.x) + Math.abs(this.y);
+    };
+    this.translate = function(dx, dy) {
+        this.x += dx;
+        this.y += dy;
+    };
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="member functions"></a>We can then
+invoke the member functions using the <tt>.</tt> (dot)
+operator:</p>
+
+<div class="docText">
+<pre>
+var shape = new Shape(10, 20);
+shape.translate(100, 100);
+print(shape.x + ", " + shape.y + " (" + shape.manhattanPos() + ")");
+</pre>
+</div>
+<br>
+
+<p class="docText">With this approach, each <tt>Shape</tt> instance
+has its own <tt>manhattanPos</tt> and <tt>translate</tt>
+properties. Since these properties should be identical for all
+<tt>Shape</tt><a name="than in"></a> instances, it is desirable to
+store them only once rather than in every instance. ECMAScript lets
+us achieve this by using a prototype. A <span class=
+"docEmphasis">prototype</span><a name="fallback for"></a> is an
+object that serves as a fallback for other objects, providing an
+initial set of properties. One advantage of this approach is that
+it is possible to change the prototype object at any time and the
+changes are immediately reflected in all objects that were created
+with that prototype.</p>
+
+<p class="docText">Consider the following example:</p>
+
+<div class="docText">
+<pre>
+function Shape(x, y) {
+    this.x = x;
+    this.y = y;
+}
+
+Shape.prototype.manhattanPos = function() {
+    return Math.abs(this.x) + Math.abs(this.y);
+};
+
+Shape.prototype.translate = function(dx, dy) {
+    this.x += dx;
+    this.y += dy;
+};
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1217"></a><a name=
+"iddle1220"></a><a name="iddle1343"></a><a name=
+"iddle2035"></a><a name="iddle2047"></a><a name=
+"iddle2048"></a><a name="iddle2382"></a><a name=
+"iddle2383"></a><a name="iddle2449"></a><a name=
+"iddle2472"></a><a name="iddle2473"></a><a name=
+"iddle2873"></a><a name="iddle2924"></a><a name=
+"iddle3208"></a><a name="iddle3323"></a><a name=
+"iddle3328"></a><a name="iddle3768"></a><a name=
+"iddle3974"></a><a name="iddle4073"></a><a name=
+"iddle4079"></a><a name="iddle4271"></a><a name=
+"iddle4272"></a><a name="iddle4429"></a><a name=
+"iddle6743"></a><a name="iddle6818"></a><a name=
+"iddle6823"></a><a name="iddle6832"></a><a name=
+"iddle7788"></a><a name="iddle7904"></a><a name=
+"iddle8255"></a><a name="iddle8289"></a><a name=
+"iddle8352"></a><a name="iddle1466"></a><a name=
+"iddle1567"></a><a name="iddle4385"></a><a name=
+"iddle7413"></a><a name="iddle7821"></a>In this version of
+<tt>Shape</tt>, we create the <tt>manhattanPos</tt> and
+<tt>translate</tt> properties outside the constructor, as
+properties of the <tt>Shape.prototype</tt> object. When we
+instantiate a <tt>Shape</tt>, the newly created object keeps an
+internal pointer back to <tt>Shape.prototype</tt><a name=
+"in our"></a>. Whenever we retrieve the value of a property that
+doesn't exist in our <tt>Shape</tt><a name="looked up"></a> object,
+the property is looked up in the prototype as a fallback. Thus, the
+<tt>Shape</tt><a name="the ideal"></a> prototype is the ideal place
+to put member functions, which should be shared by all
+<tt>Shape</tt> instances.</p>
+
+<p class="docText"><a name="It might"></a>It might be tempting to
+put all sorts of properties that we want to share between
+<tt>Shape</tt><a name="the prototype"></a> instances in the
+prototype, similar to C++'s static member variables or Java's class
+variables. This idiom works for read-only properties (including
+member functions) because the prototype acts as a fallback when we
+retrieve the value of a property. However, it doesn't work as
+expected when we try to assign a new value to the shared variable;
+instead, a fresh variable is created directly in the
+<tt>Shape</tt><a name="any property"></a> object, shadowing any
+property of the same name in the prototype. This asymmetry between
+read and write access to a variable is a frequent source of
+confusion for novice ECMAScript programmers.</p>
+
+<p class="docText"><a name="inheritance to"></a>In class-based
+languages such as C++ and Java, we can use class inheritance to
+create specialized object types. For example, we would define a
+<tt>Shape</tt> class and then derive <tt>Triangle</tt>,
+<tt>Square</tt>, and <tt>Circle</tt> from <tt>Shape</tt><a name=
+"be achieved"></a>. In ECMAScript, a similar effect can be achieved
+using prototypes. The following example shows how to define
+<tt>Circle</tt> objects that are also <tt>Shape</tt> instances:</p>
+
+<div class="docText">
+<pre>
+function Shape(x, y) {
+    this.x = x;
+    this.y = y;
+}
+
+Shape.prototype.area = function() { return 0; };
+
+function Circle(x, y, radius) {
+    Shape.call(this, x, y);
+    this.radius = radius;
+}
+
+Circle.prototype = new Shape;
+Circle.prototype.area = function() {
+    return Math.PI * this.radius * this.radius;
+};
+</pre>
+</div>
+<br>
+
+<p class="docText">We start by defining a <tt>Shape</tt>
+constructor and associate an <tt>area()</tt> function with it,
+which always returns 0. Then we define a <tt>Circle</tt>
+constructor, which calls the "base class" constructor using the
+<tt>call()</tt><a name="a"></a> function defined for all function
+objects (including constructors), and we add a <tt>radius</tt>
+property. Outside the constructor, we set the <tt>Circle</tt>'s
+prototype to be a <tt>Shape</tt> object, and we override
+<tt>Shape</tt>'s <tt>area()</tt> function with a
+<tt>Circle</tt>-specific implementation. This corresponds to the
+following C++ code:</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+class Shape
+{
+public:
+    Shape(double x, double y) {
+        this-&gt;x = x;
+        this-&gt;y = y;
+    }
+
+    virtual double area() const { return 0; }
+
+    double x;
+    double y;
+};
+
+class Circle : public Shape
+{
+public:
+    Circle(double x, double y, double radius)
+        : Shape(x, y)
+    {
+        this-&gt;radius = radius;
+    }
+
+    double area() const { return M_PI * radius * radius; }
+
+    double radius;
+};
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle3248"></a><a name=
+"iddle6159"></a>The <tt>instanceof</tt><a name=
+"determine which"></a> operator walks through the prototype chain
+to determine which constructors have been invoked. As a
+consequence, instances of a subclass are also considered to be
+instances of the base class:</p>
+
+<div class="docText">
+<pre>
+var circle = new Circle(0, 0, 50);
+circle instanceof Circle;          // returns true
+circle instanceof Shape;           // returns true
+circle instanceof Object;          // returns true
+circle instanceof Array;           // returns false
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="will show"></a>This concludes our short
+introduction to ECMAScript. In the following sections, we will show
+how to use this language in conjunction with C++/Qt applications to
+provide more flexibility and customizability to end-users or simply
+to speed up the development process.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href="ch22.html"><img src=
+"images/prev.gif" width="20" height="20" border="0" align=
+"absmiddle" alt="Previous Page"></a> <a href=
+"ch22lev1sec2.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

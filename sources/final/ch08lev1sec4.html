@@ -1,0 +1,1834 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch08lev1sec4.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch08lev1sec4.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch08lev1sec4.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch08lev1sec4.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch08lev1sec3.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch08lev1sec5.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch08lev1sec4"></a>
+<h3 class="docSection1Title" id="-100000">Item-Based Rendering with
+Graphics View</h3>
+
+<p class="docText"><a name="Drawing using"></a>Drawing using
+<tt>QPainter</tt><a name="for custom"></a> is ideal for custom
+widgets and for drawing one or just a few items. For graphics in
+which we need to handle anything from a handful up to tens of
+thousands of items, and we want the user to be able to click, drag,
+and select items, Qt's graphics view classes provide the solution
+we need.</p>
+
+<p class="docText"><a name="graphics view"></a>The graphics view
+architecture consists of a scene, represented by the
+<tt>QGraphicsScene</tt> class, and items in the scene, represented
+by <tt>QGraphicsItem</tt><a name="by showing"></a> subclasses. The
+scene (along with its item) is made visible to users by showing
+them in a view, <a name="iddle1278"></a><a name=
+"iddle2824"></a><a name="iddle2962"></a><a name=
+"iddle4253"></a><a name="iddle4789"></a><a name=
+"iddle5136"></a><a name="iddle8026"></a><a name=
+"iddle8195"></a>represented by the <tt>QGraphicsView</tt><a name=
+"shown in"></a> class. The same scene can be shown in more than one
+view—for example, to show different parts of a large scene, or to
+show the scene under different transformations. This is illustrated
+schematically in <a class="docLink" href="#ch08fig14">Figure
+8.14</a>.</p>
+<a name="ch08fig14"></a>
+<center>
+<h5 class="docFigureTitle">Figure 8.14. One scene can serve
+multiple views</h5>
+
+<p class="docText"><img border="0" id="" width="480" height="242"
+src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZmlncGNmaDRnMDgvaTFpcy4-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText">Several predefined <tt>QGraphicsItem</tt>
+subclasses are provided, including <tt>QGraphicsLineItem</tt>,
+<tt>QGraphicsPixmapItem</tt>, <tt>QGraphicsSimpleTextItem</tt> (for
+styled plain text), and <tt>QGraphicsTextItem</tt> (for rich text);
+see <a class="docLink" href="#ch08fig15">Figure 8.15</a>. We can
+also create our own custom <tt>QGraphicsItem</tt> subclasses, as we
+will see later in this section.<sup class="docFootnote"><a class=
+"docLink" href="#ch08fn01">[*]</a></sup></p>
+
+<blockquote>
+<p class="docFootnote"><sup><a name=
+"ch08fn01">[*]</a></sup><a name="scenes as"></a> Qt 4.4 is expected
+to support adding widgets to graphics scenes as though they were
+graphics items, including the ability to apply transformations to
+them.</p>
+</blockquote>
+<a name="ch08fig15"></a>
+<center>
+<h5 class="docFigureTitle">Figure 8.15. Graphics view items
+available in Qt 4.3</h5>
+
+<p class="docText"><img border="0" id="" width="415" height="350"
+src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZmlncGNmaDVnMDgvaTFpcy4-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText">A <tt>QGraphicsScene</tt><a name=
+"has three"></a> holds a collection of graphics items. A scene has
+three layers: a background layer, an item layer, and a foreground
+layer. The background and foreground are normally specified by
+<tt>QBrush</tt>es, but it is possible to reimplement
+<tt>drawBackground()</tt> or <tt>drawForeground()</tt><a name=
+"a pixmap"></a> for complete control. If we want to use a pixmap as
+a background, we could simply create a texture
+<tt>QBrush</tt><a name="that pixmap"></a> based on that pixmap. The
+foreground brush could be set to a semi-transparent white to give a
+faded effect, or to be a cross pattern to provide a grid
+overlay.</p>
+
+<p class="docText"><a name="are selected"></a>The scene can tell us
+which items have collided, which are selected, and which are at a
+particular point or in a particular region. A scene's graphics
+items are either top-level (the scene is their parent) or children
+(their parent is another item). Any transformations applied to an
+item are automatically applied to its children.</p>
+
+<p class="docText"><a name="The graphics"></a>The graphics view
+architecture provides two ways of grouping items. One is to simply
+make an item a child of another item. Another way is to use a
+<tt>QGraphicsItemGroup</tt><a name="item to"></a>. Adding an item
+to a group does not cause it to be transformed in any way; these
+groups are convenient for handling multiple items as though they
+were a single item.</p>
+
+<p class="docText">A <tt>QGraphicsView</tt><a name="a widget"></a>
+is a widget that presents a scene, providing scroll bars if
+necessary and capable of applying transformations that affect how
+the scene <a name="iddle1870"></a><a name="iddle3355"></a><a name=
+"iddle4155"></a><a name="iddle5148"></a><a name=
+"iddle7035"></a><a name="iddle7372"></a><a name=
+"iddle8446"></a><a name="iddle8450"></a><a name="as aids"></a>is
+rendered. This is useful to support zooming and rotating as aids
+for viewing the scene.</p>
+
+<p class="docText">By default, <tt>QGraphicsView</tt><a name=
+"can be"></a> renders using Qt's built-in 2D paint engine, but it
+can be changed to use an OpenGL widget with a single
+<tt>setViewport()</tt><a name="to print"></a> call after it has
+been constructed. It is also easy to print a scene, or parts of a
+scene, as we will discuss in the next section where we see several
+techniques for printing using Qt.</p>
+
+<p class="docText"><a name="and item"></a>The architecture uses
+three different coordinate systems—viewport coordinates, scene
+coordinates, and item coordinates—with functions for mapping from
+one coordinate system to another. Viewport coordinates are
+coordinates inside the <tt>QGraphicsView</tt><a name=
+"used for"></a>'s viewport. Scene coordinates are logical
+coordinates that are used for positioning top-level items on the
+scene. Item coordinates are specific to each item and are centered
+about an item-local (0, 0) point; these remain unchanged when we
+move the item on the scene. In practice, we usually only care about
+the scene coordinates (for positioning top-level items) and item
+coordinates (for positioning child items and for drawing items).
+Drawing each item in terms of its own local coordinate system means
+that we do not have to worry about where an item is in the scene or
+what transformations have been applied to it.</p>
+
+<p class="docText"><a name="view classes"></a>The graphics view
+classes are straightforward to use and offer a great deal of
+functionality. To introduce some of what can be done with them, we
+will review two examples. The first example is a simple diagram
+editor, which will show <a name="iddle2119"></a><a name=
+"iddle2579"></a><a name="iddle3559"></a><a name=
+"iddle5137"></a><a name="iddle7843"></a><a name=
+"The second"></a>how to create items and how to handle user
+interaction. The second example is an annotated map program that
+shows how to handle large numbers of graphics objects and how to
+render them efficiently at different zoom levels.</p>
+
+<p class="docText"><a name="The Diagram"></a>The Diagram
+application shown in <a class="docLink" href="#ch08fig16">Figure
+8.16</a><a name="to create"></a> allows users to create nodes and
+links. Nodes are graphics items that show plain text inside a
+rounded rectangle, whereas links are lines that connect pairs of
+nodes. Nodes that are selected are shown with a dashed outline
+drawn with a thicker pen than usual. We will begin by looking at
+links, since they are the simplest, then nodes, and then we will
+see how they are used in context.</p>
+<a name="ch08fig16"></a>
+<center>
+<h5 class="docFigureTitle"><a name="The Diagram"></a>Figure 8.16.
+The Diagram application</h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZ3BmYWlwY3RoNmcwOC9pMXNsLl9q.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="359" src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZmlqcGNnaDZnMDgvaTFwcy4-.jpg"
+alt="">
+</center>
+<br>
+
+<div class="docText">
+<pre>
+class Link : public QGraphicsLineItem
+{
+public:
+    Link(Node *fromNode, Node *toNode);
+    ~Link();
+
+    Node *fromNode() const;
+    Node *toNode() const;
+
+    void setColor(const QColor &amp;color);
+    QColor color() const;
+
+    void trackNodes();
+
+private:
+    Node *myFromNode;
+    Node *myToNode;
+};
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>Link</tt> class is derived from
+<tt>QGraphicsLineItem</tt>, which represents a line in a
+<tt>QGraphicsScene</tt><a name="connects and"></a>. A link has
+three main attributes: the two nodes it connects and the color used
+to draw its line. We don't need a <tt>QColor</tt><a name=
+"for reasons"></a> member variable to store the color, for reasons
+that will become apparent shortly. <tt>QGraphicsItem</tt> is not
+<a name="iddle3560"></a><a name="iddle3561"></a><a name=
+"iddle3562"></a><a name="iddle3563"></a><a name=
+"iddle3946"></a><a name="iddle5127"></a><a name=
+"iddle5129"></a><a name="iddle5437"></a><a name=
+"iddle7149"></a><a name="iddle7222"></a><a name=
+"iddle7394"></a><a name="iddle8172"></a>a <tt>QObject</tt><a name=
+"to"></a> subclass, but if we wanted to add signals and slots to
+<tt>Link</tt><a name="using multiple"></a>, there is nothing to
+stop us from using multiple inheritance with <tt>QObject</tt>.</p>
+
+<p class="docText">The <tt>trackNodes()</tt><a name="the user"></a>
+function is used to update the line's endpoints, when the user
+drags a connected node into a different position.</p>
+
+<div class="docText">
+<pre>
+Link::Link(Node *fromNode, Node *toNode)
+{
+    myFromNode = fromNode;
+    myToNode = toNode;
+
+    myFromNode-&gt;addLink(this);
+    myToNode-&gt;addLink(this);
+
+    setFlags(QGraphicsItem::ItemIsSelectable);
+    setZValue(-1);
+
+    setColor(Qt::darkRed);
+    trackNodes();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="link is"></a>When a link is
+constructed, it adds itself to the nodes it connects. Each node
+holds a set of links, and can have any number of connecting links.
+Graphics items have several flags, but in this case we only want
+links to be selectable so that the user can select and then delete
+them.</p>
+
+<p class="docText">Every graphics item has an (<span class=
+"docEmphasis">x</span>, <span class="docEmphasis">y</span>)
+position, and a <span class="docEmphasis">z</span><a name=
+"is in"></a> value that specifies how far forward or back it is in
+the scene. Since we are going to draw our lines from the center of
+one node to the center of another node, we give the line a negative
+<span class="docEmphasis">z</span><a name="value so"></a> value so
+that it will always be drawn underneath the nodes it connects. As a
+result, links will appear as lines between the nearest edges of the
+nodes they connect.</p>
+
+<p class="docText"><a name="end of"></a>At the end of the
+constructor, we set an initial line color and then set the line's
+endpoints by calling <tt>trackNodes()</tt>.</p>
+
+<div class="docText">
+<pre>
+Link::~Link()
+{
+    myFromNode-&gt;removeLink(this);
+    myToNode-&gt;removeLink(this);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="a link"></a>When a link is destroyed,
+it removes itself from the nodes it is connecting.</p>
+
+<div class="docText">
+<pre>
+void Link::setColor(const QColor &amp;color)
+{
+    setPen(QPen(color, 1.0));
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="the given"></a>When the link's color is
+set, we simply change its pen, using the given color and a line
+width of 1. The <tt>setPen()</tt> function is inherited from
+<tt>QGraphicsLineItem</tt>. The <tt>color()</tt> getter simply
+returns the pen's color.</p>
+
+<div class="docText">
+<pre>
+void Link::trackNodes()
+{
+    setLine(QLineF(myFromNode-&gt;pos(), myToNode-&gt;pos()));
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle4026"></a><a name=
+"iddle4392"></a><a name="iddle4588"></a><a name=
+"iddle4871"></a><a name="iddle5111"></a><a name=
+"iddle5123"></a><a name="iddle5479"></a><a name=
+"iddle7840"></a><a name="iddle8156"></a><a name=
+"iddle8196"></a><a name="page_200"></a>The
+<tt>QGraphicsItem::pos()</tt><a name="its graphics"></a> function
+returns the position of its graphics item relative to the scene
+(for top-level items) or to the parent item (for child items).</p>
+
+<p class="docText">For the <tt>Link</tt><a name="the painting"></a>
+class, we can rely on its base class to handle the painting:
+<tt>QGraphicsLineItem</tt> draws a line (using <tt>pen()</tt>)
+between two points in the scene.</p>
+
+<p class="docText">For the <tt>Node</tt><a name=
+"difference between"></a> class, we will handle all the graphics
+ourselves. Another difference between nodes and links is that nodes
+are more interactive. We will begin by reviewing the
+<tt>Node</tt><a name="it is"></a> declaration, breaking it into a
+few pieces since it is quite long.</p>
+
+<div class="docText">
+<pre>
+class Node : public QGraphicsItem
+{
+    Q_DECLARE_TR_FUNCTIONS(Node)
+
+public:
+    Node();
+</pre>
+</div>
+<br>
+
+<p class="docText">For the <tt>Node</tt> class, we use
+<tt>QGraphicsItem</tt><a name="base class"></a> as the base class.
+The <tt>Q_DECLARE_TR_FUNCTIONS()</tt> macro is used to add a
+<tt>tr()</tt> function to this class, even though it is not a
+<tt>QObject</tt><a name="use"></a> subclass. This is simply a
+convenience that allows us to use <tt>tr()</tt><a name=
+"rather than"></a> rather than the static <tt>QObject::tr()</tt> or
+<tt>QCoreApplication::translate()</tt>.</p>
+
+<div class="docText">
+<pre>
+    void setText(const QString &amp;text);
+    QString text() const;
+    void setTextColor(const QColor &amp;color);
+    QColor textColor() const;
+    void setOutlineColor(const QColor &amp;color);
+    QColor outlineColor() const;
+    void setBackgroundColor(const QColor &amp;color);
+    QColor backgroundColor() const;
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="are simply"></a>These functions are
+simply getters and setters for the private members. We provide
+control of the color of the text, the node's outline, and the
+node's background.</p>
+
+<div class="docText">
+<pre>
+    void addLink(Link *link);
+    void removeLink(Link *link);
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="we saw"></a>As we saw earlier, these
+functions are called by the <tt>Link</tt> class to add or remove
+themselves from a node.</p>
+
+<div class="docText">
+<pre>
+    QRectF boundingRect() const;
+    QPainterPath shape() const;
+    void paint(QPainter *painter,
+               const QStyleOptionGraphicsItem *option, QWidget *widget);
+</pre>
+</div>
+<br>
+
+<p class="docText">When we create <tt>QGraphicsItem</tt> subclasses
+that we want to draw manually, we normally reimplement
+<tt>boundingRect()</tt> and <tt>paint()</tt>. If we don't
+reimplement <tt>shape()</tt>, the base class implementation will
+fall back on the <tt>boundingRect()</tt>. In this case, we have
+reimplemented <tt>shape()</tt><a name="account the"></a> to return
+a more accurate shape that takes into account the node's rounded
+corners.</p>
+
+<p class="docText"><a name="iddle3353"></a><a name=
+"iddle3908"></a><a name="iddle4028"></a><a name=
+"iddle5118"></a><a name="iddle5119"></a><a name=
+"iddle5128"></a><a name="iddle7223"></a><a name=
+"the bounding"></a>The graphics view architecture uses the bounding
+rectangle to determine whether an item needs to be drawn. This
+enables <tt>QGraphicsView</tt><a name="fraction of"></a> to display
+arbitrarily large scenes very quickly, when only a fraction of the
+items are visible at any given time. The shape is used for
+determining whether a point is inside an item, or whether two items
+collide.</p>
+
+<div class="docText">
+<pre>
+protected:
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event);
+    QVariant itemChange(GraphicsItemChange change,
+                        const QVariant &amp;value);
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="Properties dialog"></a>In the Diagram
+application, we will provide a Properties dialog for editing a
+node's position, colors, and text. As an added convenience, we will
+let the user change the text by double-clicking the node.</p>
+
+<p class="docText"><a name="sure that"></a>If a node is moved, we
+must make sure that any associated links are updated accordingly.
+We reimplement the <tt>itemChange()</tt><a name="take care"></a>
+handler to take care of this; it is called whenever the item's
+properties (including its position) change. The reason we don't use
+<tt>mouseMoveEvent()</tt><a name="when the"></a> for this purpose
+is because it is not called when the node is moved
+programmatically.</p>
+
+<div class="docText">
+<pre>
+private:
+    QRectF outlineRect() const;
+    int roundness(double size) const;
+
+    QSet&lt;Link *&gt; myLinks;
+    QString myText;
+    QColor myTextColor;
+    QColor myBackgroundColor;
+    QColor myOutlineColor;
+};
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="The"></a>The
+<tt>outlineRect()</tt><a name="returns the"></a> private function
+returns the rectangle drawn by the <tt>Node</tt>, whereas
+<tt>roundness()</tt><a name="an appropriate"></a> returns an
+appropriate roundness coefficient based on the width or height of
+the rectangle.</p>
+
+<p class="docText">Just as a <tt>Link</tt> keeps track of the nodes
+it connects, a <tt>Node</tt><a name="the links"></a> keeps track of
+its links. When a node is deleted, all the links associated with
+the node are deleted as well.</p>
+
+<p class="docText"><a name="look at"></a>We are now ready to look
+at <tt>Node</tt>'s implementation, starting as usual with the
+constructor.</p>
+
+<div class="docText">
+<pre>
+Node::Node()
+{
+    myTextColor = Qt::darkGreen;
+    myOutlineColor = Qt::darkBlue;
+    myBackgroundColor = Qt::white;
+
+    setFlags(ItemIsMovable | ItemIsSelectable);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1100"></a><a name=
+"iddle4030"></a><a name="iddle4032"></a><a name=
+"iddle4038"></a><a name="iddle4040"></a><a name=
+"iddle4041"></a><a name="iddle4416"></a><a name=
+"iddle4915"></a><a name="iddle5124"></a><a name=
+"iddle5133"></a><a name="iddle6859"></a><a name=
+"iddle7345"></a><a name="iddle7356"></a><a name=
+"iddle8324"></a><a name="and selectable"></a>We initialize the
+colors, and make node items both movable and selectable. The
+<span class="docEmphasis">z</span><a name="the node"></a> value
+will default to 0, and we leave the node's position in the scene to
+be set by the caller.</p>
+
+<div class="docText">
+<pre>
+Node::~Node()
+{
+    foreach (Link *link, myLinks)
+        delete link;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="link is"></a>The destructor deletes all
+the node's links. Whenever a link is destroyed, it removes itself
+from the nodes it is connected to. We iterate over (a copy of) the
+set of links rather than use <tt>qDeleteAll()</tt><a name=
+"side effects"></a> to avoid side effects, since the set of links
+is indirectly accessed by the <tt>Link</tt> destructor.</p>
+
+<div class="docText">
+<pre>
+void Node::setText(const QString &amp;text)
+{
+    prepareGeometryChange();
+    myText = text;
+    update();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="that affects"></a>Whenever we change a
+graphics item in a way that affects its appearance, we must call
+<tt>update()</tt><a name="to schedule"></a> to schedule a repaint.
+And in cases such as this where the item's bounding rectangle might
+change (because the new text might be shorter or longer than the
+current text), we must call
+<tt>prepareGeometryChange()</tt><a name="doing anything"></a>
+immediately before doing anything that will affect the item's
+bounding rectangle.</p>
+
+<p class="docText"><a name="will skip"></a>We will skip the
+<tt>text()</tt>, <tt>textColor()</tt>, <tt>outlineColor()</tt>, and
+<tt>backgroundColor()</tt> getters since they simply return their
+corresponding private member.</p>
+
+<div class="docText">
+<pre>
+void Node::setTextColor(const QColor &amp;color)
+{
+    myTextColor = color;
+    update();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">When we set the text's color, we must call
+<tt>update()</tt><a name="painted using"></a> to schedule a repaint
+so that the item is painted using the new color. We don't need to
+call <tt>prepareGeometryChange()</tt><a name="item is"></a>,
+because the size of the item is not affected by a color change. We
+will omit the setters for the outline and background colors since
+they are structurally the same as this setter.</p>
+
+<div class="docText">
+<pre>
+void Node::addLink(Link *link)
+{
+    myLinks.insert(link);
+}
+
+void Node::removeLink(Link *link)
+{
+    myLinks.remove(link);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="to the"></a>Here we simply add or
+remove the given link to the node's set of links.</p>
+
+<div class="docText">
+<pre>
+QRectF Node::outlineRect() const
+{
+    const int Padding = 8;
+    QFontMetricsF metrics = qApp-&gt;font();
+    QRectF rect = metrics.boundingRect(myText);
+    rect.adjust(-Padding, -Padding, +Padding, +Padding);
+    rect.translate(-rect.center());
+    return rect;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1370"></a><a name=
+"iddle1660"></a><a name="iddle4033"></a><a name=
+"iddle4036"></a><a name="iddle4042"></a><a name=
+"iddle4189"></a><a name="iddle5115"></a><a name=
+"iddle5132"></a><a name="iddle5573"></a><a name=
+"iddle7414"></a><a name="a rectangle"></a>We use this private
+function to calculate a rectangle that encompasses the node's text
+with an 8-pixel margin. The bounding rectangle returned by the font
+metrics function always has (0, 0) as its top-left corner. Since we
+want the text centered on the item's center point, we translate the
+rectangle so that its center is at (0, 0).</p>
+
+<p class="docText"><a name="of pixels"></a>Although we think and
+calculate in terms of pixels, the unit is in a sense notional. The
+scene (or the parent item) may be scaled, rotated, sheared, or
+simply affected by antialiasing, so the actual number of pixels
+that appears on the screen may be different.</p>
+
+<div class="docText">
+<pre>
+QRectF Node::boundingRect() const
+{
+    const int Margin = 1;
+    return outlineRect().adjusted(-Margin, -Margin, +Margin, +Margin);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>boundingRect()</tt><a name=
+"called by"></a> function is called by
+<tt>QGraphicsView</tt><a name="use the"></a> to determine whether
+the item needs to be drawn. We use the outline rectangle, but with
+a bit of additional margin, since the rectangle we return from this
+function must allow for at least half the width of the pen if an
+outline is going to be drawn.</p>
+
+<div class="docText">
+<pre>
+QPainterPath Node::shape() const
+{
+    QRectF rect = outlineRect();
+
+    QPainterPath path;
+    path.addRoundRect(rect, roundness(rect.width()),
+                      roundness(rect.height()));
+    return path;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="The"></a>The <tt>shape()</tt><a name=
+"called by"></a> function is called by
+<tt>QGraphicsView</tt><a name="collision detection"></a> for
+fine-grained collision detection. Often, we can omit it and leave
+the item to calculate the shape itself based on the bounding
+rectangle. Here we reimplement it to return a
+<tt>QPainterPath</tt><a name="areas that"></a> that represents a
+rounded rectangle. As a consequence, clicking the corner areas that
+fall outside the rounded rectangle but inside the bounding
+rectangle <span class="docEmphasis">won't</span> select the
+item.</p>
+
+<p class="docText"><a name="we can"></a>When we create a rounded
+rectangle, we can pass optional arguments to specify the
+roundedness of the corners. We calculate suitable values using the
+<tt>roundness()</tt> private function.</p>
+
+<div class="docText">
+<pre>
+void Node::paint(QPainter *painter,
+                 const QStyleOptionGraphicsItem *option,
+                 QWidget * /* widget */)
+{
+    QPen pen(myOutlineColor);
+    if (option-&gt;state &amp; QStyle::State_Selected) {
+        pen.setStyle(Qt::DotLine);
+        pen.setWidth(2);
+    }
+    painter-&gt;setPen(pen);
+    painter-&gt;setBrush(myBackgroundColor);
+
+    QRectF rect = outlineRect();
+    painter-&gt;drawRoundRect(rect, roundness(rect.width()),
+                           roundness(rect.height()));
+
+    painter-&gt;setPen(myTextColor);
+    painter-&gt;drawText(rect, Qt::AlignCenter, myText);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle2218"></a><a name=
+"iddle2284"></a><a name="iddle2526"></a><a name=
+"iddle3352"></a><a name="iddle3535"></a><a name=
+"iddle3899"></a><a name="iddle4034"></a><a name=
+"iddle4035"></a><a name="iddle4037"></a><a name=
+"iddle4213"></a><a name="iddle5120"></a><a name=
+"iddle5144"></a><a name="iddle5145"></a><a name=
+"iddle5536"></a><a name="iddle6000"></a>The
+<tt>paint()</tt><a name="is selected"></a> function is where we
+draw the item. If the item is selected, we change the pen's style
+to be a dotted line and make it thicker; otherwise, the default of
+a solid 1-pixel line is used. We also set the brush to use the
+background color.</p>
+
+<p class="docText"><a name="same size"></a>Then we draw a rounded
+rectangle the same size as the outline rectangle, but using the
+rounding factors returned by the <tt>roundness()</tt><a name=
+"the outline"></a> private function. Finally, we draw the text
+centered within the outline rectangle on top of the rounded
+rectangle.</p>
+
+<p class="docText">The <tt>option</tt><a name="type"></a> parameter
+of type <tt>QStyleOptionGraphicsItem</tt><a name=
+"several public"></a> is an unusual class for Qt because it
+provides several public member variables. These include the current
+layout direction, font metrics, palette, rectangle, state
+(selected, "has focus", and many others), the transformation
+matrix, and the level of detail. Here we have checked the
+<tt>state</tt><a name="member to"></a> member to see whether the
+node is selected.</p>
+
+<div class="docText">
+<pre>
+QVariant Node::itemChange(GraphicsItemChange change,
+                          const QVariant &amp;value)
+{
+    if (change == ItemPositionHasChanged) {
+        foreach (Link *link, myLinks)
+            link-&gt;trackNodes();
+    }
+    return QGraphicsItem::itemChange(change, value);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="user drags"></a>Whenever the user drags
+a node, the <tt>itemChange()</tt><a name="is called"></a> handler
+is called with <tt>ItemPositionHasChanged</tt><a name=
+"are positioned"></a> as the first argument. To ensure that the
+link lines are positioned correctly, we iterate over the node's set
+of links and tell each one to update its line's endpoints. At the
+end, we call the base class implementation to ensure that it also
+gets notified.</p>
+
+<div class="docText">
+<pre>
+void Node::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+    QString text = QInputDialog::getText(event-&gt;widget(),
+                           tr("Edit Text"), tr("Enter new text:"),
+                           QLineEdit::Normal, myText);
+    if (!text.isEmpty())
+        setText(text);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle2120"></a><a name=
+"iddle2121"></a><a name="iddle4039"></a><a name=
+"iddle4044"></a><a name="iddle5323"></a><a name=
+"iddle6970"></a><a name="iddle7850"></a><a name="pop up"></a>If the
+user double-clicks the node, we pop up a dialog that shows the
+current text and allows them to change it. If the user clicks
+<span class="docEmphRomanAlt">Cancel</span><a name="if the"></a>,
+an empty string is returned; therefore, we apply the change only if
+the string is non-empty. We will see how other node properties
+(such as the node's colors) can be changed shortly.</p>
+
+<div class="docText">
+<pre>
+int Node::roundness(double size) const
+{
+    const int Diameter = 12;
+    return 100 * Diameter / int(size);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>roundness()</tt><a name="that the"></a>
+function returns appropriate rounding factors to ensure that the
+node's corners are quarter-circles with diameter 12. The rounding
+factors must be in the range 0 (square) to 99 (fully rounded).</p>
+
+<p class="docText"><a name="two custom"></a>We have now seen the
+implementation of two custom graphics item classes. Now it is time
+to see how they are actually used. The Diagram application is a
+standard main window application with menus and a toolbar. We won't
+look at all the details of the implementation, but instead
+concentrate on those relevant to the graphics view architecture. We
+will begin by looking at an extract from the <tt>QMainWindow</tt>
+subclass's definition.</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+class DiagramWindow : public QMainWindow
+{
+    Q_OBJECT
+
+public:
+    DiagramWindow();
+
+private slots:
+    void addNode();
+    void addLink();
+    void del();
+    void cut();
+    void copy();
+    void paste();
+    void bringToFront();
+    void sendToBack();
+    void properties();
+    void updateActions();
+
+private:
+    typedef QPair&lt;Node *, Node *&gt; NodePair;
+
+    void createActions();
+    void createMenus();
+    void createToolBars();
+    void setZValue(int z);
+    void setupNode(Node *node);
+    Node *selectedNode() const;
+    Link *selectedLink() const;
+    NodePair selectedNodePair() const;
+
+    QMenu *fileMenu;
+    QMenu *editMenu;
+    QToolBar *editToolBar;
+    QAction *exitAction;
+    ...
+    QAction *propertiesAction;
+
+    QGraphicsScene *scene;
+    QGraphicsView *view;
+
+    int minZ;
+    int maxZ;
+    int seqNumber;
+};
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle2122"></a><a name=
+"iddle5143"></a><a name="iddle6979"></a><a name="of most"></a>The
+purpose of most of the private slots should be clear from their
+names. The <tt>properties()</tt><a name="if a"></a> slot is used to
+pop up the Properties dialog if a node is selected, or a
+<tt>QColorDialog</tt><a name="if a"></a> if a link is selected. The
+<tt>updateActions()</tt><a name="used to"></a> slot is used to
+enable or disable actions depending on what items are selected.</p>
+
+<div class="docText">
+<pre>
+DiagramWindow::DiagramWindow()
+{
+    scene = new QGraphicsScene(0, 0, 600, 500);
+
+    view = new QGraphicsView;
+    view-&gt;setScene(scene);
+    view-&gt;setDragMode(QGraphicsView::RubberBandDrag);
+    view-&gt;setRenderHints(QPainter::Antialiasing
+                         | QPainter::TextAntialiasing);
+    view-&gt;setContextMenuPolicy(Qt::ActionsContextMenu);
+    setCentralWidget(view);
+
+    minZ = 0;
+    maxZ = 0;
+    seqNumber = 0;
+
+    createActions();
+    createMenus();
+    createToolBars();
+
+    connect(scene, SIGNAL(selectionChanged()),
+            this, SLOT(updateActions()));
+
+    setWindowTitle(tr("Diagram"));
+    updateActions();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="begin by"></a>We begin by creating a
+graphics scene, with an origin of (0, 0), a width of 600, and a
+height of 500. Then we create a graphics view to visualize the
+scene. In <a name="iddle1103"></a><a name="iddle1377"></a><a name=
+"iddle2124"></a><a name="iddle2125"></a><a name=
+"iddle2136"></a><a name="iddle7406"></a>the next example, instead
+of using <tt>QGraphicsView</tt> directly, we will subclass it to
+customize its behavior.</p>
+
+<p class="docText"><a name="more than"></a>Selectable items can be
+selected by clicking them. To select more than one item at a time,
+the user can click the items while pressing <span class=
+"docEmphRomanAlt">Ctrl</span>. Setting the drag mode to
+<tt>QGraphicsView::RubberBandDrag</tt><a name="also select"></a>
+means that the user can also select items by dragging a rubber band
+over them.</p>
+
+<p class="docText">The <tt>minZ</tt> and <tt>maxZ</tt> numbers are
+used by the <tt>sendToBack()</tt> and
+<tt>bringToFront()</tt><a name="initial text"></a> functions. The
+sequence number is used to give a unique initial text to each node
+the user adds.</p>
+
+<p class="docText"><a name="we enable"></a>The signal–slot
+connection ensures that whenever the scene's selection changes, we
+enable or disable the application's actions so that only actions
+that make sense are available. We call <tt>updateActions()</tt> to
+set the actions' initial enabled states.</p>
+
+<div class="docText">
+<pre>
+void DiagramWindow::addNode()
+{
+    Node *node = new Node;
+    node-&gt;setText(tr("Node %1").arg(seqNumber + 1));
+    setupNode(node);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="create a"></a>When the user adds a new
+node, we create a new instance of the <tt>Node</tt><a name=
+"a default"></a> class, give it a default text, and then pass the
+node to <tt>setupNode()</tt><a name="to finish"></a> to position
+and select it. We use a separate function to finish adding a node
+because we will need this functionality again when implementing
+<tt>paste()</tt>.</p>
+
+<div class="docText">
+<pre>
+void DiagramWindow::setupNode(Node *node)
+{
+    node-&gt;setPos(QPoint(80 + (100 * (seqNumber % 5)),
+                 80 + (50 * ((seqNumber / 5) % 7))));
+    scene-&gt;addItem(node);
+    ++seqNumber;
+
+    scene-&gt;clearSelection();
+    node-&gt;setSelected(true);
+    bringToFront();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="This function"></a>This function
+positions a newly added or pasted node in the scene. The use of the
+sequence number ensures that new nodes are added in different
+positions rather than on top of each other. We clear the current
+selection and select just the newly added node. The
+<tt>bringToFront()</tt><a name="that the"></a> call ensures that
+the new node is farther forward than any other node.</p>
+
+<div class="docText">
+<pre>
+void DiagramWindow::bringToFront()
+{
+    ++maxZ;
+    setZValue(maxZ);
+}
+void DiagramWindow::sendToBack()
+{
+    --minZ;
+    setZValue(minZ);
+}
+
+void DiagramWindow::setZValue(int z)
+{
+    Node *node = selectedNode();
+    if (node)
+        node-&gt;setZValue(z);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1099"></a><a name=
+"iddle2123"></a><a name="iddle2131"></a><a name=
+"iddle2132"></a><a name="iddle2133"></a><a name=
+"iddle2134"></a><a name="iddle2135"></a><a name=
+"iddle5130"></a><a name="iddle5140"></a><a name=
+"iddle7079"></a><a name="iddle7080"></a><a name=
+"iddle7081"></a><a name="iddle7082"></a><a name=
+"iddle7098"></a><a name="iddle7393"></a><a name="iddle7395"></a>The
+<tt>bringToFront()</tt><a name="increments the"></a> slot
+increments the <tt>maxZ</tt> value, and then sets the currently
+selected node's <span class="docEmphasis">z</span> value to
+<tt>maxZ</tt>. The <tt>sendToBack()</tt> slot uses
+<tt>minZ</tt><a name="of the"></a> and has the opposite effect.
+Both are defined in terms of the <tt>setZValue()</tt> private
+function.</p>
+
+<div class="docText">
+<pre>
+Node *DiagramWindow::selectedNode() const
+{
+    QList&lt;QGraphicsItem *&gt; items = scene-&gt;selectedItems();
+    if (items.count() == 1) {
+        return dynamic_cast&lt;Node *&gt;(items.first());
+    } else {
+        return 0;
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="items in"></a>The list of all selected
+items in the scene is available by calling
+<tt>QGraphicsScene::selectedItems()</tt>. The
+<tt>selectedNode()</tt><a name="just one"></a> function is designed
+to return a single node if just one node is selected, and a null
+pointer otherwise. If there is exactly one selected item, the cast
+will produce a <tt>Node</tt> pointer if the item is a
+<tt>Node</tt><a name="is a"></a>, and a null pointer if the item is
+a <tt>Link</tt>.</p>
+
+<p class="docText">There is also a <tt>selectedLink()</tt>
+function, which returns a pointer to the selected
+<tt>Link</tt><a name="item and"></a> item if there is exactly one
+selected item and it is a link.</p>
+
+<div class="docText">
+<pre>
+void DiagramWindow::addLink()
+{
+    NodePair nodes = selectedNodePair();
+    if (nodes == NodePair())
+        return;
+
+    Link *link = new Link(nodes.first, nodes.second);
+    scene-&gt;addItem(link);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="can add"></a>The user can add a link if
+exactly two nodes are selected. If the
+<tt>selectedNodePair()</tt><a name="The link"></a> function returns
+the two selected nodes, we create a new link. The link's
+constructor will make the link line's endpoints go from the center
+of the first node to the center of the second node.</p>
+
+<div class="docText">
+<pre>
+DiagramWindow::NodePair DiagramWindow::selectedNodePair() const
+{
+    QList&lt;QGraphicsItem *&gt; items = scene-&gt;selectedItems();
+    if (items.count() == 2) {
+        Node *first = dynamic_cast&lt;Node *&gt;(items.first());
+        Node *second = dynamic_cast&lt;Node *&gt;(items.last());
+        if (first &amp;&amp; second)
+            return NodePair(first, second);
+    }
+    return NodePair();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle2073"></a><a name=
+"iddle2128"></a><a name="iddle2130"></a><a name=
+"iddle2906"></a><a name="iddle4546"></a><a name=
+"iddle4831"></a><a name="This function"></a>This function is
+similar to the <tt>selectedNode()</tt><a name="saw earlier"></a>
+function we saw earlier. If there are exactly two selected items,
+and they are both nodes, the pair of them is returned; otherwise, a
+pair of null pointers is returned.</p>
+
+<div class="docText">
+<pre>
+void DiagramWindow::del()
+{
+    QList&lt;QGraphicsItem *&gt; items = scene-&gt;selectedItems();
+    QMutableListIterator&lt;QGraphicsItem *&gt; i(items);
+    while (i.hasNext()) {
+        Link *link = dynamic_cast&lt;Link *&gt;(i.next());
+        if (link) {
+            delete link;
+            i.remove();
+        }
+    }
+
+    qDeleteAll(items);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="slot deletes"></a>This slot deletes any
+selected items, whether they are nodes, links, or a mixture of
+both. When a node is deleted, its destructor deletes any links that
+are associated with it. To avoid double-deleting links, we delete
+the link items before deleting the nodes.</p>
+
+<div class="docText">
+<pre>
+void DiagramWindow::properties()
+{
+    Node *node = selectedNode();
+    Link *link = selectedLink();
+
+    if (node) {
+        PropertiesDialog dialog(node, this);
+        dialog.exec();
+    } else if (link) {
+        QColor color = QColorDialog::getColor(link-&gt;color(), this);
+        if (color.isValid())
+            link-&gt;setColor(color);
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">If the user triggers the <span class=
+"docEmphRomanAlt">Properties</span><a name="This dialog"></a>
+action and a node is selected, we invoke the Properties dialog.
+This dialog allows the user to change the node's text, position,
+and colors. Because <tt>PropertiesDialog</tt> operates directly on
+a <tt>Node</tt><a name="modally and"></a> pointer, we can simply
+execute it modally and leave it to take care of itself.</p>
+
+<p class="docText">If a link is selected, we use Qt's built-in
+<tt>QColorDialog::getColor()</tt><a name="the user"></a> static
+convenience function to pop up a color dialog. If the user chooses
+a color, we set that as the link's color.</p>
+
+<p class="docText"><a name="iddle1622"></a><a name=
+"iddle1626"></a><a name="iddle1873"></a><a name=
+"iddle1992"></a><a name="iddle2085"></a><a name=
+"iddle2126"></a><a name="iddle2127"></a><a name=
+"iddle2129"></a><a name="iddle3976"></a><a name=
+"iddle4278"></a><a name="iddle4717"></a><a name=
+"iddle4817"></a><a name="iddle4819"></a><a name=
+"iddle4827"></a><a name="iddle5937"></a><a name=
+"iddle5959"></a><a name="iddle7348"></a><a name=
+"iddle7619"></a><a name="iddle7981"></a><a name=
+"the changes"></a>If a node's properties or a link's color were
+changed, the changes are made through setter functions, and these
+call <tt>update()</tt><a name="is repainted"></a> to ensure that
+the node or link is repainted with its new settings.</p>
+
+<p class="docText"><a name="want to"></a>Users often want to cut,
+copy, and paste graphics items in this type of application, and one
+way to support this is to represent items textually, as we will see
+when we review the relevant code. We only handle nodes, because it
+would not make sense to copy or paste links, which only exist in
+relation to nodes.</p>
+
+<div class="docText">
+<pre>
+void DiagramWindow::cut()
+{
+    Node *node = selectedNode();
+    if (!node)
+        return;
+
+    copy();
+    delete node;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <span class=
+"docEmphRomanAlt">Cut</span><a name="clipboard and"></a> action is
+a two-part process: Copy the selected item into the clipboard and
+delete the item. The copy is performed using the
+<tt>copy()</tt><a name="slot associated"></a> slot associated with
+the <span class="docEmphRomanAlt">Copy</span><a name=
+"deletion uses"></a> action, and the deletion uses C++'s standard
+<tt>delete</tt><a name="on the"></a> operator, relying on the
+node's destructor to delete any links that are connected to the
+node and to remove the node from the scene.</p>
+
+<div class="docText">
+<pre>
+void DiagramWindow::copy()
+{
+    Node *node = selectedNode();
+    if (!node)
+        return;
+
+    QString str = QString("Node %1 %2 %3 %4")
+                  .arg(node-&gt;textColor().name())
+                  .arg(node-&gt;outlineColor().name())
+                  .arg(node-&gt;backgroundColor().name())
+                  .arg(node-&gt;text());
+    QApplication::clipboard()-&gt;setText(str);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>QColor::name()</tt> function returns a
+<tt>QString</tt> that contains an HTML-style color string in
+"#<span class="docEmphasis">RRGGBB</span><a name="in the"></a>"
+format, with each color component represented by a hexadecimal
+value in the range <tt>0x00</tt> to <tt>0xFF</tt><a name=
+"to the"></a> (0 to 255). We write a string to the clipboard, which
+is a single line of text starting with the word "Node", then the
+node's three colors, and finally the node's text, with a space
+between each part. For example:</p>
+
+<div class="docText">
+<pre>
+Node #aa0000 #000080 #ffffff Red herring
+</pre>
+</div>
+<br>
+
+<p class="docText">This text is decoded by the <tt>paste()</tt>
+function:</p>
+
+<div class="docText">
+<pre>
+void DiagramWindow::paste()
+{
+    QString str = QApplication::clipboard()-&gt;text();
+    QStringList parts = str.split(" ");
+    if (parts.count() &gt;= 5 &amp;&amp; parts.first() == "Node") {
+        Node *node = new Node;
+        node-&gt;setText(QStringList(parts.mid(4)).join(" "));
+        node-&gt;setTextColor(QColor(parts[1]));
+        node-&gt;setOutlineColor(QColor(parts[2]));
+        node-&gt;setBackgroundColor(QColor(parts[3]));
+        setupNode(node);
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1591"></a><a name=
+"iddle2137"></a><a name="iddle2574"></a><a name=
+"iddle3977"></a><a name="iddle4828"></a><a name="iddle8336"></a>We
+split the clipboard's text into a <tt>QStringList</tt><a name=
+"To be"></a>. Using the preceding example, this would give us the
+list ["Node", "#aa0000", "#000080", "#ffffff", "Red", "herring"].
+To be a valid node, there must be at least five elements in the
+list: the word "Node", the three colors, and at least one word of
+text. If this is the case, we create a new node, setting its text
+to be the space-separated concatenation of the fifth and subsequent
+elements. We set the colors to be the second, third, and fourth
+elements, using the <tt>QColor</tt> constructor that accepts the
+names returned by <tt>QColor::name()</tt>.</p>
+
+<p class="docText">For completeness, here is the
+<tt>updateActions()</tt><a name="disable the"></a> slot that is
+used to enable and disable the actions in the <span class=
+"docEmphRomanAlt">Edit</span> menu and the context menu:</p>
+
+<div class="docText">
+<pre>
+void DiagramWindow::updateActions()
+{
+    bool hasSelection = !scene-&gt;selectedItems().isEmpty();
+    bool isNode = (selectedNode() != 0);
+    bool isNodePair = (selectedNodePair() != NodePair());
+
+    cutAction-&gt;setEnabled(isNode);
+    copyAction-&gt;setEnabled(isNode);
+    addLinkAction-&gt;setEnabled(isNodePair);
+    deleteAction-&gt;setEnabled(hasSelection);
+    bringToFrontAction-&gt;setEnabled(isNode);
+    sendToBackAction-&gt;setEnabled(isNode);
+    propertiesAction-&gt;setEnabled(isNode);
+
+    foreach (QAction *action, view-&gt;actions())
+        view-&gt;removeAction(action);
+
+    foreach (QAction *action, editMenu-&gt;actions()) {
+        if (action-&gt;isEnabled())
+            view-&gt;addAction(action);
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="the Diagram"></a>We have now finished
+the review of the Diagram application and can turn our attention to
+the second graphics view example, Cityscape.</p>
+
+<p class="docText"><a name="application shown"></a>The Cityscape
+application shown in <a class="docLink" href="#ch08fig17">Figure
+8.17</a><a name="in a"></a> presents a fictitious map of the major
+buildings, blocks, and parks in a city, with the most important
+ones annotated with their names. It allows the user to scroll and
+zoom the map using the mouse and the keyboard. We will begin by
+showing the <tt>Cityscape</tt><a name="which provides"></a> class,
+which provides the application's main window.</p>
+
+<p class="docText">
+</p>
+<a name="ch08fig17"></a>
+<center>
+<h5 class="docFigureTitle"><a name=
+"Cityscape application"></a>Figure 8.17. The Cityscape application
+at two different zoom levels</h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZ3BmYWlwY3RoN2cwOC9pMXNsLl9q.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="202" src=
+"images/M2cvMTdhYTdyZDBwYy9laW0vc2c4dDE5cjk0NzkzZmlqcGNnaDdnMDgvaTFwcy4-.jpg"
+alt="">
+</center>
+<br>
+
+<div class="docText">
+<pre>
+class Cityscape : public QMainWindow
+{
+    Q_OBJECT
+
+public:
+    Cityscape();
+
+private:
+    void generateCityBlocks();
+
+    QGraphicsScene *scene;
+    CityView *view;
+};
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1571"></a><a name=
+"iddle1589"></a><a name="iddle1590"></a><a name=
+"iddle5112"></a><a name="iddle7841"></a><a name=
+"application has"></a>The application has no menus or toolbars; it
+simply displays the annotated map using a <tt>CityView</tt> widget.
+The <tt>CityView</tt> class is derived from
+<tt>QGraphicsView</tt>.</p>
+
+<div class="docText">
+<pre>
+Cityscape::Cityscape()
+{
+    scene = new QGraphicsScene(-22.25, -22.25, 1980, 1980);
+    scene-&gt;setBackgroundBrush(QColor(255, 255, 238));
+    generateCityBlocks();
+
+    view = new CityView;
+    view-&gt;setScene(scene);
+    setCentralWidget(view);
+
+    setWindowTitle(tr("Cityscape"));
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The constructor creates a
+<tt>QGraphicsScene</tt> and calls
+<tt>generateCityBlocks()</tt><a name="and"></a> to generate a map.
+The map consists of about 2000 blocks and 200 annotations.</p>
+
+<p class="docText"><a name="the"></a>We will first look at the
+<tt>CityBlock</tt> graphics item subclass, then the
+<tt>Annotation</tt> graphics item subclass, and finally the
+<tt>CityView</tt> graphics view subclass.</p>
+
+<div class="docText">
+<pre>
+class CityBlock : public QGraphicsItem
+{
+public:
+    enum Kind { Park, SmallBuilding, Hospital, Hall, Building, Tower,
+                LShapedBlock, LShapedBlockPlusSmallBlock, TwoBlocks,
+                BlockPlusTwoSmallBlocks };
+
+    CityBlock(Kind kind);
+
+    QRectF boundingRect() const;
+    void paint(QPainter *painter,
+               const QStyleOptionGraphicsItem *option, QWidget *widget);
+
+private:
+    int kind;
+    QColor color;
+    QPainterPath shape;
+};
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1369"></a><a name=
+"iddle1572"></a><a name="iddle1573"></a><a name=
+"iddle5116"></a><a name="the city"></a>A city block has a kind, a
+color, and a shape. Since the city blocks are not selectable, we
+have not bothered to reimplement the <tt>shape()</tt> function like
+we did for the <tt>Node</tt> class in the previous example.</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+CityBlock::CityBlock(Kind kind)
+{
+    this-&gt;kind = kind;
+
+    int green = 96 + (std::rand() % 64);
+    int red = 16 + green + (std::rand() % 64);
+    int blue = 16 + (std::rand() % green);
+    color = QColor(red, green, blue);
+
+    if (kind == Park) {
+        color = QColor(192 + (std::rand() % 32), 255,
+                       192 + (std::rand() % 16));
+        shape.addRect(boundingRect());
+    } else if (kind == SmallBuilding) {
+        ...
+    } else if (kind == BlockPlusTwoSmallBlocks) {
+        int w1 = (std::rand() % 10) + 8;
+        int h1 = (std::rand() % 28) + 8;
+        int w2 = (std::rand() % 10) + 8;
+        int h2 = (std::rand() % 10) + 8;
+        int w3 = (std::rand() % 6) + 8;
+        int h3 = (std::rand() % 6) + 8;
+        int y = (std::rand() % 4) - 16;
+        shape.addRect(QRectF(-16, -16, w1, h1));
+        shape.addRect(QRectF(-16 + w1 + 4, y, w2, h2));
+        shape.addRect(QRectF(-16 + w1 + 4,
+                             y + h2 + 4 + (std::rand() % 4), w3, h3));
+    }
+}
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="generates a"></a>The constructor sets a
+random color and generates a suitable <tt>QPainterPath</tt><a name=
+"node represents"></a> depending on what kind of block the node
+represents.</p>
+
+<div class="docText">
+<pre>
+QRectF CityBlock::boundingRect() const
+{
+    return QRectF(-20, -20, 40, 40);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1161"></a><a name=
+"iddle1166"></a><a name="iddle1574"></a><a name=
+"iddle3356"></a><a name="iddle3536"></a><a name=
+"iddle4212"></a><a name="iddle5113"></a><a name=
+"iddle5114"></a><a name="iddle5121"></a><a name=
+"iddle5274"></a><a name="iddle6001"></a><a name=
+"iddle7842"></a><a name="occupies a"></a>Each block occupies a 40 x
+40 square, with its center at (0, 0).</p>
+
+<div class="docText">
+<pre>
+void CityBlock::paint(QPainter *painter,
+                      const QStyleOptionGraphicsItem *option,
+                      QWidget * /* widget */)
+{
+    if (option-&gt;levelOfDetail &lt; 4.0) {
+        painter-&gt;fillPath(shape, color);
+    } else {
+        QLinearGradient gradient(QPoint(-20, -20), QPoint(+20, +20));
+        int coeff = 105 + int(std::log(option-&gt;levelOfDetail - 4.0));
+        gradient.setColorAt(0.0, color.lighter(coeff));
+        gradient.setColorAt(1.0, color.darker(coeff));
+        painter-&gt;fillPath(shape, gradient);
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">In <tt>paint()</tt>, we draw the shape using the
+given <tt>QPainter</tt>. We distinguish two cases:</p>
+
+<ul>
+<li>
+<p class="docList"><a name="a solid"></a>If the zoom factor is less
+than 4.0, we use a solid color to fill the shape.</p>
+</li>
+
+<li>
+<p class="docList"><a name="If the"></a>If the zoom factor is 4.0
+or more, we use a <tt>QLinearGradient</tt><a name="the shape"></a>
+to fill the shape to give a subtle lighting effect.</p>
+</li>
+</ul>
+
+<p class="docText">The <tt>levelOfDetail</tt><a name="of the"></a>
+member of the <tt>QStyleOptionGraphicsItem</tt><a name=
+"zoom factor"></a> class stores a floating-point value that tells
+us what the zoom factor is. A value of 1.0 means that the scene is
+being viewed at its natural size, a value of 0.5 means that the
+scene has been zoomed out to half its natural size, and a value of
+2.5 means that the scene has been zoomed in to two and a half times
+its natural size. Using the "level of detail" information allows us
+to use faster drawing algorithms for scenes that are zoomed out too
+much to show any detail.</p>
+
+<p class="docText">The <tt>CityBlock</tt><a name="the fact"></a>
+graphics item class works perfectly, but the fact that the items
+are scaled when the scene is zoomed raises the question of what
+happens to items that draw text. Normally, we don't want the text
+to scale with the scene. The graphics view architecture provide a
+general solution to this problem, through the
+<tt>ItemIgnoresTransformations</tt> flag. This is what we use in
+the <tt>Annotation</tt> class:</p>
+
+<div class="docText">
+<pre>
+class Annotation : public QGraphicsItem
+{
+public:
+    Annotation(const QString &amp;text, bool major = false);
+
+    void setText(const QString &amp;text);
+    QString text() const;
+
+    QRectF boundingRect() const;
+    void paint(QPainter *painter,
+               const QStyleOptionGraphicsItem *option, QWidget *widget);
+
+private:
+    QFont font;
+    QString str;
+    bool major;
+    double threshold;
+    int y;
+};
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1162"></a><a name=
+"iddle1165"></a><a name="iddle4417"></a><a name=
+"iddle5125"></a><a name="iddle5126"></a><a name=
+"iddle5131"></a><a name="iddle5134"></a><a name=
+"iddle7221"></a><a name="iddle7344"></a><a name=
+"iddle7396"></a><a name="iddle8325"></a>The constructor takes a
+text and a <tt>bool</tt> flag, called <tt>major</tt><a name=
+"a minor"></a>, that specifies whether the annotation is a major or
+a minor annotation. This will affect the size of the font.</p>
+
+<div class="docText">
+<pre>
+Annotation::Annotation(const QString &amp;text, bool major)
+{
+    font = qApp-&gt;font();
+    font.setBold(true);
+    if (major) {
+        font.setPointSize(font.pointSize() + 2);
+        font.setStretch(QFont::SemiExpanded);
+    }
+
+    if (major) {
+        threshold = 0.01 * (40 + (std::rand() % 40));
+    } else {
+        threshold = 0.01 * (100 + (std::rand() % 100));
+    }
+
+    str = text;
+    this-&gt;major = major;
+    y = 20 - (std::rand() % 40);
+
+    setZValue(1000);
+    setFlag(ItemIgnoresTransformations, true);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="font to"></a>In the constructor, we
+begin by setting the font to be bigger and bolder if this is a
+major annotation, presumably one that refers to an important
+building or landmark. The threshold below which the annotation will
+not be shown is calculated pseudo-randomly, with a lower threshold
+for major annotations, so less important ones will disappear first
+as the scene is zoomed out.</p>
+
+<p class="docText">The <span class="docEmphasis">z</span><a name=
+"annotations are"></a> value is set to 1000 to ensure that
+annotations are on top of everything else, and we use the
+<tt>ItemIgnoresTransformations</tt><a name="ensure that"></a> flag
+to ensure that the annotation does not change size no matter how
+much the scene is zoomed.</p>
+
+<div class="docText">
+<pre>
+void Annotation::setText(const QString &amp;text)
+{
+    prepareGeometryChange();
+    str = text;
+    update();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="shorter than"></a>If the annotation's
+text is changed, it might be longer or shorter than before, so we
+must notify the graphics view architecture that the item's geometry
+may change.</p>
+
+<div class="docText">
+<pre>
+QRectF Annotation::boundingRect() const
+{
+    QFontMetricsF metrics(font);
+    QRectF rect = metrics.boundingRect(str);
+    rect.moveCenter(QPointF(0, y));
+    rect.adjust(-4, 0, +4, 0);
+    return rect;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1163"></a><a name=
+"iddle1164"></a><a name="iddle1368"></a><a name=
+"iddle1371"></a><a name="iddle1586"></a><a name=
+"iddle2808"></a><a name="iddle4211"></a><a name=
+"iddle5037"></a><a name="iddle5117"></a><a name=
+"iddle5122"></a><a name="iddle5142"></a><a name=
+"iddle7844"></a><a name="We get"></a>We get the font metrics for
+the annotation's font, and use them to calculate the text's
+bounding rectangle. We then move the rectangle's center point to
+the annotation's <span class="docEmphasis">y</span><a name=
+"the rectangle"></a> offset, and make the rectangle slightly wider.
+The extra pixels on the left and right sides of the bounding
+rectangle will give the text some margin from the edges.</p>
+
+<div class="docText">
+<pre>
+void Annotation::paint(QPainter *painter,
+                       const QStyleOptionGraphicsItem *option,
+                       QWidget * /* widget */)
+{
+    if (option-&gt;levelOfDetail &lt;= threshold)
+        return;
+
+    painter-&gt;setFont(font);
+
+    QRectF rect = boundingRect();
+
+    int alpha = int(30 * std::log(option-&gt;levelOfDetail));
+    if (alpha &gt;= 32)
+        painter-&gt;fillRect(rect, QColor(255, 255, 255, qMin(alpha, 63)));
+
+    painter-&gt;setPen(Qt::white);
+    painter-&gt;drawText(rect.translated(+1, +1), str,
+                      QTextOption(Qt::AlignCenter));
+    painter-&gt;setPen(Qt::blue);
+    painter-&gt;drawText(rect, str, QTextOption(Qt::AlignCenter));
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="the scene"></a>If the scene is zoomed
+out beyond the annotation's threshold, we don't paint the
+annotation at all. And if the scene is zoomed in sufficiently, we
+start by painting a semi-transparent white rectangle; this helps
+the text stand out when drawn on top of a dark block.</p>
+
+<p class="docText"><a name="in blue"></a>We draw the text twice,
+once in white and once in blue. The white text is offset by one
+pixel horizontally and vertically to create a shadow effect that
+makes the text easier to read.</p>
+
+<p class="docText"><a name="and annotations"></a>Having seen how
+the blocks and annotations are done, we can now move on to the last
+aspect of the Cityscape application, the custom
+<tt>QGraphicsView</tt> subclass:</p>
+
+<div class="docText">
+<pre>
+class CityView : public QGraphicsView
+{
+    Q_OBJECT
+
+public:
+    CityView(QWidget *parent = 0);
+protected:
+    void wheelEvent(QWheelEvent *event);
+};
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1160"></a><a name=
+"iddle1587"></a><a name="iddle1588"></a><a name=
+"iddle2561"></a><a name="iddle4216"></a><a name=
+"iddle4433"></a><a name="iddle4451"></a><a name=
+"iddle5135"></a><a name="iddle5147"></a><a name=
+"iddle5503"></a><a name="iddle5602"></a><a name=
+"iddle5607"></a><a name="iddle6354"></a><a name=
+"iddle6647"></a><a name="iddle7033"></a><a name="iddle8536"></a>By
+default, the <tt>QGraphicsView</tt><a name="does not"></a> class
+provides scroll bars that appear automatically when needed, but
+does not provide any means of zooming the scene it is being used to
+view. For this reason, we have created the tiny
+<tt>CityView</tt><a name="ability to"></a> subclass to provide the
+user with the ability to zoom in and out using the mouse wheel.</p>
+
+<div class="docText">
+<pre>
+CityView::CityView(QWidget *parent)
+    : QGraphicsView(parent)
+{
+    setDragMode(ScrollHandDrag);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="is required"></a>Setting the drag mode
+is all that is required to support scrolling by dragging.</p>
+
+<div class="docText">
+<pre>
+void CityView::wheelEvent(QWheelEvent *event)
+{
+    double numDegrees = -event-&gt;delta() / 8.0;
+    double numSteps = numDegrees / 15.0;
+    double factor = std::pow(1.125, numSteps);
+    scale(factor, factor);
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="user rolls"></a>When the user rolls the
+mouse wheel, wheel events are generated; we simply have to
+calculate an appropriate scaling factor and call
+<tt>QGraphicsView::scale()</tt><a name="scale the"></a>. The
+mathematical formula is a bit tricky, but basically we scale the
+scene up or down by a factor of 1.125 for every mouse wheel
+step.</p>
+
+<p class="docText"><a name="That completes"></a>That completes our
+two graphics view examples. Qt's graphics view architecture is very
+rich, so bear in mind that it has a lot more to offer than we have
+had the space to cover. There is support for drag and drop, and
+graphics items can have tooltips and custom cursors. Animation
+effects can be achieved in a number of ways—for example, by
+associating <tt>QGraphicsItemAnimation</tt><a name=
+"the items"></a>s with the items that we want to animate and
+performing the animation using a <tt>QTimeLine</tt><a name=
+"is also"></a>. It is also possible to achieve animation by
+creating custom graphics item subclasses that are derived from
+<tt>QObject</tt> (through multiple inheritance) and that
+reimplement <tt>QObject::timerEvent()</tt>.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch08lev1sec3.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch08lev1sec5.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

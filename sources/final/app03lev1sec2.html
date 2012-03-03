@@ -1,0 +1,414 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>app03lev1sec2.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/app03lev1sec2.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fapp03lev1sec2.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fapp03lev1sec2.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"app03lev1sec1.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"app03lev1sec3.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="app03lev1sec2"></a>
+<h3 class="docSection1Title" id="-100000">Using Qt Jambi in the
+Eclipse IDE</h3>
+
+<p class="docText"><a name="The Eclipse"></a>The Eclipse IDE
+("Eclipse" for short) is one of the key pieces of software in the
+Eclipse family of more than sixty open source projects. Eclipse is
+very popular with Java programmers, and since it is written in
+Java, it runs on all major platforms. Eclipse displays a collection
+of panels, called views. Many views are available in Eclipse,
+including navigator, outline, and editor views, and each particular
+collection of views is called a perspective.</p>
+
+<p class="docText"><a name="Qt Jambi"></a>To make Qt Jambi and
+<span class="docEmphasis">Qt Designer</span><a name=
+"inside Eclipse"></a> available inside Eclipse, it is necessary to
+install the Qt Jambi Eclipse integration package. Once the package
+is unpacked in the right location, Eclipse must be run with the
+<tt>-clean</tt><a name="than relying"></a> option to force it to
+look for new plugins, rather than relying on its cache. The
+Preferences dialog will now have an extra option called "Qt Jambi
+Preference Page". It is necessary to go to this page and set Qt
+Jambi's location, as explained in
+<tt>http://doc.trolltech.com/qtjambi-4.3.2_01/com/trolltech/qt/qtjambi-eclipse.html</tt><a name="set and"></a>.
+Once the path has been set and verified, Eclipse should be closed
+and restarted for the changes to take effect.</p>
+
+<p class="docText">The next time we start Eclipse and click
+<span class="docEmphRomanAlt">File|New Project</span><a name=
+"two kinds"></a>, the New Project dialog that pops up will offer
+two kinds of Qt Jambi project: <span class="docEmphRomanAlt">Qt
+Jambi Project</span> and <span class="docEmphRomanAlt">Qt Jambi
+Project (Using Designer Form)</span><a name="these project"></a>.
+In this section, we will discuss both of these project types by
+presenting a Qt Jambi version of the Go to Cell example developed
+in <a class="docLink" href="ch02.html#ch02">Chapter 2</a>.</p>
+
+<p class="docText">To create a Qt Jambi application purely in code,
+click <span class="docEmphRomanAlt">File|New Project</span><a name=
+"the end"></a>, choose "Qt Jambi Project", and go through each page
+of the wizard. At the end, Eclipse <a name="iddle2142"></a><a name=
+"iddle2602"></a><a name="iddle2936"></a><a name=
+"iddle3377"></a><a name="iddle3403"></a><a name=
+"iddle6110"></a><a name="project with"></a>will create a project
+with a skeleton <tt>.java</tt><a name="a"></a> file with a
+<tt>main()</tt><a name="method and"></a> method and a constructor.
+The application can be run from within Eclipse using the
+<span class="docEmphRomanAlt">Run|Run</span><a name=
+"shows syntax"></a> menu option. Eclipse shows syntax errors in the
+left margin of the editor, and shows any errors that occur at
+run-time in a console window.</p>
+
+<p class="docText"><a name="a Qt"></a>Creating a Qt Jambi
+application that uses <span class="docEmphasis">Qt Designer</span>
+is very similar to creating a pure code application. Click
+<span class="docEmphRomanAlt">File|New Project</span><a name=
+"Call the"></a>, and then choose "Qt Jambi Project (Using Designer
+Form)". Again, a wizard will appear. Call the project
+"JambiGoToCell", and on the last page, specify "GoToCellDialog" as
+the class name and choose "Dialog" as the form type.</p>
+
+<p class="docText"><a name="will have"></a>Once the wizard has
+finished, it will have created <tt>GoToCellDialog.java</tt> and
+also a Java user interface file <tt>GoToCellDialog.jui</tt>.
+Double-click the <tt>.jui</tt> file to make the <span class=
+"docEmphasis">Qt Designer</span> editor visible. A form with
+<span class="docEmphRomanAlt">OK</span> and <span class=
+"docEmphRomanAlt">Cancel</span> buttons will be shown. To access
+<span class="docEmphasis">Qt Designer</span>'s functionality, click
+<span class="docEmphRomanAlt">Window|Open Perspective|Other</span>,
+then double-click <span class="docEmphRomanAlt">Qt Designer
+UI</span>. This perspective shows <span class="docEmphasis">Qt
+Designer</span>'s signal–slot editor, action editor, property
+editor, widget box, and more, as shown in <a class="docLink" href=
+"#app03fig02">Figure C.2</a>.</p>
+<a name="app03fig02"></a>
+<center>
+<h5 class="docFigureTitle">Figure C.2. The Go to Cell dialog in
+Eclipse</h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83anAyY2gubGwvX2Flc2NpaXB0cGdzZQ--.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="317" src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83cDJjaGwuanAvaXNlaWNwZ3Nl.jpg"
+alt="">
+</center>
+<br>
+
+<p class="docText"><a name="in"></a>To complete the design, we
+perform the same steps as in <a class="docLink" href=
+"ch02.html#ch02">Chapter 2</a> (p. <a class="docLink" href=
+"ch02lev1sec3.html#ch02fig05">24</a><a name="could be"></a>). The
+dialog can be previewed as it could be within <span class=
+"docEmphasis">Qt Designer</span><a name="to run"></a>, and since
+Eclipse generates skeleton code it is also possible to run it by
+clicking <span class="docEmphRomanAlt">Run|Run</span>.</p>
+
+<p class="docText"><a name="is to"></a>The final stage is to edit
+the <tt>GoToCellDialog.java</tt><a name="implement the"></a> file
+to implement the functionality we need. Two constructors are
+generated by Eclipse, but we only want one of them, so we delete
+the parameterless constructor. In the generated
+<tt>main()</tt><a name="we must"></a> method, we must pass
+<tt>null</tt><a name="parent to"></a> as the parent to the
+<tt>GoToCellDialog</tt> constructor. Also, <a name=
+"iddle1263"></a><a name="iddle2603"></a><a name=
+"iddle3378"></a><a name="iddle3394"></a><a name=
+"iddle3404"></a><a name="iddle3406"></a><a name=
+"iddle3470"></a><a name="iddle6111"></a><a name=
+"iddle7407"></a><a name="iddle7448"></a><a name=
+"iddle7523"></a><a name="iddle8263"></a><a name=
+"iddle8277"></a><a name="must implement"></a>we must implement the
+<tt>GoToCellDialog(QWidget parent)</tt> constructor, and provide a
+<tt>on_lineEdit_textChanged(String)</tt> method that is called
+whenever the line editor's <tt>textChanged()</tt> signal is
+emitted. Here is the resulting <tt>GoToCellDialog.java</tt>
+file:</p>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+import com.trolltech.qt.core.*;
+import com.trolltech.qt.gui.*;
+
+public class GoToCellDialog extends QDialog {
+    private Ui_GoToCellDialogClass ui = new Ui_GoToCellDialogClass();
+
+    public GoToCellDialog(QWidget parent) {
+        super(parent);
+        ui.setupUi(this);
+
+        ui.okButton.setEnabled(false);
+
+        QRegExp regExp = new QRegExp("[A-Za-z][1-9][0-9]{0,2}");
+        ui.lineEdit.setValidator(new QRegExpValidator(regExp, this));
+
+        ui.okButton.clicked.connect(this, "accept()");
+        ui.cancelButton.clicked.connect(this, "reject()");
+    }
+
+    private void on_lineEdit_textChanged(String text) {
+        ui.okButton.setEnabled(!text.isEmpty());
+    }
+
+    public static void main(String[] args) {
+        QApplication.initialize(args);
+        GoToCellDialog testGoToCellDialog = new GoToCellDialog(null);
+        testGoToCellDialog.show();
+        QApplication.exec();
+    }
+}
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText">Eclipse takes care of invoking <tt>juic</tt> to
+convert <tt>GoToCellDialog.jui</tt> into
+<tt>Ui_GoTo-CellDialogClass.java</tt>, which defines a class called
+<tt>Ui_GoToCellDialogClass</tt> that reproduces the dialog we
+designed using <span class="docEmphasis">Qt Designer</span><a name=
+"a reference"></a>. We create an instance of this class and keep a
+reference to it in a private field called <tt>ui</tt>.</p>
+
+<p class="docText">In the constructor, we call the
+<tt>Ui_GoToCellDialogClass</tt>'s <tt>setupUi()</tt><a name=
+"out the"></a> method to create and lay out the widgets and to set
+their properties and signal–slot connections, including automatic
+connections for slots that follow the naming convention
+<tt>on_</tt><span class=
+"docEmphasis"><tt>objectName</tt></span><tt>_</tt><span class=
+"docEmphasis"><tt>signalName</tt></span><tt>()</tt>.</p>
+
+<p class="docText"><a name="it is"></a>A convenient feature of the
+Eclipse integration is that it is easy to make
+<tt>QWidget</tt><a name="be dragged"></a> subclasses available in
+the widget box to be dragged on to forms. We will briefly review
+the <tt>LabeledLineEdit</tt> custom widget, and then describe how
+to make it available in <span class="docEmphasis">Qt
+Designer</span>'s widget box.</p>
+
+<p class="docText">When we create custom widgets for use with
+<span class="docEmphasis">Qt Designer</span><a name=
+"can change"></a>, it is often convenient to provide properties
+that the programmer can change to customize the widget. The
+screenshot in <a class="docLink" href="#app03fig03">Figure C.3</a>
+shows a custom <tt>LabeledLineEdit</tt><a name="The widget"></a>
+widget in a form. The widget has two custom properties,
+<tt>labelText</tt> and <tt>editText</tt><a name="be set"></a>, that
+can be set in <a name="iddle1169"></a><a name=
+"iddle1986"></a><a name="iddle3191"></a><a name=
+"iddle4111"></a><a name="iddle4540"></a><a name=
+"iddle4612"></a><a name="iddle6152"></a><a name=
+"iddle6153"></a><a name="iddle6489"></a><a name=
+"iddle7872"></a><a name="iddle8585"></a><a name=
+"the property"></a>the property editor. In C++/Qt, properties are
+defined by means of the <tt>Q_PROPERTY()</tt><a name=
+"introspection is"></a> macro. In Qt Jambi, introspection is used
+to detect pairs of accessor methods that follow the Qt naming
+convention <span class=
+"docEmphasis"><tt>xxx</tt></span><tt>()</tt>/<tt>set</tt><span class="docEmphasis"><tt>Xxx</tt></span><tt>()</tt><a name="the Java"></a>
+or the Java naming convention <tt>get</tt><span class=
+"docEmphasis"><tt>Xxx</tt></span><tt>()</tt>/<tt>set</tt><span class="docEmphasis"><tt>Xxx</tt></span><tt>()</tt><a name="to hide"></a>.
+It is also possible to specify other properties and to hide
+automatically detected properties using annotations.</p>
+<a name="app03fig03"></a>
+<center>
+<h5 class="docFigureTitle">Figure C.3. The <tt>LabeledLineEdit</tt>
+custom widget in a form</h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83anAzY2gubGwvX2Flc2NpaXB0cGdzZQ--.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="311" src=
+"images/NzlkOW1jM2FhMDc4L2lwdHJnZTFnMTRzOXIvMy83cDNjaGwuanAvaXNlaWNwZ3Nl.jpg"
+alt="">
+</center>
+<br>
+
+<div class="docText">
+<pre>
+import com.trolltech.qt.*;
+import com.trolltech.qt.gui.*;
+
+public class LabeledLineEdit extends QWidget {
+</pre>
+</div>
+<br>
+
+<p class="docText">The first <tt>import</tt><a name="Qt Jambi"></a>
+declaration is needed to access Qt Jambi's
+<tt>@QtPropertyReader()</tt> and <tt>@QtPropertyWriter()</tt>
+annotations, which let us export properties to <span class=
+"docEmphasis">Qt Designer</span>.</p>
+
+<div class="docText">
+<pre>
+    @QtPropertyReader(name="labelText")
+    public String labelText() { return label.text(); }
+
+    @QtPropertyWriter(name="labelText")
+    public void setLabelText(String text) { label.setText(text); }
+
+    @QtPropertyReader(name="editText")
+    public String editText() { return lineEdit.text(); }
+
+    @QtPropertyWriter(name="editText")
+    public void setEditText(String text) { lineEdit.setText(text); }
+</pre>
+</div>
+<br>
+
+<p class="docText">For read-only properties, we can simply use the
+<tt>@QtPropertyReader()</tt><a name="provide read"></a> annotation
+and provide a getter method. Here we want to provide read-write
+properties, <a name="iddle4364"></a><a name="For this"></a>so each
+has a getter and a setter. For this example, we could have omitted
+the annotations, since the accessor methods follow the Qt naming
+convention.</p>
+
+<div class="docText">
+<pre>
+    public LabeledLineEdit(QWidget parent){
+        super(parent);
+
+        label = new QLabel();
+        lineEdit = new QLineEdit();
+        label.setBuddy(lineEdit);
+
+        QHBoxLayout layout = new QHBoxLayout();
+        layout.addWidget(label);
+        layout.addWidget(lineEdit);
+        setLayout(layout);
+    }
+
+    private QLabel label;
+    private QLineEdit lineEdit;
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="the widget"></a>The constructor is
+quite conventional. To be eligible for use in the widget box, we
+must provide a constructor that takes a single <tt>QWidget</tt>
+argument.</p>
+
+<div class="docText">
+<pre>
+    public static void main(String[] args) {
+        QApplication.initialize(args);
+        LabeledLineEdit testLabeledLineEdit = new LabeledLineEdit(null);
+        testLabeledLineEdit.setLabelText("&amp;Test");
+        testLabeledLineEdit.show();
+        QApplication.exec();
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">Eclipse generates the <tt>main()</tt><a name=
+"passed"></a> method automatically. We have passed
+<tt>null</tt><a name="argument to"></a> as the argument to the
+<tt>LabeledLineEdit</tt><a name="constructor and"></a> constructor
+and added a line to set the label's text property.</p>
+
+<p class="docText"><a name="have a"></a>Once we have a custom
+widget, we can add it to a project by copying its
+<tt>.java</tt><a name="into the"></a> file into the project's
+<tt>src</tt><a name="and click"></a> in the package explorer. Then
+we invoke the project's Properties dialog and click the
+<span class="docEmphRomanAlt">Qt Designer Plugins</span><a name=
+"suitable"></a> page. This page lists all the suitable
+<tt>QWidget</tt><a name="check the"></a> subclasses that are in the
+project. We just need to check the <span class=
+"docEmphRomanAlt">Enable plugin</span><a name="we want"></a>
+checkbox for any of the subclasses that we want to appear in the
+widget box and click <span class="docEmphRomanAlt">OK</span>. The
+next time we edit a form using the integrated <span class=
+"docEmphasis">Qt Designer</span><a name="will appear"></a>, the
+widgets we have added to the project as plugins will appear at the
+bottom of the widget box in a separate section.</p>
+
+<p class="docText"><a name="brief introduction"></a>This concludes
+our brief introduction to using Eclipse for Qt Jambi programming.
+Eclipse provides a powerful and functional IDE with many
+conveniences for software development. And with the Qt Jambi
+integration in place, it is possible to create Qt Jambi
+applications, including those that use <span class="docEmphasis">Qt
+Designer</span><a name="the Eclipse"></a>, completely within the
+Eclipse environment. Trolltech also provides a C++/Qt Eclipse
+integration with most of the same benefits as the Qt Jambi one.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"app03lev1sec1.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"app03lev1sec3.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>

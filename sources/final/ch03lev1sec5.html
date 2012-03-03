@@ -1,0 +1,563 @@
+<html>
+<head><meta http-equiv="Content-Style-Type" content="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="generator" content="chm2web Pro 2.85 (unicode)" />
+
+<title>ch03lev1sec5.html</title>
+<link rel="stylesheet" href="../../files/helpindex.css" type=
+"text/css">
+<link rel="stylesheet" href="../../default.css" type="text/css">
+
+<script type="text/JavaScript" src="../../files/supply.js"></script>
+<script type="text/JavaScript">
+chmtop.c2wtopf.pageid = "final/ch03lev1sec5.html";
+</script>
+
+</head>
+<body><script type="text/JavaScript"> 
+if (window.name != "content") 
+  document.write(" <table width=\"100%\" bgcolor=\"#e1e1e1\"cellspacing=\"2\" cellpadding=\"0\" style=\"border-collapse: collapse; font-family: sans-serif; font-size: 14px; color: #000000; text-decoration: none;  \"> <tr> <td align=\"center\" style=\"border-bottom: 2px solid gray\" > <br>&nbsp;Click <a href=\"../../index.html?page=sources%2Ffinal%2Fch03lev1sec5.html\">here</a> to show toolbars of the Web Online Help System: <a href=\"../../index.html?page=sources%2Ffinal%2Fch03lev1sec5.html\">show toolbars</a><br>&nbsp;</td></tr></table><br> "); 
+</script>
+<!-- !chm2web! -->
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch03lev1sec4.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch03lev1sec6.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<div style="">
+<div><a name="ch03lev1sec5"></a>
+<h3 class="docSection1Title" id="-100000">Using Dialogs</h3>
+
+<p class="docText"><a name="In this"></a>In this section, we will
+explain how to use dialogs in Qt—how to create and initialize them,
+run them, and respond to choices made by the user interacting with
+them. We will make use of the Find, Go to Cell, and Sort dialogs
+that we created in <a class="docLink" href="ch02.html#ch02">Chapter
+2</a><a name="also create"></a>. We will also create a simple About
+box.</p>
+
+<p class="docText"><a name="will begin"></a>We will begin with the
+Find dialog shown in <a class="docLink" href="#ch03fig12">Figure
+3.12</a><a name="switch between"></a>. Since we want the user to be
+able to switch between the main Spreadsheet window and the Find
+dialog at will, the Find dialog must be modeless. A <span class=
+"docEmphasis">modeless</span><a name="independently of"></a> window
+is one that runs independently of any other windows in the
+application.</p>
+<a name="ch03fig12"></a>
+<center>
+<h5 class="docFigureTitle">Figure 3.12. The Spreadsheet
+application's Find dialog</h5>
+
+<p class="docText"><img border="0" id="" width="310" height="126"
+src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzcGlqZmlzaC9nMnAzZ2MwLjE-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="connected to"></a>When modeless dialogs
+are created, they normally have their signals connected to slots
+that respond to the user's interactions.</p>
+
+<div class="docText">
+<pre>
+void MainWindow::find()
+{
+    if (!findDialog) {
+        findDialog = new FindDialog(this);
+        connect(findDialog, SIGNAL(findNext(const QString &amp;,
+                                            Qt::CaseSensitivity)),
+                spreadsheet, SLOT(findNext(const QString &amp;,
+                                           Qt::CaseSensitivity)));
+        connect(findDialog, SIGNAL(findPrevious(const QString &amp;,
+                                                Qt::CaseSensitivity)),
+                spreadsheet, SLOT(findPrevious(const QString &amp;,
+                                               Qt::CaseSensitivity)));
+    }
+
+    findDialog-&gt;show();
+    findDialog-&gt;raise();
+    findDialog-&gt;activateWindow();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1071"></a><a name=
+"iddle1077"></a><a name="iddle2746"></a><a name=
+"iddle2754"></a><a name="iddle3045"></a><a name=
+"iddle3292"></a><a name="iddle3705"></a><a name=
+"iddle6494"></a><a name="iddle6570"></a><a name=
+"iddle6619"></a><a name="iddle6740"></a><a name=
+"iddle7433"></a><a name="iddle8462"></a><a name=
+"iddle8563"></a><a name="iddle8625"></a><a name=
+"that enables"></a>The Find dialog is a window that enables the
+user to search for text in the spreadsheet. The <tt>find()</tt>
+slot is called when the user clicks <span class=
+"docEmphRomanAlt">Edit|Find</span><a name="scenarios are"></a> to
+pop up the Find dialog. At that point, several scenarios are
+possible:</p>
+
+<ul>
+<li>
+<p class="docList"><a name="is the"></a>This is the first time the
+user has invoked the Find dialog.</p>
+</li>
+
+<li>
+<p class="docList">The Find dialog was invoked before, but the user
+closed it.</p>
+</li>
+
+<li>
+<p class="docList">The Find dialog was invoked before and is still
+visible.</p>
+</li>
+</ul>
+
+<p class="docText"><a name="its"></a>If the Find dialog doesn't
+already exist, we create it and connect its
+<tt>findNext()</tt><a name="and"></a> and
+<tt>findPrevious()</tt><a name="the corresponding"></a> signals to
+the corresponding <tt>Spreadsheet</tt><a name="could also"></a>
+slots. We could also have created the dialog in the
+<tt>MainWindow</tt><a name="dialog is"></a> constructor, but
+delaying its creation makes application startup faster. Also, if
+the dialog is never used, it is never created, saving both time and
+memory.</p>
+
+<p class="docText">Then we call <tt>show()</tt>, <tt>raise()</tt>,
+and <tt>activateWindow()</tt><a name="is visible"></a> to ensure
+that the window is visible, on top of the others, and active. A
+call to <tt>show()</tt><a name="and active"></a> alone is
+sufficient to make a hidden window visible, on top, and active, but
+the Find dialog may be invoked when it is already visible. In that
+case, <tt>show()</tt> does nothing and we must call
+<tt>raise()</tt> and <tt>activateWindow()</tt><a name=
+"and active"></a> to make the window on top and active. An
+alternative would have been to write</p>
+
+<div class="docText">
+<pre>
+if (findDialog-&gt;isHidden()) {
+    findDialog-&gt;show();
+} else {
+    findDialog-&gt;raise();
+    findDialog-&gt;activateWindow();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="both ways"></a>but this is the
+programming equivalent of looking both ways before crossing a
+one-way street.</p>
+
+<p class="docText"><a name="iddle1053"></a><a name=
+"iddle1064"></a><a name="iddle2590"></a><a name=
+"iddle2655"></a><a name="iddle2755"></a><a name=
+"iddle2935"></a><a name="iddle2938"></a><a name=
+"iddle2940"></a><a name="iddle3706"></a><a name=
+"iddle3825"></a><a name="iddle3863"></a><a name=
+"iddle4931"></a><a name="iddle4933"></a><a name=
+"iddle4935"></a><a name="iddle4938"></a><a name=
+"iddle4941"></a><a name="iddle4942"></a><a name=
+"iddle5270"></a><a name="iddle5923"></a><a name=
+"iddle5945"></a><a name="iddle6205"></a><a name=
+"iddle6835"></a><a name="iddle6838"></a><a name=
+"iddle7165"></a><a name="iddle7266"></a><a name=
+"iddle7984"></a><a name="iddle8111"></a><a name="will now"></a>We
+will now look at the Go to Cell dialog shown in <a class="docLink"
+href="#ch03fig13">Figure 3.13</a><a name="it without"></a>. We want
+the user to pop it up, use it, and close it without being able to
+switch to any other window in the application. This means that the
+Go to Cell dialog must be modal. A <span class=
+"docEmphasis">modal</span><a name="window is"></a> window is a
+window that pops up when invoked and blocks the application,
+preventing any other processing or interactions from taking place
+until the window is closed. The file dialogs and message boxes we
+used earlier were modal.</p>
+<a name="ch03fig13"></a>
+<center>
+<h5 class="docFigureTitle"><a name=
+"Spreadsheet application"></a>Figure 3.13. The Spreadsheet
+application's Go to Cell dialog</h5>
+
+<p class="docText"><img border="0" id="" width="256" height="109"
+src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzcGlqZmlzaC9nM3AzZ2MwLjE-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText"><a name="dialog is"></a>A dialog is modeless if
+it's invoked using <tt>show()</tt> (unless we call
+<tt>setModal()</tt><a name="using"></a> beforehand to make it
+modal); it is modal if it's invoked using <tt>exec()</tt>.</p>
+
+<div class="docText">
+<pre>
+void MainWindow::goToCell()
+{
+    GoToCellDialog dialog(this);
+    if (dialog.exec()) {
+        QString str = dialog.lineEdit-&gt;text().toUpper();
+        spreadsheet-&gt;setCurrentCell(str.mid(1).toInt() - 1,
+                                    str[0].unicode() - 'A');
+    }
+}
+</pre>
+</div>
+<br>
+
+<p class="docText">The <tt>QDialog::exec()</tt> function returns a
+true value (<tt>QDialog::Accepted</tt><a name="a false"></a>) if
+the dialog is accepted, and a false value
+(<tt>QDialog::Rejected</tt><a name="dialog using"></a>) otherwise.
+Recall that when we created the Go to Cell dialog using
+<span class="docEmphasis">Qt Designer</span> in <a class="docLink"
+href="ch02.html#ch02">Chapter 2</a>, we connected <span class=
+"docEmphRomanAlt">OK</span> to <tt>accept()</tt> and <span class=
+"docEmphRomanAlt">Cancel</span> to <tt>reject()</tt>. If the user
+chooses <span class="docEmphRomanAlt">OK</span><a name=
+"the value"></a>, we set the current cell to the value in the line
+editor.</p>
+
+<p class="docText">The
+<tt>QTableWidget::setCurrentCell()</tt><a name="In the"></a>
+function expects two arguments:a row index and a column index. In
+the Spreadsheet application, cell A1 is cell (0, 0) and cell B27 is
+cell (26, 1). To obtain the row index from the
+<tt>QString</tt><a name="by"></a> returned by
+<tt>QLineEdit::text()</tt>, we extract the row number using
+<tt>QString::mid()</tt><a name="of the"></a> (which returns a
+substring from the start position to the end of the string),
+convert it to an <tt>int</tt><a name="using"></a> using
+<tt>QString::toInt()</tt><a name="For the"></a>, and subtract 1.
+For the column number, we subtract the <a name=
+"iddle2082"></a><a name="iddle2618"></a><a name=
+"iddle3726"></a><a name="iddle3992"></a><a name=
+"iddle7561"></a><a name="iddle7565"></a><a name=
+"iddle7571"></a><a name="iddle7573"></a><a name=
+"value of"></a>numeric value of 'A' from the numeric value of the
+string's uppercased first character. We know that the string will
+have the correct format because the <tt>QRegExpValidator</tt> we
+created for the dialog allows the <span class=
+"docEmphRomanAlt">OK</span><a name="letter followed"></a> button to
+be enabled only if we have a letter followed by up to three
+digits.</p>
+
+<p class="docText">The <tt>goToCell()</tt><a name="code seen"></a>
+function differs from all the code seen so far in that it creates a
+widget (a <tt>GoToCellDialog</tt><a name="one extra"></a>) as a
+variable on the stack. At the cost of one extra line, we could just
+as easily have used <tt>new</tt> and <tt>delete</tt>:</p>
+
+<div class="docText">
+<pre>
+void MainWindow::goToCell()
+{
+    GoToCellDialog *dialog = new GoToCellDialog(this);
+    if (dialog-&gt;exec()) {
+        QString str = dialog-&gt;lineEdit-&gt;text().toUpper();
+        spreadsheet-&gt;setCurrentCell(str.mid(1).toInt() - 1,
+                                    str[0].unicode() - 'A');
+    }
+    delete dialog;
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="stack is"></a>Creating modal dialogs
+(and context menus) on the stack is a common programming pattern
+since we usually don't need the dialog (or menu) after we have used
+it, and it will automatically be destroyed at the end of the
+enclosing scope.</p>
+
+<p class="docText"><a name="Sort dialog"></a>We will now turn to
+the Sort dialog. The Sort dialog is a modal dialog that allows the
+user to sort the currently selected area by the columns they
+specify. <a class="docLink" href="#ch03fig14">Figure
+3.14</a><a name="an example"></a> shows an example of sorting, with
+column B as the primary sort key and column A as the secondary sort
+key (both ascending).</p>
+<a name="ch03fig14"></a>
+<center>
+<h5 class="docFigureTitle">Figure 3.14. Sorting the spreadsheet's
+selected area</h5>
+
+<p class="docText">
+</p>
+
+<div class="st1"><a target="_blank" href=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzZ3BpYWZpc2gvLjR0bDNnYzBfMXBq.jpg">
+[View full size image]</a>
+</div>
+<img border="0" id="" width="500" height="187" src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzcGlqZmlzaC9nNHAzZ2MwLjE-.jpg"
+alt="">
+</center>
+<br>
+
+<div class="docText">
+<div class="codeSegmentsExpansionLinks">Code View:</div>
+
+<pre class="">
+void MainWindow::sort()
+{
+    SortDialog dialog(this);
+    QTableWidgetSelectionRange range = spreadsheet-&gt;selectedRange();
+    dialog.setColumnRange('A' + range.leftColumn(),
+                          'A' + range.rightColumn());
+    if (dialog.exec()) {
+        SpreadsheetCompare compare;
+        compare.keys[0] =
+              dialog.primaryColumnCombo-&gt;currentIndex();
+        compare.keys[1] =
+              dialog.secondaryColumnCombo-&gt;currentIndex() - 1;
+        compare.keys[2] =
+              dialog.tertiaryColumnCombo-&gt;currentIndex() - 1;
+        compare.ascending[0] =
+              (dialog.primaryOrderCombo-&gt;currentIndex() == 0);
+        compare.ascending[1] =
+              (dialog.secondaryOrderCombo-&gt;currentIndex() == 0);
+        compare.ascending[2] =
+              (dialog.tertiaryOrderCombo-&gt;currentIndex() == 0);
+        spreadsheet-&gt;sort(compare);
+    }
+}
+
+                                          
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1948"></a><a name=
+"iddle2149"></a><a name="iddle3529"></a><a name=
+"iddle4840"></a><a name="iddle6233"></a><a name=
+"iddle6952"></a><a name="iddle7156"></a><a name=
+"iddle7569"></a><a name="iddle7662"></a>The code in <tt>sort()</tt>
+follows a similar pattern to that used for <tt>goToCell()</tt>:</p>
+
+<ul>
+<li>
+<p class="docList">We create the dialog on the stack and initialize
+it.</p>
+</li>
+
+<li>
+<p class="docList">We pop up the dialog using <tt>exec()</tt>.</p>
+</li>
+
+<li>
+<p class="docList">If the user clicks <span class=
+"docEmphRomanAlt">OK</span><a name="widgets and"></a>, we extract
+the values entered by the user from the dialog's widgets and make
+use of them.</p>
+</li>
+</ul>
+
+<p class="docText"><a name="The"></a>The
+<tt>setColumnRange()</tt><a name="the columns"></a> call sets the
+columns available for sorting to the columns that are selected. For
+example, using the selection shown in <a class="docLink" href=
+"#ch03fig14">Figure 3.14</a>, <tt>range.leftColumn()</tt><a name=
+"yield"></a> would yield 0, giving 'A' + 0 = 'A', and
+<tt>range.rightColumn()</tt> would yield 2, giving 'A' + 2 =
+'C'.</p>
+
+<p class="docText">The <tt>compare</tt><a name="sort orders"></a>
+object stores the primary, secondary, and tertiary sort keys and
+their sort orders. (We will see the definition of the
+<tt>SpreadsheetCompare</tt><a name="object is"></a> class in the
+next chapter.) The object is used by <tt>Spreadsheet::sort()</tt>
+to compare two rows. The <tt>keys</tt><a name="the selection"></a>
+array stores the column numbers of the keys. For example, if the
+selection extends from C2 to E5, column C has position 0. The
+<tt>ascending</tt><a name="each key"></a> array stores the order
+associated with each key as a <tt>bool</tt>.
+<tt>QComboBox::currentIndex()</tt><a name="at"></a> returns the
+index of the currently selected item, starting at 0. For the
+secondary and tertiary keys, we subtract one from the current item
+to account for the "None" item.</p>
+
+<p class="docText">The <tt>sort()</tt><a name="does the"></a>
+function does the job, but it is a bit fragile. It assumes that the
+Sort dialog is implemented in a particular way, with comboboxes and
+"None" items. This means that if we redesign the Sort dialog, we
+may also need to rewrite this code. While this approach is adequate
+for a dialog that is called only from one place, it opens the door
+to maintenance nightmares if the dialog is used in several
+places.</p>
+
+<p class="docText">A more robust approach is to make the
+<tt>SortDialog</tt> class smarter by having it create a
+<tt>SpreadsheetCompare</tt> object itself, which can then be
+accessed by its caller. This simplifies <tt>MainWindow::sort()</tt>
+significantly:</p>
+
+<div class="docText">
+<pre>
+void MainWindow::sort()
+{
+    SortDialog dialog(this);
+    QTableWidgetSelectionRange range = spreadsheet-&gt;selectedRange();
+    dialog.setColumnRange('A' + range.leftColumn(),
+                          'A' + range.rightColumn());
+
+    if (dialog.exec())
+        spreadsheet-&gt;performSort(dialog.comparisonObject());
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1046"></a><a name=
+"iddle3688"></a><a name="iddle7566"></a><a name=
+"always the"></a>This approach leads to loosely coupled components
+and is almost always the right choice for dialogs that will be
+called from more than one place.</p>
+
+<p class="docText"><a name="A more"></a>A more radical approach
+would be to pass a pointer to the <tt>Spreadsheet</tt><a name=
+"initializing the"></a> object when initializing the
+<tt>SortDialog</tt><a name="and to"></a> object and to allow the
+dialog to operate directly on the <tt>Spreadsheet</tt>. This makes
+the <tt>SortDialog</tt><a name="certain type"></a> much less
+general, since it will work only on a certain type of widget, but
+it simplifies the code even further by eliminating the
+<tt>SortDialog::setColumnRange()</tt> function. The
+<tt>MainWindow::sort()</tt> function then becomes</p>
+
+<div class="docText">
+<pre>
+void MainWindow::sort()
+{
+    SortDialog dialog(this);
+    dialog.setSpreadsheet(spreadsheet);
+    dialog.exec();
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="of the"></a>This approach mirrors the
+first: Instead of the caller needing intimate knowledge of the
+dialog, the dialog needs intimate knowledge of the data structures
+supplied by the caller. This approach may be useful where the
+dialog needs to apply changes live. But just as the caller code is
+fragile using the first approach, this third approach breaks if the
+data structures change.</p>
+
+<p class="docText"><a name="and stick"></a>Some developers choose
+just one approach to using dialogs and stick with that. This has
+the benefit of familiarity and simplicity since all their dialog
+usages follow the same pattern, but it also misses the benefits of
+the approaches that are not used. Ideally, the approach to use
+should be decided on a per-dialog basis.</p>
+
+<p class="docText"><a name="with the"></a>We will round off this
+section with the About box. We could create a custom dialog like we
+did for the Find dialog or the Go to Cell dialog to present the
+information about the application, but since most About boxes are
+highly stylized, Qt provides a simpler solution.</p>
+
+<div class="docText">
+<pre>
+void MainWindow::about()
+{
+    QMessageBox::about(this, tr("About Spreadsheet"),
+            tr("&lt;h2&gt;Spreadsheet 1.1&lt;/h2&gt;"
+               "&lt;p&gt;Copyright &amp;copy; 2008 Software Inc."
+               "&lt;p&gt;Spreadsheet is a small application that "
+               "demonstrates QAction, QMainWindow, QMenuBar, "
+               "QStatusBar, QTableWidget, QToolBar, and many other "
+               "Qt classes."));
+}
+</pre>
+</div>
+<br>
+
+<p class="docText"><a name="iddle1047"></a><a name=
+"iddle1189"></a><a name="iddle1738"></a><a name=
+"iddle1885"></a><a name="iddle3125"></a><a name=
+"iddle3179"></a><a name="iddle3732"></a><a name=
+"iddle4405"></a><a name="iddle5365"></a><a name=
+"iddle5367"></a><a name="iddle5741"></a><a name=
+"iddle5750"></a><a name="iddle6825"></a><a name=
+"iddle7365"></a><a name="iddle7398"></a><a name=
+"iddle7907"></a><a name="iddle8646"></a><a name="iddle8676"></a>The
+About box is obtained by calling
+<tt>QMessageBox::about()</tt><a name="to"></a>, a static
+convenience function. The function is very similar to
+<tt>QMessageBox::warning()</tt><a name="that it"></a>, except that
+it uses the parent window's icon instead of the standard "warning"
+icon. The resulting dialog is shown in <a class="docLink" href=
+"#ch03fig15">Figure 3.15</a>.</p>
+<a name="ch03fig15"></a>
+<center>
+<h5 class="docFigureTitle">Figure 3.15. About Spreadsheet</h5>
+
+<p class="docText"><img border="0" id="" width="500" height="206"
+src=
+"images/MXJkcjcvYWd0Yy8xMC84bXBlaTlzNzQ5YTk3ZzMzcGlqZmlzaC9nNXAzZ2MwLjE-.jpg"
+alt="">
+</p>
+</center>
+<br>
+
+<p class="docText">So far, we have used several convenience static
+functions from both <tt>QMessageBox</tt> and <tt>QFileDialog</tt>.
+These functions create a dialog, initialize it, and call
+<tt>exec()</tt> on it. It is also possible, although less
+convenient, to create a <tt>QMessageBox</tt> or a
+<tt>QFileDialog</tt> widget like any other widget and explicitly
+call <tt>exec()</tt>, or even <tt>show()</tt>, on it.</p>
+</div>
+</div>
+
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="right">
+<div style="MARGIN-LEFT: 0.15in;"><a href=
+"ch03lev1sec4.html"><img src="images/prev.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Previous Page"></a> <a href=
+"ch03lev1sec6.html"><img src="images/next.gif" width="20" height=
+"20" border="0" align="absmiddle" alt="Next Page"></a></div>
+</td>
+</tr>
+</table>
+
+<script type="text/JavaScript">
+var fe = FindFrame("toc", top);
+if ((fe != null) && (chmtop.c2wtopf.jstree != null)) {
+  if (chmtop.c2wtopf.FITEMS[chmtop.c2wtopf.pagenum] != chmtop.c2wtopf.pageid)
+    chmtop.c2wtopf.jstree.OpenTreeNode("sources/" + chmtop.c2wtopf.pageid);
+}
+</script>
+
+<!-- CHM2WEB -->
+<!-- DO NOT DELETE OR MODIFY THIS CODE WITHOUT 
+     WRITTEN PERMISSION OF A!K RESEARCH LABS -->
+<table width="100%" cellspacing="0" cellpadding="0" 
+style="margin-top: 0pt; border-collapse: collapse;"> 
+<tr> <td align="right" style="background-color:white; border-top: 1px solid gray;"> 
+<a href="http://chm2web.aklabs.com" target="_blank" style="font-family: sans-serif;  font-size: 11px; text-decoration: none;"><font color="gray">Converted from CHM to HTML with <b>chm2web Pro 2.85 (unicode)</b></font></a>
+</td></tr></table> 
+<!-- /CHM2WEB -->
+
+</body>
+</html>
